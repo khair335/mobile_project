@@ -1,0 +1,7 @@
+export const ADD_TO_CART = "ADD_TO_CART";
+export const REMOVE_FROM_CART = "REMOVE_FROM_CART";
+export const SEARCH_BOX_OPEN = "SEARCH_BOX_OPEN";
+export const SEARCH_BOX_CLOSE = "SEARCH_BOX_CLOSE";
+export const ON_SEARCH = "ON_SEARCH";
+export const SEARCH_PANEL_OPEN = "SEARCH_PANEL_OPEN";
+export const SEARCH_PANEL_CLOSE = "SEARCH_PANEL_CLOSE";
