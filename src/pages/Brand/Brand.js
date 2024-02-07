@@ -13,14 +13,8 @@ import PhoneSearchPanel from '../../component/PhoneSearchPanel/PhoneSearchPanel'
 const Brand = () => {
   let location = useLocation()
   const pathname = location.pathname;
-
-  // Split the pathname into parts using '/' as the separator
   const pathnameParts = pathname.split('/');
-
-  // Get the last part of the pathname
   const lastPathname = pathnameParts[pathnameParts.length - 1];
-
-
   const topTenMobile = [
     {
       id: 1,
@@ -127,19 +121,23 @@ const Brand = () => {
     },
 
   ]
- 
+
   const state = useSelector((state) => state);
   const sortedTopTenMobile = topTenMobile.sort((a, b) => b.hit - a.hit);
   const sortedTopTenMobileFan = topTenMobileFan.sort((a, b) => b.fav - a.fav);
   return (
     <div>
       <Navbar />
-      <Advertisement_Width_Full />
+      <div className='mt-[48px]'>
+         <Advertisement_Width_Full />
       <div className='max-w-[1440px] w-full mx-auto'>
-        <div className='flex gap-3 pt-4'>
-          <div className='max-w-[428px] w-full  '>
+          <div className='flex flex-col md:flex-row gap-3 pt-0 sm:pt-4 px-0 sm:px-3'>
+            <div className={`md:hidden  ${state.mobileSearch ? 'block':'hidden'}`}>
+              <PhoneFind/>
+            </div>
+          <div className='lg:max-w-[428px] max-w-[330px] w-full md:block hidden  '>
           <PhoneFind />
-           
+
 
             <Advertisement_height_250 />
             <div className='my-3 w-full px-5'>
@@ -214,8 +212,8 @@ const Brand = () => {
               <div className='w-full '>
 
 
-                <div className={`w-[1000px] h-[320px] bg-top bg-no-repeat relative bg-cover ]`} style={{ backgroundImage: `url(${banner})` }}>
-                  <h2 className='capitalize  text-4xl font-inter absolute bottom-10 left-10 font-medium bg-slate-500 py-4 px-2 bg-opacity-30 backdrop-blur-sm rounded-md text-white '>
+                <div className={`max-w-[1000px] w-full md:h-[320px] h-[160px] bg-top bg-no-repeat relative bg-cover ]`} style={{ backgroundImage: `url(${banner})` }}>
+                  <h2 className='capitalize  md:text-4xl text-base font-inter absolute md:bottom-10 bottom-5 md:left-10 left-5 font-medium bg-slate-500 md:py-4 py-2 px-2 bg-opacity-30 backdrop-blur-sm rounded-md text-white '>
                     <span>{ lastPathname}</span> Phone
                   </h2>
                 </div>
@@ -223,251 +221,132 @@ const Brand = () => {
 
                 </div>
                 <div>
-                    <div className='m-5 flex flex-wrap gap-y-6 gap-x-2'>
+                    <div className='m-2 md:pt-0 pt-10 md:m-5 flex flex-wrap gap-y-6 gap-x-1 md:gap-x-2'>
 
-                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
+                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
+                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
                       <img className='w-full' src={mobile1} alt="" srcset="" />
                     </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
+                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
                       Galaxy S24 Ultra
                     </p>
                   </Link>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
+                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
+                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
                       <img className='w-full' src={mobile1} alt="" srcset="" />
                     </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
+                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
                       Galaxy S24 Ultra
                     </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
+                  </Link>
+                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
+                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
                       <img className='w-full' src={mobile1} alt="" srcset="" />
                     </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
+                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
                       Galaxy S24 Ultra
                     </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
+                  </Link>
+                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
+                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
                       <img className='w-full' src={mobile1} alt="" srcset="" />
                     </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
+                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
                       Galaxy S24 Ultra
                     </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
+                  </Link>
+                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
+                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
                       <img className='w-full' src={mobile1} alt="" srcset="" />
                     </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
+                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
                       Galaxy S24 Ultra
                     </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
+                  </Link>
+                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
+                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
                       <img className='w-full' src={mobile1} alt="" srcset="" />
                     </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
+                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
                       Galaxy S24 Ultra
                     </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
+                  </Link>
+                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
+                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
                       <img className='w-full' src={mobile1} alt="" srcset="" />
                     </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
+                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
                       Galaxy S24 Ultra
                     </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
+                  </Link>
+                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
+                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
                       <img className='w-full' src={mobile1} alt="" srcset="" />
                     </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
+                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
                       Galaxy S24 Ultra
                     </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
+                  </Link>
+                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
+                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
                       <img className='w-full' src={mobile1} alt="" srcset="" />
                     </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
+                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
                       Galaxy S24 Ultra
                     </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
+                  </Link>
+                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
+                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
                       <img className='w-full' src={mobile1} alt="" srcset="" />
                     </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
+                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
                       Galaxy S24 Ultra
                     </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
+                  </Link>
+                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
+                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
                       <img className='w-full' src={mobile1} alt="" srcset="" />
                     </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
+                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
                       Galaxy S24 Ultra
                     </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
+                  </Link>
+                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
+                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
                       <img className='w-full' src={mobile1} alt="" srcset="" />
                     </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
+                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
                       Galaxy S24 Ultra
                     </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
+                  </Link>
+                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
+                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
                       <img className='w-full' src={mobile1} alt="" srcset="" />
                     </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
+                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
                       Galaxy S24 Ultra
                     </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
+                  </Link>
+                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
+                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
                       <img className='w-full' src={mobile1} alt="" srcset="" />
                     </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
+                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
                       Galaxy S24 Ultra
                     </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
+                  </Link>
+                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
+                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
                       <img className='w-full' src={mobile1} alt="" srcset="" />
                     </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
+                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
                       Galaxy S24 Ultra
                     </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
-                  <div className='max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[135px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
+                  </Link>
+
                 </div>
                 </div>
-                 <div>
+                 {/* <div>
                   <div class="my-[50px] flex justify-center items-center gap-5">
                     <button>
                       <svg width="34" height="36" viewBox="0 0 34 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -511,13 +390,14 @@ const Brand = () => {
                       </svg>
                     </button>
                   </div>
-                </div>
+                </div> */}
 
               </div>
           }
 
         </div>
       </div>
+     </div>
 
     </div>
   );

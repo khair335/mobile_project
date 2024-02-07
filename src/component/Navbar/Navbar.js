@@ -12,7 +12,7 @@ const Navbar = () => {
         <div className='w-full bg-[#616161] h-12 mx-auto flex justify-between sm:px-4 px-2 items-center'>
           <Link
             onClick={() => dispatch({ type: SEARCH_BOX_CLOSE })}
-            to="/" className='h-11 sm:max-w-52 w-full max-w-[100px] flex justify-center items-center'>
+            to="/" className='h-11 sm:max-w-36 lg:max-w-52 w-full max-w-[100px] flex justify-center items-center'>
             <span className='w-full'>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 220 40">
                 <path fill="#ffff" d="M20 40c11.046 0 20-8.954 20-20V6a6 6 0 0 0-6-6H21v8.774c0 2.002.122 4.076 1.172 5.78a9.999 9.999 0 0 0 6.904 4.627l.383.062a.8.8 0 0 1 0 1.514l-.383.062a10 10 0 0 0-8.257 8.257l-.062.383a.8.8 0 0 1-1.514 0l-.062-.383a10 10 0 0 0-4.627-6.904C12.85 21.122 10.776 21 8.774 21H.024C.547 31.581 9.29 40 20 40Z" />
@@ -21,7 +21,7 @@ const Navbar = () => {
             </span>
           </Link>
 
-          <form className='bg-[#a5a5a5] w-[300px] py-1 h-[32px] hidden justify-center items-center sm:flex'>
+          <form className='bg-[#a5a5a5] lg:max-w-[300px] max-w-48 w-full py-1 h-[32px] hidden justify-center items-center md:flex mx-1'>
             <input className='bg-transparent w-full h-full outline-none px-3 border-r-[1px] mr-2 text-white border-white placeholder:text-white' placeholder='Search' type="text" />
             <button className='w-8 flex  '>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="rgba(255,255,255,1)">
@@ -30,14 +30,14 @@ const Navbar = () => {
             </button>
           </form>
 
-          <div className='hidden sm:flex items-center gap-7'>
+          <div className='hidden md:flex items-center lg:gap-7 gap-3'>
 
             <div>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="rgba(255,255,255,1)"><path d="M9.97308 18H14.0269C14.1589 16.7984 14.7721 15.8065 15.7676 14.7226C15.8797 14.6006 16.5988 13.8564 16.6841 13.7501C17.5318 12.6931 18 11.385 18 10C18 6.68629 15.3137 4 12 4C8.68629 4 6 6.68629 6 10C6 11.3843 6.46774 12.6917 7.31462 13.7484C7.40004 13.855 8.12081 14.6012 8.23154 14.7218C9.22766 15.8064 9.84103 16.7984 9.97308 18ZM14 20H10V21H14V20ZM5.75395 14.9992C4.65645 13.6297 4 11.8915 4 10C4 5.58172 7.58172 2 12 2C16.4183 2 20 5.58172 20 10C20 11.8925 19.3428 13.6315 18.2443 15.0014C17.624 15.7748 16 17 16 18.5V21C16 22.1046 15.1046 23 14 23H10C8.89543 23 8 22.1046 8 21V18.5C8 17 6.37458 15.7736 5.75395 14.9992ZM13 10.0048H15.5L11 16.0048V12.0048H8.5L13 6V10.0048Z"></path></svg>
 
 
             </div>
-            <div className='flex w-full justify-center items-center gap-7 border-r-[1px] border-l-[1px] px-3'>
+            <div className='flex w-full justify-center items-center lg:gap-7 gap-3 border-r-[1px] border-l-[1px] px-3'>
               <div className='w-full cursor-pointer'>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="rgba(255,255,255,1)"><path d="M19.6069 6.99482C19.5307 6.69695 19.3152 6.47221 19.0684 6.40288C18.6299 6.28062 16.501 6 12.001 6C7.50098 6 5.37252 6.28073 4.93225 6.40323C4.68776 6.47123 4.4723 6.69593 4.3951 6.99482C4.2863 7.41923 4.00098 9.19595 4.00098 12C4.00098 14.804 4.2863 16.5808 4.3954 17.0064C4.47126 17.3031 4.68676 17.5278 4.93251 17.5968C5.37252 17.7193 7.50098 18 12.001 18C16.501 18 18.6299 17.7194 19.0697 17.5968C19.3142 17.5288 19.5297 17.3041 19.6069 17.0052C19.7157 16.5808 20.001 14.8 20.001 12C20.001 9.2 19.7157 7.41923 19.6069 6.99482ZM21.5442 6.49818C22.001 8.28 22.001 12 22.001 12C22.001 12 22.001 15.72 21.5442 17.5018C21.2897 18.4873 20.547 19.2618 19.6056 19.5236C17.8971 20 12.001 20 12.001 20C12.001 20 6.10837 20 4.39637 19.5236C3.45146 19.2582 2.70879 18.4836 2.45774 17.5018C2.00098 15.72 2.00098 12 2.00098 12C2.00098 12 2.00098 8.28 2.45774 6.49818C2.71227 5.51273 3.45495 4.73818 4.39637 4.47636C6.10837 4 12.001 4 12.001 4C12.001 4 17.8971 4 19.6056 4.47636C20.5505 4.74182 21.2932 5.51636 21.5442 6.49818ZM10.001 15.5V8.5L16.001 12L10.001 15.5Z"></path></svg>
               </div>
@@ -48,7 +48,7 @@ const Navbar = () => {
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="rgba(255,255,255,1)"><path d="M14 13.5H16.5L17.5 9.5H14V7.5C14 6.47062 14 5.5 16 5.5H17.5V2.1401C17.1743 2.09685 15.943 2 14.6429 2C11.9284 2 10 3.65686 10 6.69971V9.5H7V13.5H10V22H14V13.5Z"></path></svg>
               </div>
             </div>
-            <div className='flex w-full justify-center items-center gap-7  px-3'>
+            <div className='flex w-full justify-center items-center lg:gap-7 gap-3  px-3'>
 
               <div className='w-full cursor-pointer'>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="rgba(255,255,255,1)"><path d="M4 15H6V20H18V4H6V9H4V3C4 2.44772 4.44772 2 5 2H19C19.5523 2 20 2.44772 20 3V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V15ZM10 11V8L15 12L10 16V13H2V11H10Z"></path></svg>
@@ -61,7 +61,7 @@ const Navbar = () => {
           </div>
           <div
 
-            className='flex items-center gap-4' >
+            className='items-center gap-4 md:hidden flex' >
             <div onClick={() => dispatch({ type: MOBILE_SEARCH_BOX_SHOW })} className=''>
 
               {

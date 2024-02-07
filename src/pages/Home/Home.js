@@ -130,12 +130,12 @@ const Home = () => {
       <div className='w-full mt-[48px]'>
         <Advertisement_Width_Full />
         <div className='max-w-[1440px] w-full mx-auto'>
-          <div className='flex flex-col sm:flex-row gap-3 pt-0 sm:pt-4'>
+          <div className='flex flex-col md:flex-row gap-3 pt-0 sm:pt-4 px-0 sm:px-3'>
 
-            <div className={`sm:hidden  ${state.mobileSearch ? 'block':'hidden'}`}>
+            <div className={`md:hidden  ${state.mobileSearch ? 'block':'hidden'}`}>
               <PhoneFind/>
             </div>
-            <div className='max-w-[428px] w-full sm:block hidden  '>
+            <div className='lg:max-w-[428px] max-w-[330px] w-full md:block hidden  '>
               <PhoneFind />
               <Advertisement_height_250 />
               <div className='my-3 w-full px-5'>
@@ -210,10 +210,10 @@ const Home = () => {
                 <div className=' w-full '>
 
 
-                  <div>
+                  <div className='px-[6px] sm:px-0'>
                     <div className='mb-10'>
                       <p className='pb-2 font-inter font-medium text-2xl relative after:absolute after:h-[3px] after:w-5 after:bottom-2 after:bg-black'>Latest</p>
-                      <div className='m-2 sm:m-5 flex flex-wrap gap-y-6 gap-x-3 sm:gap-x-2'>
+                      <div className='m-0 sm:m-5 flex flex-wrap gap-y-6 gap-x-2 sm:gap-x-2'>
 
                         <Link to="/brand/samsung/samsung_galaxy_s24_ultra" className='max-w-[110px] sm:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
                           <div className='max-w-[135px] w-full '>
@@ -261,7 +261,7 @@ const Home = () => {
                     </div>
                     <div className='mb-10'>
                       <p className='pb-2 font-inter font-medium text-2xl relative after:absolute after:h-[3px] after:w-5 after:bottom-2 after:bg-black'>Upcoming</p>
-                      <div className='m-2 sm:m-5 flex flex-wrap gap-y-6 gap-x-3 sm:gap-x-2'>
+                      <div className='m-0 sm:m-5 flex flex-wrap gap-y-6 gap-x-2 sm:gap-x-2'>
 
                         <div className='max-w-[110px] sm:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
                           <div className='max-w-[135px] w-full '>
@@ -309,7 +309,7 @@ const Home = () => {
                     </div>
                     <div className='mb-10'>
                       <p className='pb-2 font-inter font-medium text-2xl relative after:absolute after:h-[3px] after:w-5 after:bottom-2 after:bg-black'>Under 15k</p>
-                      <div className='m-2 sm:m-5 flex flex-wrap gap-y-6 gap-x-3 sm:gap-x-2'>
+                      <div className='m-0 sm:m-5 flex flex-wrap gap-y-6 gap-x-2 sm:gap-x-2'>
 
                         <div className='max-w-[110px] sm:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
                           <div className='max-w-[135px] w-full '>

@@ -367,10 +367,10 @@ const PhoneFind = () => {
 
   console.log(state.searchBox,"State");
   return (
-    <div>
+    <div className='min-w-[310px]'>
       {
-        !state?.searchBox && 
-        
+        !state?.searchBox &&
+
         <div className='w-full'>
           <div  onClick={() => dispatch({ type: SEARCH_BOX_OPEN })} className='w-full h-11 bg-gray-300 hover:bg-gray-500 cursor-pointer flex justify-center items-center group transition-all duration-300'>
             <div className='flex justify-center items-center gap-2 '>
@@ -406,13 +406,13 @@ const PhoneFind = () => {
         </div>
       }
       {
-        state.searchBox && 
+        state.searchBox &&
         <div className='w-full pb-4'>
 
           <div className='w-full '>
-            <div 
-            
-            // onClick={() => [setSearchBox(!searchBox), setSearchPanel(false)]} 
+            <div
+
+            // onClick={() => [setSearchBox(!searchBox), setSearchPanel(false)]}
             onClick={() => dispatch({ type: SEARCH_BOX_CLOSE })}
             className='w-full h-11 bg-gray-300 hover:bg-gray-500 cursor-pointer flex justify-center items-center group transition-all duration-300'>
               <div className='flex justify-center items-center gap-2 '>
@@ -498,7 +498,7 @@ const PhoneFind = () => {
           </div>
 
 
-          <div className='w-full'>
+          <div className='w-full sm:px-0 px-5'>
             <button onClick={() => dispatch({ type: ON_SEARCH })} className='w-full h-9 bg-gray-500 text-white text-xl font-raleway font-medium text-center rounded-sm mt-5 hover:border-[1px] hover:bg-transparent hover:text-gray-500 hover:border-gray-500 transition-all duration-300'>
               Search
             </button>
