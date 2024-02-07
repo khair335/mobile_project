@@ -2,8 +2,8 @@ import React from 'react';
 
 const Advertisement_Width_Full = () => {
   return (
-    <div className='bg-slate-300 max-w-[1440px] h-32 mx-auto flex justify-center items-center'>
-        <div className='text-center text-6xl '>Advertisement</div>
+    <div className='bg-slate-300 max-w-[1440px] sm:h-32 h-20 mx-auto flex justify-center items-center'>
+        <div className='text-center sm:text-6xl text-lg'>Advertisement</div>
     </div>
   );
 };
