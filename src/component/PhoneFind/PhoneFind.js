@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import RangeSlider from "react-range-slider-input";
 import "react-range-slider-input/dist/style.css";
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ON_SEARCH, SEARCH_BOX_CLOSE, SEARCH_BOX_OPEN } from '../../redux/actionTypes/actionTypes';
+import axios from 'axios';
 const PhoneFind = () => {
     const dispatch = useDispatch();
   const [isClearable, setIsClearable] = useState(true);
@@ -15,188 +16,205 @@ const PhoneFind = () => {
   const [searchBox, setSearchBox] = useState(false);
   const [value, setValue] = useState([0, 500000]);
   const [searchPanel, setSearchPanel] = useState(false);
-  const mobileBrand = [
-    {
+   const [mobileBrand, setMobileBrand] = useState([]); // State to store the fetched data
 
-      name: 'SAMSUNG',
-      link: '/'
-    },
-    {
+  useEffect(() => {
+    // Fetch data using Axios when the component mounts
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:2000/api/brandName');
+        // Assuming the response.data is an array of objects with 'name' and 'link' properties
+        setMobileBrand(response.data.brandNames);
+        // console.log("mobileBrand",response.data.brandNames);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-      name: 'APPLE',
-      link: '/'
-    },
-    {
+    fetchData();
+  }, []); // Empty dependency array ensures the effect runs only once when the component mounts
+  // const mobileBrand = [
+  //   {
 
-      name: 'HUAWEI',
-      link: '/'
-    },
-    {
+  //     name: 'SAMSUNG',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'NOKIA',
-      link: '/'
-    },
-    {
+  //     name: 'APPLE',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'SONY',
-      link: '/'
-    },
-    {
+  //     name: 'HUAWEI',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'LG',
-      link: '/'
-    },
-    {
+  //     name: 'NOKIA',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'HTC',
-      link: '/'
-    },
-    {
+  //     name: 'SONY',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'MOTOROLA',
-      link: '/'
-    },
-    {
+  //     name: 'LG',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'LENOVO',
-      link: '/'
-    },
-    {
+  //     name: 'HTC',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'XIAOMI',
-      link: '/'
-    },
-    {
+  //     name: 'MOTOROLA',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'GOOGLE',
-      link: '/'
-    },
-    {
+  //     name: 'LENOVO',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'HONOR',
-      link: '/'
-    },
-    {
+  //     name: 'XIAOMI',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'OPPO',
-      link: '/'
-    },
-    {
+  //     name: 'GOOGLE',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'REALME',
-      link: '/'
-    },
-    {
+  //     name: 'HONOR',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'ONEPLUS',
-      link: '/'
-    },
-    {
+  //     name: 'OPPO',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'VIVO',
-      link: '/'
-    },
-    {
+  //     name: 'REALME',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'MEIZU',
-      link: '/'
-    },
-    {
+  //     name: 'ONEPLUS',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'BLACKBERRY',
-      link: '/'
-    },
-    {
+  //     name: 'VIVO',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'ASUS',
-      link: '/'
-    },
-    {
+  //     name: 'MEIZU',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'ALCATEL',
-      link: '/'
-    },
-    {
+  //     name: 'BLACKBERRY',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'ZTE',
-      link: '/'
-    },
-    {
+  //     name: 'ASUS',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'MICROSOFT',
-      link: '/'
-    },
-    {
+  //     name: 'ALCATEL',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'VODAFONE',
-      link: '/'
-    },
-    {
+  //     name: 'ZTE',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'ENERGIZER',
-      link: '/'
-    },
-    {
+  //     name: 'MICROSOFT',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'CAT',
-      link: '/'
-    },
-    {
+  //     name: 'VODAFONE',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'SHARP',
-      link: '/'
-    },
-    {
+  //     name: 'ENERGIZER',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'MICROMAX',
-      link: '/'
-    },
-    {
+  //     name: 'CAT',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'INFINIX',
-      link: '/'
-    },
-    {
+  //     name: 'SHARP',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'ULEFONE',
-      link: '/'
-    },
-    {
+  //     name: 'MICROMAX',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'TECNO',
-      link: '/'
-    },
-    {
+  //     name: 'INFINIX',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'DOOGEE',
-      link: '/'
-    },
-    {
+  //     name: 'ULEFONE',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'BLACKVIEW',
-      link: '/'
-    },
-    {
+  //     name: 'TECNO',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'CUBOT',
-      link: '/'
-    },
-    {
+  //     name: 'DOOGEE',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'OUKITEL',
-      link: '/'
-    },
-    {
+  //     name: 'BLACKVIEW',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'ITEL',
-      link: '/'
-    },
-    {
+  //     name: 'CUBOT',
+  //     link: '/'
+  //   },
+  //   {
 
-      name: 'TCL',
-      link: '/'
-    },
-  ]
+  //     name: 'OUKITEL',
+  //     link: '/'
+  //   },
+  //   {
+
+  //     name: 'ITEL',
+  //     link: '/'
+  //   },
+  //   {
+
+  //     name: 'TCL',
+  //     link: '/'
+  //   },
+  // ]
   const mobileBrand2 = [
     {
       id: 1,

@@ -340,11 +340,6 @@ const PhoneDetails = () => {
         ]
 
       },
-
-
-
-
-
     ],
 
   }
