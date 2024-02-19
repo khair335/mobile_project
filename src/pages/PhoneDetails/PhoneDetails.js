@@ -15,334 +15,356 @@ import PhoneSearchPanel from '../../component/PhoneSearchPanel/PhoneSearchPanel'
 import { useSelector } from 'react-redux';
 import Slider from "react-slick";
 import './PhoneDetails.css'
+import axios from 'axios';
 const PhoneDetails = () => {
   const state = useSelector((state) => state);
 
   const [shareModal, setShareModal] = useState(false);
   const [tab, setTab] = useState('specifications')
 
+  const [deviceData, setDeviceData] = useState(null);
+  console.log("deviceData",deviceData);
+  useEffect(() => {
+    const deviceId = '65d354929eae25c5d6f410d6';
+    const apiUrl = `http://localhost:2000/api/devicesData/${deviceId}`;
 
-  const devicesData =
-  {
-    "model": "Samsung Galaxy S24 Ultra",
-    "release_date": "2024, January 24",
-    "weight": "232g or 233g",
-    "thickness": "8.6mm",
-    "os_android": "Android 14",
-    "os_brand": "One UI 6.1",
-    "displaySize": "6.8",
-    "displayResolution": "1440 x 3120 pixels",
-    "expandable_storage": false,
-    "expandable_storage_type": "microSDXC",
-    "ram": "12GB",
-    "storage": "256GB/512GB/1TB",
-    data: [
-      {
-        type: "Network",
-        subType: [
-          {
-            name: "Technology",
-            subData: "GSM / CDMA / HSPA / EVDO / LTE / 5G"
-          }
+    axios.get(apiUrl)
+      .then(response => {
+        console.log('Axios Response:', response.data);
+        setDeviceData(response.data);
+      })
+      .catch(error => {
+        console.error('Axios Error:', error.message);
+      });
+  }, []);
 
-        ]
+  console.log('Device Data:', deviceData);
 
-      },
-      {
-        type: "LAUNCH",
-        subType: [
-          {
-            name: "Announced",
-            subData: "2024, January 08"
-          },
-          {
-            name: "Status",
-            subData: "Available. Released 2024, January 12"
-          },
-
-        ]
-
-      },
-      {
-        type: "BODY",
-        subType: [
-          {
-            name: "Dimensions",
-            subData: "164.3 x 76.2 x 9.5 mm (6.47 x 3.00 x 0.37 in)"
-          },
-          {
-            name: "Weight",
-            subData: "221 g (7.80 oz)"
-          },
-          {
-            name: "Build",
-            subData: "Glass front (Gorilla Glass Victus 2), glass back (Gorilla Glass) or eco leather back, aluminum frame"
-          },
-          {
-            name: "SIM",
-            subData: "Dual SIM (Nano-SIM, dual stand-by)"
-          },
-          {
-            name: "IP Status",
-            subData: "IP68 dust/water resistant (up to 1.5m for 30 min)"
-          },
-
-        ]
-
-      },
-      {
-        type: "DISPLAY",
-        subType: [
-          {
-            name: "Type",
-            subData: "Dynamic LTPO AMOLED 2X, 120Hz, HDR10+, 2600 nits (peak)"
-          },
-          {
-            name: "Size",
-            subData: "6.8 inches, 113.5 cm2 (~88.5% screen-to-body ratio)"
-          },
-          {
-            name: "Resolution",
-            subData: "1440 x 3120 pixels, 19.5:9 ratio (~505 ppi density)"
-          },
-          {
-            name: "Protection",
-            subData: "Corning Gorilla Glass Armor / Always-on display"
-          },
-          {
-            name: "IP Status",
-            subData: "IP68 dust/water resistant (up to 1.5m for 30 min)"
-          },
-
-        ]
-
-      },
-      {
-        type: "PLATFORM",
-        subType: [
-          {
-            name: "OS",
-            subData: "Android 14, One UI 6.1"
-          },
-          {
-            name: "Chipset",
-            subData: "Qualcomm SM8650-AC Snapdragon 8 Gen 3 (4 nm)"
-          },
-          {
-            name: "CPU",
-            subData: "8-core (1x3.39GHz Cortex-X4 & 3x3.1GHz Cortex-A720 & 2x2.9GHz Cortex-A720 & 2x2.2GHz Cortex-A520)"
-          },
-          {
-            name: "GPU",
-            subData: "Adreno 750 (1 GHz)"
-          },
-
-
-        ]
-
-      },
-      {
-        type: "MEMORY",
-        subType: [
-          {
-            name: "Card slot",
-            subData: "No"
-          },
-          {
-            name: "Internal",
-            subData: "256GB 12GB RAM, 512GB 12GB RAM, 1TB 12GB RAM / UFS 4.0"
-          },
-
-
-        ]
-
-      },
-      {
-        type: "MAIN CAMERA",
-        subType: [
-          {
-            name: "Quad",
-            subData: `200 MP, f/1.7, 24mm (wide), 1/1.3", 0.6µm, multi-directional PDAF, Laser AF, OIS`
-          },
-          {
-            name: "",
-            subData: "50 MP, f/3.4, 111mm (periscope telephoto), PDAF, OIS, 5x optical zoom"
-          },
-          {
-            name: "",
-            subData: `10 MP, f/2.4, 67mm (telephoto), 1/3.52", 1.12µm, Dual Pixel PDAF, OIS, 3x optical zoom`
-          },
-          {
-            name: "",
-            subData: `12 MP, f/2.2, 13mm, 120˚ (ultrawide), 1/2.55", 1.4µm, Dual Pixel PDAF, Super Steady video`
-          },
-          {
-            name: "Features",
-            subData: "LED flash, auto-HDR, panorama"
-          },
-          {
-            name: "Video",
-            subData: "8K@24/30fps, 4K@30/60/120fps, 1080p@30/60/240fps, 1080p@960fps, HDR10+, stereo sound rec., gyro-EIS"
-          },
-
-        ]
-
-      },
-      {
-        type: "SELFIE CAMERA",
-        subType: [
-          {
-            name: "Single",
-            subData: "12 MP, f/2.2, 26mm (wide), Dual Pixel PDAF"
-          },
-          {
-            name: "Features",
-            subData: "Dual video call, Auto-HDR, HDR10+"
-          },
-          {
-            name: "Video",
-            subData: "4K@30/60fps, 1080p@30fps"
-          },
-
-
-
-        ]
-
-      },
-      {
-        type: "SOUND",
-        subType: [
-          {
-            name: "Loudspeaker",
-            subData: "Yes, with stereo speakers"
-          },
-          {
-            name: "3.5mm jack",
-            subData: "No"
-          },
-          {
-            name: "",
-            subData: "32-bit/384kHz audio"
-          },
-          {
-            name: "",
-            subData: "Tuned by AKG"
-          },
-
-        ]
-
-      },
-      {
-        type: "COMMS",
-        subType: [
-          {
-            name: "WLAN",
-            subData: "Wi-Fi 802.11 a/b/g/n/ac/6e/7, tri-band, Wi-Fi Direc"
-          },
-          {
-            name: "Bluetooth",
-            subData: "5.3, A2DP, LE"
-          },
-          {
-            name: "Positioning",
-            subData: "GPS, GLONASS, BDS, GALILEO, QZSS"
-          },
-          {
-            name: "NFC",
-            subData: "Yes"
-          },
-          {
-            name: "Radio",
-            subData: "No"
-          },
-          {
-            name: "USB",
-            subData: "USB Type-C 3.2, DisplayPort 1.2, OTG"
-          },
-
-        ]
-
-      },
-      {
-        type: "FEATURES",
-        subType: [
-          {
-            name: "Sensors",
-            subData: "Fingerprint (under display, ultrasonic), accelerometer, gyro, proximity, compass, barometer"
-          },
-          {
-            name: "",
-            subData: "Samsung DeX, Samsung Wireless DeX (desktop experience support)"
-          },
-          {
-            name: "",
-            subData: "Ultra Wideband (UWB) support"
-          },
-
-
-        ]
-
-      },
-      {
-        type: "BATTERY",
-        subType: [
-          {
-            name: "Type",
-            subData: "Li-Ion 5000 mAh, non-removable"
-          },
-          {
-            name: "Charging",
-            subData: "45W wired, PD3.0, 65% in 30 min (advertised)"
-          },
-          {
-            name: "",
-            subData: "15W wireless (Qi/PMA)"
-          },
-          {
-            name: "",
-            subData: "4.5W reverse wireless"
-          },
-
-
-        ]
-
-      },
-      {
-        type: "MISC",
-        subType: [
-          {
-            name: "Colors",
-            subData: "Titanium Black, Titanium Gray, Titanium Violet, Titanium Yellow, Titanium Blue, Titanium Green, Titanium Orange"
-          },
-          {
-            name: "Models",
-            subData: "SM-S928B, SM-S928B/DS, SM-S928U, SM-S928U1, SM-S928W, SM-S928N, SM-S9280, SM-S928E, SM-S928E/DS"
-          },
-          {
-            name: "SAR",
-            subData: "1.26 W/kg (head)     0.62 W/kg (body)    "
-          },
-          {
-            name: "SAR EU",
-            subData: "1.06 W/kg (head)     1.30 W/kg (body)    "
-          },
-          {
-            name: "SAR EU",
-            subData: "1.06 W/kg (head)     1.30 W/kg (body)    "
-          },
-          {
-            name: "Price",
-            subData: "$ 1,290.00 / € 1,349.00 / £ 1,249.00 / ₹ 128,999 "
-          },
-
-
-
-        ]
-
-      },
-    ],
-
+  if (!deviceData) {
+    return <div>Loading...</div>; // Add a loading indicator while fetching data
   }
+
+  // const deviceData =
+  // {
+  //   "model": "Samsung Galaxy S24 Ultra",
+  //   "release_date": "2024, January 24",
+  //   "weight": "232g or 233g",
+  //   "thickness": "8.6mm",
+  //   "os_android": "Android 14",
+  //   "os_brand": "One UI 6.1",
+  //   "displaySize": "6.8",
+  //   "displayResolution": "1440 x 3120 pixels",
+  //   "expandable_storage": false,
+  //   "expandable_storage_type": "microSDXC",
+  //   "ram": "12GB",
+  //   "storage": "256GB/512GB/1TB",
+  //   data: [
+  //     {
+  //       type: "Network",
+  //       subType: [
+  //         {
+  //           name: "Technology",
+  //           subData: "GSM / CDMA / HSPA / EVDO / LTE / 5G"
+  //         }
+
+  //       ]
+
+  //     },
+  //     {
+  //       type: "LAUNCH",
+  //       subType: [
+  //         {
+  //           name: "Announced",
+  //           subData: "2024, January 08"
+  //         },
+  //         {
+  //           name: "Status",
+  //           subData: "Available. Released 2024, January 12"
+  //         },
+
+  //       ]
+
+  //     },
+  //     {
+  //       type: "BODY",
+  //       subType: [
+  //         {
+  //           name: "Dimensions",
+  //           subData: "164.3 x 76.2 x 9.5 mm (6.47 x 3.00 x 0.37 in)"
+  //         },
+  //         {
+  //           name: "Weight",
+  //           subData: "221 g (7.80 oz)"
+  //         },
+  //         {
+  //           name: "Build",
+  //           subData: "Glass front (Gorilla Glass Victus 2), glass back (Gorilla Glass) or eco leather back, aluminum frame"
+  //         },
+  //         {
+  //           name: "SIM",
+  //           subData: "Dual SIM (Nano-SIM, dual stand-by)"
+  //         },
+  //         {
+  //           name: "IP Status",
+  //           subData: "IP68 dust/water resistant (up to 1.5m for 30 min)"
+  //         },
+
+  //       ]
+
+  //     },
+  //     {
+  //       type: "DISPLAY",
+  //       subType: [
+  //         {
+  //           name: "Type",
+  //           subData: "Dynamic LTPO AMOLED 2X, 120Hz, HDR10+, 2600 nits (peak)"
+  //         },
+  //         {
+  //           name: "Size",
+  //           subData: "6.8 inches, 113.5 cm2 (~88.5% screen-to-body ratio)"
+  //         },
+  //         {
+  //           name: "Resolution",
+  //           subData: "1440 x 3120 pixels, 19.5:9 ratio (~505 ppi density)"
+  //         },
+  //         {
+  //           name: "Protection",
+  //           subData: "Corning Gorilla Glass Armor / Always-on display"
+  //         },
+  //         {
+  //           name: "IP Status",
+  //           subData: "IP68 dust/water resistant (up to 1.5m for 30 min)"
+  //         },
+
+  //       ]
+
+  //     },
+  //     {
+  //       type: "PLATFORM",
+  //       subType: [
+  //         {
+  //           name: "OS",
+  //           subData: "Android 14, One UI 6.1"
+  //         },
+  //         {
+  //           name: "Chipset",
+  //           subData: "Qualcomm SM8650-AC Snapdragon 8 Gen 3 (4 nm)"
+  //         },
+  //         {
+  //           name: "CPU",
+  //           subData: "8-core (1x3.39GHz Cortex-X4 & 3x3.1GHz Cortex-A720 & 2x2.9GHz Cortex-A720 & 2x2.2GHz Cortex-A520)"
+  //         },
+  //         {
+  //           name: "GPU",
+  //           subData: "Adreno 750 (1 GHz)"
+  //         },
+
+
+  //       ]
+
+  //     },
+  //     {
+  //       type: "MEMORY",
+  //       subType: [
+  //         {
+  //           name: "Card slot",
+  //           subData: "No"
+  //         },
+  //         {
+  //           name: "Internal",
+  //           subData: "256GB 12GB RAM, 512GB 12GB RAM, 1TB 12GB RAM / UFS 4.0"
+  //         },
+
+
+  //       ]
+
+  //     },
+  //     {
+  //       type: "MAIN CAMERA",
+  //       subType: [
+  //         {
+  //           name: "Quad",
+  //           subData: `200 MP, f/1.7, 24mm (wide), 1/1.3", 0.6µm, multi-directional PDAF, Laser AF, OIS`
+  //         },
+  //         {
+  //           name: "",
+  //           subData: "50 MP, f/3.4, 111mm (periscope telephoto), PDAF, OIS, 5x optical zoom"
+  //         },
+  //         {
+  //           name: "",
+  //           subData: `10 MP, f/2.4, 67mm (telephoto), 1/3.52", 1.12µm, Dual Pixel PDAF, OIS, 3x optical zoom`
+  //         },
+  //         {
+  //           name: "",
+  //           subData: `12 MP, f/2.2, 13mm, 120˚ (ultrawide), 1/2.55", 1.4µm, Dual Pixel PDAF, Super Steady video`
+  //         },
+  //         {
+  //           name: "Features",
+  //           subData: "LED flash, auto-HDR, panorama"
+  //         },
+  //         {
+  //           name: "Video",
+  //           subData: "8K@24/30fps, 4K@30/60/120fps, 1080p@30/60/240fps, 1080p@960fps, HDR10+, stereo sound rec., gyro-EIS"
+  //         },
+
+  //       ]
+
+  //     },
+  //     {
+  //       type: "SELFIE CAMERA",
+  //       subType: [
+  //         {
+  //           name: "Single",
+  //           subData: "12 MP, f/2.2, 26mm (wide), Dual Pixel PDAF"
+  //         },
+  //         {
+  //           name: "Features",
+  //           subData: "Dual video call, Auto-HDR, HDR10+"
+  //         },
+  //         {
+  //           name: "Video",
+  //           subData: "4K@30/60fps, 1080p@30fps"
+  //         },
+
+
+
+  //       ]
+
+  //     },
+  //     {
+  //       type: "SOUND",
+  //       subType: [
+  //         {
+  //           name: "Loudspeaker",
+  //           subData: "Yes, with stereo speakers"
+  //         },
+  //         {
+  //           name: "3.5mm jack",
+  //           subData: "No"
+  //         },
+  //         {
+  //           name: "",
+  //           subData: "32-bit/384kHz audio"
+  //         },
+  //         {
+  //           name: "",
+  //           subData: "Tuned by AKG"
+  //         },
+
+  //       ]
+
+  //     },
+  //     {
+  //       type: "COMMS",
+  //       subType: [
+  //         {
+  //           name: "WLAN",
+  //           subData: "Wi-Fi 802.11 a/b/g/n/ac/6e/7, tri-band, Wi-Fi Direc"
+  //         },
+  //         {
+  //           name: "Bluetooth",
+  //           subData: "5.3, A2DP, LE"
+  //         },
+  //         {
+  //           name: "Positioning",
+  //           subData: "GPS, GLONASS, BDS, GALILEO, QZSS"
+  //         },
+  //         {
+  //           name: "NFC",
+  //           subData: "Yes"
+  //         },
+  //         {
+  //           name: "Radio",
+  //           subData: "No"
+  //         },
+  //         {
+  //           name: "USB",
+  //           subData: "USB Type-C 3.2, DisplayPort 1.2, OTG"
+  //         },
+
+  //       ]
+
+  //     },
+  //     {
+  //       type: "FEATURES",
+  //       subType: [
+  //         {
+  //           name: "Sensors",
+  //           subData: "Fingerprint (under display, ultrasonic), accelerometer, gyro, proximity, compass, barometer"
+  //         },
+  //         {
+  //           name: "",
+  //           subData: "Samsung DeX, Samsung Wireless DeX (desktop experience support)"
+  //         },
+  //         {
+  //           name: "",
+  //           subData: "Ultra Wideband (UWB) support"
+  //         },
+
+
+  //       ]
+
+  //     },
+  //     {
+  //       type: "BATTERY",
+  //       subType: [
+  //         {
+  //           name: "Type",
+  //           subData: "Li-Ion 5000 mAh, non-removable"
+  //         },
+  //         {
+  //           name: "Charging",
+  //           subData: "45W wired, PD3.0, 65% in 30 min (advertised)"
+  //         },
+  //         {
+  //           name: "",
+  //           subData: "15W wireless (Qi/PMA)"
+  //         },
+  //         {
+  //           name: "",
+  //           subData: "4.5W reverse wireless"
+  //         },
+
+
+  //       ]
+
+  //     },
+  //     {
+  //       type: "MISC",
+  //       subType: [
+  //         {
+  //           name: "Colors",
+  //           subData: "Titanium Black, Titanium Gray, Titanium Violet, Titanium Yellow, Titanium Blue, Titanium Green, Titanium Orange"
+  //         },
+  //         {
+  //           name: "Models",
+  //           subData: "SM-S928B, SM-S928B/DS, SM-S928U, SM-S928U1, SM-S928W, SM-S928N, SM-S9280, SM-S928E, SM-S928E/DS"
+  //         },
+  //         {
+  //           name: "SAR",
+  //           subData: "1.26 W/kg (head)     0.62 W/kg (body)    "
+  //         },
+  //         {
+  //           name: "SAR EU",
+  //           subData: "1.06 W/kg (head)     1.30 W/kg (body)    "
+  //         },
+  //         {
+  //           name: "SAR EU",
+  //           subData: "1.06 W/kg (head)     1.30 W/kg (body)    "
+  //         },
+  //         {
+  //           name: "Price",
+  //           subData: "$ 1,290.00 / € 1,349.00 / £ 1,249.00 / ₹ 128,999 "
+  //         },
+
+
+
+  //       ]
+
+  //     },
+  //   ],
+
+  // }
   const tabData = [
     {
       tabName: 'specifications',
@@ -405,6 +427,10 @@ const PhoneDetails = () => {
     slidesToShow: 1,
     slidesToScroll: 1
   };
+const formatPropertyName = (name) => {
+  // Replace underscores with spaces and capitalize each word
+  return name.replace(/_/g, ' ').replace(/\b\w/g, (match) => match.toUpperCase());
+};
   return (
     <div>
       <Navbar />
@@ -492,10 +518,10 @@ const PhoneDetails = () => {
 
 
                   <div>
-                    <div className='w-full  bg-white/30 bg-opacity-40 md:h-[400px] h-[320px] z-10 relative bg-no-repeat  bg-center object-cover ' style={{ backgroundImage: `url(${mobile1})` }}>
+                    <div className='w-full  bg-white/30 bg-opacity-40 md:h-[400px] h-[320px] z-10 relative bg-no-repeat  bg-center object-cover ' style={{ backgroundImage: `url(${deviceData?.banner_img})` }}>
                       <div className='md:h-[50px] h-8 w-full bg-black absolute top-0 flex z-[2] justify-between px-3 md:px-6 items-center bg-opacity-50 backdrop-blur-[80px]'>
                         <h3 className='text-white lg:text-3xl md:text-xl text-base font-sans font-inter'>
-                          {devicesData.model ? devicesData.model : "No Name Found"}
+                          {deviceData.deviceName ? deviceData.deviceName : "No Name Found"}
                         </h3>
                         <div className='flex items-center'>
 
@@ -531,7 +557,7 @@ const PhoneDetails = () => {
                       </div>
                       <div className='pt-[40px] md:pt-[60px] pb-[10px] flex md:gap-2 gap-2 md:justify-start justify-center  backdrop-blur-[100px] relative z-[1] h-full'>
                         <div className='md:max-w-[270px] md:min-w-[270px] max-w-[198.5px] w-full cursor-pointer' onClick={() => setTab('pictures')}>
-                          <img className='md:max-w-[270px] md:min-w-[270px] max-w-full  md:h-[280px] min-h-[200px] h-[200px] w-full' src={mobile1} alt="" />
+                          <img className='md:max-w-[270px] md:min-w-[270px] max-w-full  md:h-[280px] min-h-[200px] h-[200px] w-full object-contain' src={deviceData?.banner_img} alt="" />
                         </div>
 
                         <div className='md:flex hidden flex-col justify-between h-[85%] w-[95%]'>
@@ -543,7 +569,7 @@ const PhoneDetails = () => {
                                 </div>
                                 <p className='font-poppins  lg:text-sm text-[10px] font-light'>
                                   {
-                                    devicesData.release_date ? devicesData.release_date : "No Data Found"
+                                    deviceData.release_date ? deviceData.release_date : "No Data Found"
                                   }
                                 </p>
                               </div>
@@ -552,21 +578,26 @@ const PhoneDetails = () => {
                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="currentColor"><path d="M7 4V20H17V4H7ZM6 2H18C18.5523 2 19 2.44772 19 3V21C19 21.5523 18.5523 22 18 22H6C5.44772 22 5 21.5523 5 21V3C5 2.44772 5.44772 2 6 2ZM12 17C12.5523 17 13 17.4477 13 18C13 18.5523 12.5523 19 12 19C11.4477 19 11 18.5523 11 18C11 17.4477 11.4477 17 12 17Z"></path></svg>
                                 </div>
                                 <p className='font-poppins lg:text-sm text-[10px] font-light'>
-                                  {devicesData?.weight}, {devicesData?.thickness} thickness
+                                  {deviceData?.weight}
+                                  {
+                                    deviceData?.thickness && <span className='pl-2'>{deviceData?.thickness}, thickness </span>
+                                  }
+
+                                  {/* {deviceData?.thickness && (deviceData?.thickness)`, thickness`} */}
                                 </p>
                               </div>
                               <div className='flex items-center gap-2 pt-2'>
                                 <div className='lg:w-[18px] w-3  lg:h-[18px] h-3'>
                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M23 12L15.9289 19.0711L14.5147 17.6569L20.1716 12L14.5147 6.34317L15.9289 4.92896L23 12ZM3.82843 12L9.48528 17.6569L8.07107 19.0711L1 12L8.07107 4.92896L9.48528 6.34317L3.82843 12Z"></path></svg>        </div>
                                 <p className='font-poppins lg:text-sm text-[10px] font-light'>
-                                  {devicesData.os_android}, {devicesData.os_brand}
+                                  {deviceData.os_android}, {deviceData.os_brand}
                                 </p>
                               </div>
                               <div className='flex items-center gap-2 pt-2'>
                                 <div className='lg:w-[18px] w-3  lg:h-[18px] h-3'>
                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="currentColor"><path d="M6 18H18V6H6V18ZM14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM8 8H16V16H8V8Z"></path></svg>  </div>
                                 <p className='font-poppins lg:text-sm text-[10px] font-light'>
-                                  {devicesData?.storage} storage, {devicesData?.expandable_storage ? devicesData.expandable_storage_type : "no card slot"}
+                                  {deviceData?.storage} storage, {deviceData?.expandable_storage ? deviceData.expandable_storage_type : "no card slot"}
 
                                 </p>
                               </div>
@@ -600,30 +631,30 @@ const PhoneDetails = () => {
 
                               </div>
 
-                              <p className='font-poppins lg:text-xl text-sm font-medium'>{devicesData?.displaySize}"</p>
-                              <p className='font-poppins  lg:text-sm text-[8px] font-light'>{devicesData?.displayResolution}</p>
+                              <p className='font-poppins lg:text-xl text-sm font-medium'>{deviceData?.displaySize}"</p>
+                              <p className='font-poppins  lg:text-sm text-[8px] font-light'>{deviceData?.displayResolution}</p>
                             </div>
                             <div className='flex-col justify-start items-start'>
                               <div className='lg:max-w-[36px] max-w-5 lg:h-[36px] h-5 w-full '>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="currentColor"><path d="M2 6.00087C2 5.44811 2.45531 5 2.9918 5H21.0082C21.556 5 22 5.44463 22 6.00087V19.9991C22 20.5519 21.5447 21 21.0082 21H2.9918C2.44405 21 2 20.5554 2 19.9991V6.00087ZM4 7V19H20V7H4ZM14 16C15.6569 16 17 14.6569 17 13C17 11.3431 15.6569 10 14 10C12.3431 10 11 11.3431 11 13C11 14.6569 12.3431 16 14 16ZM14 18C11.2386 18 9 15.7614 9 13C9 10.2386 11.2386 8 14 8C16.7614 8 19 10.2386 19 13C19 15.7614 16.7614 18 14 18ZM4 2H10V4H4V2Z"></path></svg>
                               </div>
 
-                              <p className='font-poppins lg:text-xl text-sm font-medium'>200  <span className='lg:text-sm text-[8px]'>MP</span> </p>
-                              <p className='font-poppins  lg:text-sm text-[8px] font-light'>4320p</p>
+                              <p className='font-poppins lg:text-xl text-sm font-medium'>{deviceData?.backCamera}  <span className='lg:text-sm text-[8px]'>MP</span> </p>
+                              <p className='font-poppins  lg:text-sm text-[8px] font-light'>{deviceData?.backCameraVideo}</p>
                             </div>
                             <div>
                               <div className='lg:max-w-[36px] max-w-5 lg:h-[36px] h-5 w-full'>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="rgba(0,0,0,1)"><path d="M14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM7 7V11H11V7H7Z"></path></svg>
                               </div>
-                              <p className='font-poppins lg:text-xl text-sm font-medium'>12 <span className='lg:text-sm text-[8px]'>GB RAM</span></p>
-                              <p className='font-poppins  lg:text-sm text-[8px] font-light'>Snapdragon 8 Gen 3</p>
+                              <p className='font-poppins lg:text-xl text-sm font-medium'>{deviceData?.ram} <span className='lg:text-sm text-[8px]'>GB RAM</span></p>
+                              <p className='font-poppins  lg:text-sm text-[8px] font-light'>{deviceData?.processor}</p>
                             </div>
                             <div>
                               <div className='lg:max-w-[36px] max-w-5 lg:h-[36px] h-5 w-full'>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="rgba(0,0,0,1)"><path d="M9 4V3C9 2.44772 9.44772 2 10 2H14C14.5523 2 15 2.44772 15 3V4H18C18.5523 4 19 4.44772 19 5V21C19 21.5523 18.5523 22 18 22H6C5.44772 22 5 21.5523 5 21V5C5 4.44772 5.44772 4 6 4H9ZM13 12V7L8 14H11V19L16 12H13Z"></path></svg>
                               </div>
-                              <p className='font-poppins lg:text-xl text-sm font-medium'>5000 <span className='lg:text-sm text-[8px]'>mAh</span></p>
-                              <p className='font-poppins  lg:text-sm text-[8px] font-light'>Li-Ion</p>
+                              <p className='font-poppins lg:text-xl text-sm font-medium'>{deviceData?.battery} <span className='lg:text-sm text-[8px]'>mAh Li-Ion</span></p>
+                              <p className='font-poppins  lg:text-sm text-[8px] font-light flex items-center gap-1'> <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3.92887 4.92896L5.34315 6.34323C3.89543 7.79094 3 9.79094 3 12.0001C3 14.2092 3.89543 16.2092 5.34315 17.6569L3.92887 19.0712C2.11925 17.2616 1 14.7616 1 12.0001C1 9.23858 2.11925 6.73858 3.92887 4.92896ZM20.0711 4.92896C21.8808 6.73858 23 9.23858 23 12.0001C23 14.7616 21.8808 17.2616 20.0711 19.0712L18.6569 17.6569C20.1046 16.2092 21 14.2092 21 12.0001C21 9.79145 20.105 7.79186 18.6579 6.34423L20.0711 4.92896ZM13 5.00008V11.0001H16L11 19.0001V13.0001H8L13 5.00008ZM6.75736 7.75744L8.17157 9.17165C7.44771 9.89551 7 10.8955 7 12.0001C7 13.1046 7.44771 14.1046 8.17157 14.8285L6.75736 16.2427C5.67157 15.1569 5 13.6569 5 12.0001C5 10.3432 5.67157 8.84323 6.75736 7.75744ZM17.2436 7.75842C18.3288 8.84413 19 10.3437 19 12.0001C19 13.6569 18.3284 15.1569 17.2426 16.2427L15.8284 14.8285C16.5523 14.1046 17 13.1046 17 12.0001C17 10.896 16.5527 9.89643 15.8294 9.17265L17.2436 7.75842Z"></path></svg></span> {deviceData?.chargingSpeed}</p>
                             </div>
                           </div>
                         </div>
@@ -643,8 +674,8 @@ const PhoneDetails = () => {
                                   </div>
 
                                   <div>
-                                    <p className='font-poppins text-base font-medium'>{devicesData?.displaySize}"</p>
-                                    <p className='font-poppins  text-xs font-light'>{devicesData?.displayResolution}</p>
+                                    <p className='font-poppins text-base font-medium'>{deviceData?.displaySize}"</p>
+                                    <p className='font-poppins  text-xs font-light'>{deviceData?.displayResolution}</p>
                                   </div>
                                 </div>
                                 <div className='flex items-center gap-1'>
@@ -698,7 +729,7 @@ const PhoneDetails = () => {
 
                                   <div>
                                     <p className='font-poppins text-xs '> {
-                                      devicesData.release_date ? devicesData.release_date : "No Data Found"
+                                      deviceData.release_date ? deviceData.release_date : "No Data Found"
                                     }</p>
 
                                   </div>
@@ -712,7 +743,7 @@ const PhoneDetails = () => {
 
                                   <div>
                                     <p className='font-poppins text-xs'>
-                                      {devicesData?.weight}, {devicesData?.thickness} thickness
+                                      {deviceData?.weight}, {deviceData?.thickness} thickness
                                     </p>
                                   </div>
                                 </div>
@@ -725,7 +756,7 @@ const PhoneDetails = () => {
 
                                   <div>
                                     <p className='font-poppins text-xs'>
-                                      {devicesData.os_android}, {devicesData.os_brand}
+                                      {deviceData.os_android}, {deviceData.os_brand}
                                     </p>
                                   </div>
                                 </div>
@@ -737,7 +768,7 @@ const PhoneDetails = () => {
 
                                   <div>
                                     <p className='font-poppins text-xs'>
-                                      {devicesData?.storage} storage, {devicesData?.expandable_storage ? devicesData.expandable_storage_type : "no card slot"}
+                                      {deviceData?.storage} storage, {deviceData?.expandable_storage ? deviceData.expandable_storage_type : "no card slot"}
                                     </p>
                                   </div>
                                 </div>
@@ -795,22 +826,20 @@ const PhoneDetails = () => {
                         // specifications-tab
                         <div className='w-full' >
                           {
-                            devicesData.data.map((d, i) => (
-                              <div className={`border-b-4 md:border-b-[8px] border-gray-100 py-1 md:py-2 flex items-start gap-2 md:gap-4 ${i === devicesData.data.length - 1 ? 'last-child-no-border' : ''}`} key={i}>
-                                <p className='uppercase text-sky-700 text-sm md:text-lg max-w-[80px] md:max-w-[100px] w-full py-0 md:py-1'>{d.type}</p>
-                                <div className='flex-col w-full'>
-                                  {
-                                    d.subType.map((s, j) => (
-                                      <div key={j} className={`flex items-start w-full ${j === d.subType.length - 1 ? 'last-child-no-border' : ''} border-b-[1px] py-[2px] md:py-1`}>
-                                        <p className='max-w-[90px] md:max-w-[150px] w-full capitalize text-xs md:text-base text-gray-500'>{s.name}</p>
-                                        <p className='text-gray-500 text-[10px] md:text-sm'>{s.subData}</p>
-                                      </div>
-                                    ))
-                                  }
-                                </div>
-                              </div>
-                            ))
-                          }
+  deviceData.data.map((d, i) => (
+    <div className={`border-b-4 md:border-b-[8px] border-gray-100 py-1 md:py-2 flex items-start gap-2 md:gap-4 ${i === deviceData.data.length - 1 ? 'last-child-no-border' : ''}`} key={i}>
+      <p className='uppercase text-sky-700 text-sm md:text-lg max-w-[80px] md:max-w-[100px] w-full py-0 md:py-1'>{formatPropertyName(d.type)}</p>
+      <div className='flex-col w-full'>
+        {d.subType.map((s, j) => (
+          <div key={j} className={`flex items-start w-full ${j === d.subType.length - 1 ? 'last-child-no-border' : ''} border-b-[1px] py-[2px] md:py-1`}>
+            <p className='max-w-[90px] md:max-w-[150px] w-full capitalize text-xs md:text-base text-gray-500'>{formatPropertyName(s.name)}</p>
+            <p className='text-gray-500 text-[10px] md:text-sm'>{s.subData}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  ))
+}
 
 
 
@@ -824,11 +853,11 @@ const PhoneDetails = () => {
                       {
                         tab === 'pictures' && <div>
                           <div className=''>
-                            <p className='relative md:text-2xl text-sm font-light pt-4 pl-2 md:pl-0 after:absolute after:h-[20px] md:after:h-10 after:w-1 after:bg-black after:left-[-4px] md:after:left-[-25px] after:top-[14px] '>Samsung Galaxy S24 Ultra official images</p>
+                            <p className='relative md:text-2xl text-sm font-light pt-4 pl-2 md:pl-0 after:absolute after:h-[20px] md:after:h-10 after:w-1 after:bg-black after:left-[-4px] md:after:left-[-25px] after:top-[14px] '>{deviceData?.deviceName} official images</p>
                           </div>
                           <div className='flex flex-col gap-2 md:gap-6 mt-5 px-4 md:px-0'>
                             {
-                              images.map((image, i) => <img className='w-full h-[400px] object-contain ' src={image.image} alt="" />)
+                              deviceData.galleryPhoto.map((image, i) => <img className='w-full h-[400px] object-contain ' src={image} alt="" />)
                             }
 
                           </div>
