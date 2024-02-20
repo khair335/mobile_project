@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import Slider from "react-slick";
 import './PhoneDetails.css'
 import axios from 'axios';
+import PhoneYoutubeVideo from '../../component/PhoneYoutubeVideo/PhoneYoutubeVideo';
 const PhoneDetails = () => {
   const state = useSelector((state) => state);
 
@@ -507,7 +508,7 @@ const formatPropertyName = (name) => {
 
               </div>
               <Advertisement_height_250 />
-
+              <PhoneYoutubeVideo title={deviceData?.deviceName}/>
             </div>
 
             {
