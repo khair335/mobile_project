@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../../component/Navbar/Navbar';
 import Advertisement_Width_Full from '../../component/Advertisement_Width_Full/Advertisement_Width_Full';
 import { Link, Outlet } from 'react-router-dom';
@@ -9,7 +9,9 @@ import "react-range-slider-input/dist/style.css";
 import mobile1 from '../../assets/samsung-galaxy-s24-ultra-5g-sm-s928-0.jpg'
 import PhoneFind from '../../component/PhoneFind/PhoneFind';
 import PhoneSearchPanel from '../../component/PhoneSearchPanel/PhoneSearchPanel';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchDevices } from '../../redux/actions/deviceAction';
+// import { fetchDevices } from '../actions/deviceActions';
 const Home = () => {
 
   const [searchPanel, setSearchPanel] = useState(false);
@@ -124,6 +126,18 @@ const Home = () => {
 
   const sortedTopTenMobile = topTenMobile.sort((a, b) => b.hit - a.hit);
   const sortedTopTenMobileFan = topTenMobileFan.sort((a, b) => b.fav - a.fav);
+
+ // useDispatch hook to dispatch actions
+  const dispatch = useDispatch();
+
+  // useSelector hook to access the Redux store state
+  const { devices, loading, error } = useSelector((state) => state.device);
+console.log("devices-----------",devices);
+  // useEffect hook to fetch devices on component mount
+  useEffect(() => {
+    // Dispatch the fetchDevices action
+    dispatch(fetchDevices());
+  }, [dispatch]);
   return (
     <div>
       <Navbar />

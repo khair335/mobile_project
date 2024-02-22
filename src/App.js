@@ -5,6 +5,8 @@ import Brand from './pages/Brand/Brand';
 import PhoneDetails from './pages/PhoneDetails/PhoneDetails';
 
 
+
+
 function App() {
 
   return (
