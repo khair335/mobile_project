@@ -2,7 +2,7 @@ import { createStore, combineReducers, applyMiddleware } from "redux";
 import { composeWithDevTools } from "@redux-devtools/extension";
 import searchReducer from "./reducers/searchReducer";
 import deviceReducer from "./reducers/deviceReducer";
-import thunk from "redux-thunk"; // Import Thunk middleware if not already done
+import {thunk} from 'redux-thunk'; // Import Thunk middleware if not already done
 
 // Combine your reducers
 const rootReducer = combineReducers({

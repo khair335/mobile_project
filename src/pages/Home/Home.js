@@ -15,8 +15,9 @@ import { fetchDevices } from '../../redux/actions/deviceAction';
 const Home = () => {
 
   const [searchPanel, setSearchPanel] = useState(false);
-  const state = useSelector((state) => state);
-
+  const state = useSelector((state) => state.search);
+  const rootState = useSelector((state) => state);
+  console.log("statessssss",rootState);
   const topTenMobile = [
     {
       id: 1,
@@ -127,12 +128,12 @@ const Home = () => {
   const sortedTopTenMobile = topTenMobile.sort((a, b) => b.hit - a.hit);
   const sortedTopTenMobileFan = topTenMobileFan.sort((a, b) => b.fav - a.fav);
 
- // useDispatch hook to dispatch actions
+  // useDispatch hook to dispatch actions
   const dispatch = useDispatch();
 
   // useSelector hook to access the Redux store state
   const { devices, loading, error } = useSelector((state) => state.device);
-console.log("devices-----------",devices);
+  console.log("devices-----------", devices);
   // useEffect hook to fetch devices on component mount
   useEffect(() => {
     // Dispatch the fetchDevices action
@@ -146,8 +147,8 @@ console.log("devices-----------",devices);
         <div className='max-w-[1440px] w-full mx-auto'>
           <div className='flex flex-col md:flex-row gap-3 pt-0 sm:pt-4 px-0 sm:px-3'>
 
-            <div className={`md:hidden  ${state.mobileSearch ? 'block':'hidden'}`}>
-              <PhoneFind/>
+            <div className={`md:hidden  ${state.mobileSearch ? 'block' : 'hidden'}`}>
+              <PhoneFind />
             </div>
             <div className='lg:max-w-[428px] max-w-[330px] w-full md:block hidden  '>
               <PhoneFind />
@@ -219,7 +220,7 @@ console.log("devices-----------",devices);
 
             {
               state.searchPanel ?
-                <PhoneSearchPanel/>
+                <PhoneSearchPanel />
                 :
                 <div className=' w-full '>
 
@@ -227,48 +228,20 @@ console.log("devices-----------",devices);
                   <div className='px-[6px] sm:px-0'>
                     <div className='mb-10'>
                       <p className='pb-2 font-inter font-medium text-2xl relative after:absolute after:h-[3px] after:w-5 after:bottom-2 after:bg-black'>Latest</p>
-                      <div className='m-0 sm:m-5 flex flex-wrap gap-y-6 gap-x-2 sm:gap-x-2'>
+                      <div className='m-0 sm:m-5 flex flex-wrap gap-y-6 gap-x-2  sm:gap-x-2 items-center'>
 
-                        <Link to="/brand/samsung/samsung_galaxy_s24_ultra" className='max-w-[110px] sm:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                          <div className='max-w-[135px] w-full '>
-                            <img className='w-full' src={mobile1} alt="" srcset="" />
-                          </div>
-                          <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                            Galaxy S24 Ultra
-                          </p>
-                        </Link>
-                        <div className='max-w-[110px] sm:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                          <div className='max-w-[135px] w-full '>
-                            <img className='w-full' src={mobile1} alt="" srcset="" />
-                          </div>
-                          <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                            Galaxy S24 Ultra
-                          </p>
-                        </div>
-                        <div className='max-w-[110px] sm:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                          <div className='max-w-[135px] w-full '>
-                            <img className='w-full' src={mobile1} alt="" srcset="" />
-                          </div>
-                          <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                            Galaxy S24 Ultra
-                          </p>
-                        </div>
-                        <div className='max-w-[110px] sm:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                          <div className='max-w-[135px] w-full '>
-                            <img className='w-full' src={mobile1} alt="" srcset="" />
-                          </div>
-                          <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                            Galaxy S24 Ultra
-                          </p>
-                        </div>
-                        <div className='max-w-[110px] sm:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                          <div className='max-w-[135px] w-full '>
-                            <img className='w-full' src={mobile1} alt="" srcset="" />
-                          </div>
-                          <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                            Galaxy S24 Ultra
-                          </p>
-                        </div>
+
+                        {
+                          devices.map((d, i) => <Link to={`/${d.brand.toLowerCase()}/${d._id}`} className='max-w-[110px] sm:max-w-[180px] w-full flex flex-col justify-center items-center cursor-pointer group'>
+                            <div className='max-w-[135px]  w-full '>
+                              <img className='w-full h-[135px] object-contain' src={d.banner_img} alt="" srcset="" />
+                            </div>
+                            <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1 w-full'>
+                              {d.deviceName}
+                            </p>
+                          </Link>)
+                        }
+
 
 
                       </div>

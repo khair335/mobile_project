@@ -12,23 +12,43 @@ import mobile4 from '../../assets/samsung-galaxy-s24-ultra-5g-sm-s928-3.jpg'
 import mobile5 from '../../assets/samsung-galaxy-s24-ultra-5g-sm-s928-4.jpg'
 import PhoneFind from '../../component/PhoneFind/PhoneFind';
 import PhoneSearchPanel from '../../component/PhoneSearchPanel/PhoneSearchPanel';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Slider from "react-slick";
 import './PhoneDetails.css'
 import axios from 'axios';
 import PhoneYoutubeVideo from '../../component/PhoneYoutubeVideo/PhoneYoutubeVideo';
+import { Link, useLocation, useParams } from 'react-router-dom';
+import Loading from '../../component/Loading/Loading';
+import { fetchBrandDevices } from '../../redux/actions/deviceAction';
 const PhoneDetails = () => {
-  const state = useSelector((state) => state);
+
+  const { phoneId } = useParams()
+
+  const state = useSelector((state) => state.search);
+  const location = useLocation();
+  const pathname = location?.pathname
+
+
+  const extractNameFromPath = (pathname) => {
+    const parts = pathname.split('/');
+    return parts.length >= 2 ? parts[1] : 'defaultName';
+  };
+  const brandName = extractNameFromPath(pathname);
+  const brandWiseDevice = useSelector((state) => state.device.brandDevices);
+  const rootStae = useSelector((state) => state.device);
+  console.log("brandWiseDevice999",rootStae);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchBrandDevices(brandName.toLocaleLowerCase()))
+  }, [phoneId]);
 
   const [shareModal, setShareModal] = useState(false);
   const [tab, setTab] = useState('specifications')
 
   const [deviceData, setDeviceData] = useState(null);
-  console.log("deviceData",deviceData);
-  useEffect(() => {
-    const deviceId = '65d354929eae25c5d6f410d6';
-    const apiUrl = `http://localhost:2000/api/devicesData/${deviceId}`;
 
+  useEffect(() => {
+    const apiUrl = `http://localhost:2000/api/devicesData/${phoneId}`;
     axios.get(apiUrl)
       .then(response => {
         console.log('Axios Response:', response.data);
@@ -39,333 +59,11 @@ const PhoneDetails = () => {
       });
   }, []);
 
-  console.log('Device Data:', deviceData);
 
   if (!deviceData) {
-    return <div>Loading...</div>; // Add a loading indicator while fetching data
+    return <Loading />;
   }
 
-  // const deviceData =
-  // {
-  //   "model": "Samsung Galaxy S24 Ultra",
-  //   "release_date": "2024, January 24",
-  //   "weight": "232g or 233g",
-  //   "thickness": "8.6mm",
-  //   "os_android": "Android 14",
-  //   "os_brand": "One UI 6.1",
-  //   "displaySize": "6.8",
-  //   "displayResolution": "1440 x 3120 pixels",
-  //   "expandable_storage": false,
-  //   "expandable_storage_type": "microSDXC",
-  //   "ram": "12GB",
-  //   "storage": "256GB/512GB/1TB",
-  //   data: [
-  //     {
-  //       type: "Network",
-  //       subType: [
-  //         {
-  //           name: "Technology",
-  //           subData: "GSM / CDMA / HSPA / EVDO / LTE / 5G"
-  //         }
-
-  //       ]
-
-  //     },
-  //     {
-  //       type: "LAUNCH",
-  //       subType: [
-  //         {
-  //           name: "Announced",
-  //           subData: "2024, January 08"
-  //         },
-  //         {
-  //           name: "Status",
-  //           subData: "Available. Released 2024, January 12"
-  //         },
-
-  //       ]
-
-  //     },
-  //     {
-  //       type: "BODY",
-  //       subType: [
-  //         {
-  //           name: "Dimensions",
-  //           subData: "164.3 x 76.2 x 9.5 mm (6.47 x 3.00 x 0.37 in)"
-  //         },
-  //         {
-  //           name: "Weight",
-  //           subData: "221 g (7.80 oz)"
-  //         },
-  //         {
-  //           name: "Build",
-  //           subData: "Glass front (Gorilla Glass Victus 2), glass back (Gorilla Glass) or eco leather back, aluminum frame"
-  //         },
-  //         {
-  //           name: "SIM",
-  //           subData: "Dual SIM (Nano-SIM, dual stand-by)"
-  //         },
-  //         {
-  //           name: "IP Status",
-  //           subData: "IP68 dust/water resistant (up to 1.5m for 30 min)"
-  //         },
-
-  //       ]
-
-  //     },
-  //     {
-  //       type: "DISPLAY",
-  //       subType: [
-  //         {
-  //           name: "Type",
-  //           subData: "Dynamic LTPO AMOLED 2X, 120Hz, HDR10+, 2600 nits (peak)"
-  //         },
-  //         {
-  //           name: "Size",
-  //           subData: "6.8 inches, 113.5 cm2 (~88.5% screen-to-body ratio)"
-  //         },
-  //         {
-  //           name: "Resolution",
-  //           subData: "1440 x 3120 pixels, 19.5:9 ratio (~505 ppi density)"
-  //         },
-  //         {
-  //           name: "Protection",
-  //           subData: "Corning Gorilla Glass Armor / Always-on display"
-  //         },
-  //         {
-  //           name: "IP Status",
-  //           subData: "IP68 dust/water resistant (up to 1.5m for 30 min)"
-  //         },
-
-  //       ]
-
-  //     },
-  //     {
-  //       type: "PLATFORM",
-  //       subType: [
-  //         {
-  //           name: "OS",
-  //           subData: "Android 14, One UI 6.1"
-  //         },
-  //         {
-  //           name: "Chipset",
-  //           subData: "Qualcomm SM8650-AC Snapdragon 8 Gen 3 (4 nm)"
-  //         },
-  //         {
-  //           name: "CPU",
-  //           subData: "8-core (1x3.39GHz Cortex-X4 & 3x3.1GHz Cortex-A720 & 2x2.9GHz Cortex-A720 & 2x2.2GHz Cortex-A520)"
-  //         },
-  //         {
-  //           name: "GPU",
-  //           subData: "Adreno 750 (1 GHz)"
-  //         },
-
-
-  //       ]
-
-  //     },
-  //     {
-  //       type: "MEMORY",
-  //       subType: [
-  //         {
-  //           name: "Card slot",
-  //           subData: "No"
-  //         },
-  //         {
-  //           name: "Internal",
-  //           subData: "256GB 12GB RAM, 512GB 12GB RAM, 1TB 12GB RAM / UFS 4.0"
-  //         },
-
-
-  //       ]
-
-  //     },
-  //     {
-  //       type: "MAIN CAMERA",
-  //       subType: [
-  //         {
-  //           name: "Quad",
-  //           subData: `200 MP, f/1.7, 24mm (wide), 1/1.3", 0.6µm, multi-directional PDAF, Laser AF, OIS`
-  //         },
-  //         {
-  //           name: "",
-  //           subData: "50 MP, f/3.4, 111mm (periscope telephoto), PDAF, OIS, 5x optical zoom"
-  //         },
-  //         {
-  //           name: "",
-  //           subData: `10 MP, f/2.4, 67mm (telephoto), 1/3.52", 1.12µm, Dual Pixel PDAF, OIS, 3x optical zoom`
-  //         },
-  //         {
-  //           name: "",
-  //           subData: `12 MP, f/2.2, 13mm, 120˚ (ultrawide), 1/2.55", 1.4µm, Dual Pixel PDAF, Super Steady video`
-  //         },
-  //         {
-  //           name: "Features",
-  //           subData: "LED flash, auto-HDR, panorama"
-  //         },
-  //         {
-  //           name: "Video",
-  //           subData: "8K@24/30fps, 4K@30/60/120fps, 1080p@30/60/240fps, 1080p@960fps, HDR10+, stereo sound rec., gyro-EIS"
-  //         },
-
-  //       ]
-
-  //     },
-  //     {
-  //       type: "SELFIE CAMERA",
-  //       subType: [
-  //         {
-  //           name: "Single",
-  //           subData: "12 MP, f/2.2, 26mm (wide), Dual Pixel PDAF"
-  //         },
-  //         {
-  //           name: "Features",
-  //           subData: "Dual video call, Auto-HDR, HDR10+"
-  //         },
-  //         {
-  //           name: "Video",
-  //           subData: "4K@30/60fps, 1080p@30fps"
-  //         },
-
-
-
-  //       ]
-
-  //     },
-  //     {
-  //       type: "SOUND",
-  //       subType: [
-  //         {
-  //           name: "Loudspeaker",
-  //           subData: "Yes, with stereo speakers"
-  //         },
-  //         {
-  //           name: "3.5mm jack",
-  //           subData: "No"
-  //         },
-  //         {
-  //           name: "",
-  //           subData: "32-bit/384kHz audio"
-  //         },
-  //         {
-  //           name: "",
-  //           subData: "Tuned by AKG"
-  //         },
-
-  //       ]
-
-  //     },
-  //     {
-  //       type: "COMMS",
-  //       subType: [
-  //         {
-  //           name: "WLAN",
-  //           subData: "Wi-Fi 802.11 a/b/g/n/ac/6e/7, tri-band, Wi-Fi Direc"
-  //         },
-  //         {
-  //           name: "Bluetooth",
-  //           subData: "5.3, A2DP, LE"
-  //         },
-  //         {
-  //           name: "Positioning",
-  //           subData: "GPS, GLONASS, BDS, GALILEO, QZSS"
-  //         },
-  //         {
-  //           name: "NFC",
-  //           subData: "Yes"
-  //         },
-  //         {
-  //           name: "Radio",
-  //           subData: "No"
-  //         },
-  //         {
-  //           name: "USB",
-  //           subData: "USB Type-C 3.2, DisplayPort 1.2, OTG"
-  //         },
-
-  //       ]
-
-  //     },
-  //     {
-  //       type: "FEATURES",
-  //       subType: [
-  //         {
-  //           name: "Sensors",
-  //           subData: "Fingerprint (under display, ultrasonic), accelerometer, gyro, proximity, compass, barometer"
-  //         },
-  //         {
-  //           name: "",
-  //           subData: "Samsung DeX, Samsung Wireless DeX (desktop experience support)"
-  //         },
-  //         {
-  //           name: "",
-  //           subData: "Ultra Wideband (UWB) support"
-  //         },
-
-
-  //       ]
-
-  //     },
-  //     {
-  //       type: "BATTERY",
-  //       subType: [
-  //         {
-  //           name: "Type",
-  //           subData: "Li-Ion 5000 mAh, non-removable"
-  //         },
-  //         {
-  //           name: "Charging",
-  //           subData: "45W wired, PD3.0, 65% in 30 min (advertised)"
-  //         },
-  //         {
-  //           name: "",
-  //           subData: "15W wireless (Qi/PMA)"
-  //         },
-  //         {
-  //           name: "",
-  //           subData: "4.5W reverse wireless"
-  //         },
-
-
-  //       ]
-
-  //     },
-  //     {
-  //       type: "MISC",
-  //       subType: [
-  //         {
-  //           name: "Colors",
-  //           subData: "Titanium Black, Titanium Gray, Titanium Violet, Titanium Yellow, Titanium Blue, Titanium Green, Titanium Orange"
-  //         },
-  //         {
-  //           name: "Models",
-  //           subData: "SM-S928B, SM-S928B/DS, SM-S928U, SM-S928U1, SM-S928W, SM-S928N, SM-S9280, SM-S928E, SM-S928E/DS"
-  //         },
-  //         {
-  //           name: "SAR",
-  //           subData: "1.26 W/kg (head)     0.62 W/kg (body)    "
-  //         },
-  //         {
-  //           name: "SAR EU",
-  //           subData: "1.06 W/kg (head)     1.30 W/kg (body)    "
-  //         },
-  //         {
-  //           name: "SAR EU",
-  //           subData: "1.06 W/kg (head)     1.30 W/kg (body)    "
-  //         },
-  //         {
-  //           name: "Price",
-  //           subData: "$ 1,290.00 / € 1,349.00 / £ 1,249.00 / ₹ 128,999 "
-  //         },
-
-
-
-  //       ]
-
-  //     },
-  //   ],
-
-  // }
   const tabData = [
     {
       tabName: 'specifications',
@@ -428,10 +126,12 @@ const PhoneDetails = () => {
     slidesToShow: 1,
     slidesToScroll: 1
   };
-const formatPropertyName = (name) => {
-  // Replace underscores with spaces and capitalize each word
-  return name.replace(/_/g, ' ').replace(/\b\w/g, (match) => match.toUpperCase());
-};
+  const formatPropertyName = (name) => {
+    // Replace underscores with spaces and capitalize each word
+    return name.replace(/_/g, ' ').replace(/\b\w/g, (match) => match.toUpperCase());
+  };
+
+
   return (
     <div>
       <Navbar />
@@ -448,58 +148,29 @@ const formatPropertyName = (name) => {
               <Advertisement_height_250 />
               <div className='my-3 w-full px-5'>
                 <h3 className='uppercase text-[#777] font-semibold text-lg h-[35px] relative before:absolute before:h-[35px] before:w-3 before:bg-gray-400 before:left-[-20px] before:top-[-4px]'>
-                  Latest Samsung Device</h3>
+                  Latest {brandName} Device</h3>
 
-                <div className='flex flex-wrap gap-y-4 gap-x-2 mt-2'>
+                <div className='flex flex-wrap gap-y-4 gap-x-2 mt-2 items-start'>
+                  {
+                    brandWiseDevice.slice(0, 6).map((d, i) => (
+                      <Link
+                        to={`/${d.brand.toLowerCase()}/${d._id}`}
 
-                  <div className='max-w-[122px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[80px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-xs py-2 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
-                  <div className='max-w-[122px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[80px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-xs py-2 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
-                  <div className='max-w-[122px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[80px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-xs py-2 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
-                  <div className='max-w-[122px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[80px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-xs py-2 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
-                  <div className='max-w-[122px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[80px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-xs py-2 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
-                  <div className='max-w-[122px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='max-w-[80px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter text-xs py-2 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </div>
+                        key={d._id} className='max-w-[122px] w-full flex flex-col justify-center items-center cursor-pointer group'>
+                        <div className='max-w-[80px] w-full '>
+                          <img className='w-full object-contain h-[80px]' src={d.banner_img} alt="" srcset="" />
+                        </div>
+                        <p className='text-center text-[#777] font-inter text-xs py-2 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
+                          {d.deviceName}
+                        </p>
+                      </Link>
+                    ))
+                  }
+
+
+
+
+
 
 
 
@@ -508,7 +179,7 @@ const formatPropertyName = (name) => {
 
               </div>
               <Advertisement_height_250 />
-              <PhoneYoutubeVideo title={deviceData?.deviceName}/>
+              <PhoneYoutubeVideo title={deviceData?.deviceName} />
             </div>
 
             {
@@ -566,7 +237,7 @@ const formatPropertyName = (name) => {
                             <div>
                               <div className='flex items-center gap-2'>
                                 <div className='lg:w-[18px] w-3  lg:h-[18px] h-3'>
-                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="currentColor"><path d="M9 1V3H15V1H17V3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H7V1H9ZM20 11H4V19H20V11ZM7 5H4V9H20V5H17V7H15V5H9V7H7V5Z"></path></svg>
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M9 1V3H15V1H17V3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H7V1H9ZM20 11H4V19H20V11ZM7 5H4V9H20V5H17V7H15V5H9V7H7V5Z"></path></svg>
                                 </div>
                                 <p className='font-poppins  lg:text-sm text-[10px] font-light'>
                                   {
@@ -576,7 +247,7 @@ const formatPropertyName = (name) => {
                               </div>
                               <div className='flex items-center gap-2 pt-2'>
                                 <div className='lg:w-[18px] w-3  lg:h-[18px] h-3'>
-                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="currentColor"><path d="M7 4V20H17V4H7ZM6 2H18C18.5523 2 19 2.44772 19 3V21C19 21.5523 18.5523 22 18 22H6C5.44772 22 5 21.5523 5 21V3C5 2.44772 5.44772 2 6 2ZM12 17C12.5523 17 13 17.4477 13 18C13 18.5523 12.5523 19 12 19C11.4477 19 11 18.5523 11 18C11 17.4477 11.4477 17 12 17Z"></path></svg>
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4V20H17V4H7ZM6 2H18C18.5523 2 19 2.44772 19 3V21C19 21.5523 18.5523 22 18 22H6C5.44772 22 5 21.5523 5 21V3C5 2.44772 5.44772 2 6 2ZM12 17C12.5523 17 13 17.4477 13 18C13 18.5523 12.5523 19 12 19C11.4477 19 11 18.5523 11 18C11 17.4477 11.4477 17 12 17Z"></path></svg>
                                 </div>
                                 <p className='font-poppins lg:text-sm text-[10px] font-light'>
                                   {deviceData?.weight}
@@ -596,7 +267,7 @@ const formatPropertyName = (name) => {
                               </div>
                               <div className='flex items-center gap-2 pt-2'>
                                 <div className='lg:w-[18px] w-3  lg:h-[18px] h-3'>
-                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="currentColor"><path d="M6 18H18V6H6V18ZM14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM8 8H16V16H8V8Z"></path></svg>  </div>
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18H18V6H6V18ZM14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM8 8H16V16H8V8Z"></path></svg>  </div>
                                 <p className='font-poppins lg:text-sm text-[10px] font-light'>
                                   {deviceData?.storage} storage, {deviceData?.expandable_storage ? deviceData.expandable_storage_type : "no card slot"}
 
@@ -608,7 +279,7 @@ const formatPropertyName = (name) => {
                               <div className='flex gap-3'>
 
                                 <div className='lg:w-8 lg:h-8 w-4 h-4'>
-                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="rgba(0,0,0,1)"><path d="M9 7.53861L15 21.5386L18.6594 13H23V11H17.3406L15 16.4614L9 2.46143L5.3406 11H1V13H6.6594L9 7.53861Z"></path></svg>  </div>
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(0,0,0,1)"><path d="M9 7.53861L15 21.5386L18.6594 13H23V11H17.3406L15 16.4614L9 2.46143L5.3406 11H1V13H6.6594L9 7.53861Z"></path></svg>  </div>
                                 <p className='text-black lg:text-2xl text-sm'>93%</p>
                               </div>
                               <p className='pt-3 lg:text-sm text-[8px] text-center'>2,672,789 HITS</p>
@@ -616,7 +287,7 @@ const formatPropertyName = (name) => {
                             <div>
                               <div className='flex gap-3'>
 
-                                <div className='lg:w-8 lg:h-8 w-4 h-4'>  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="currentColor"><path d="M12.001 4.52853C14.35 2.42 17.98 2.49 20.2426 4.75736C22.5053 7.02472 22.583 10.637 20.4786 12.993L11.9999 21.485L3.52138 12.993C1.41705 10.637 1.49571 7.01901 3.75736 4.75736C6.02157 2.49315 9.64519 2.41687 12.001 4.52853ZM18.827 6.1701C17.3279 4.66794 14.9076 4.60701 13.337 6.01687L12.0019 7.21524L10.6661 6.01781C9.09098 4.60597 6.67506 4.66808 5.17157 6.17157C3.68183 7.66131 3.60704 10.0473 4.97993 11.6232L11.9999 18.6543L19.0201 11.6232C20.3935 10.0467 20.319 7.66525 18.827 6.1701Z"></path></svg>
+                                <div className='lg:w-8 lg:h-8 w-4 h-4'>  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12.001 4.52853C14.35 2.42 17.98 2.49 20.2426 4.75736C22.5053 7.02472 22.583 10.637 20.4786 12.993L11.9999 21.485L3.52138 12.993C1.41705 10.637 1.49571 7.01901 3.75736 4.75736C6.02157 2.49315 9.64519 2.41687 12.001 4.52853ZM18.827 6.1701C17.3279 4.66794 14.9076 4.60701 13.337 6.01687L12.0019 7.21524L10.6661 6.01781C9.09098 4.60597 6.67506 4.66808 5.17157 6.17157C3.68183 7.66131 3.60704 10.0473 4.97993 11.6232L11.9999 18.6543L19.0201 11.6232C20.3935 10.0467 20.319 7.66525 18.827 6.1701Z"></path></svg>
                                 </div>
                                 <p className='text-black lg:text-2xl text-sm'>624</p>
                               </div>
@@ -637,7 +308,7 @@ const formatPropertyName = (name) => {
                             </div>
                             <div className='flex-col justify-start items-start'>
                               <div className='lg:max-w-[36px] max-w-5 lg:h-[36px] h-5 w-full '>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="currentColor"><path d="M2 6.00087C2 5.44811 2.45531 5 2.9918 5H21.0082C21.556 5 22 5.44463 22 6.00087V19.9991C22 20.5519 21.5447 21 21.0082 21H2.9918C2.44405 21 2 20.5554 2 19.9991V6.00087ZM4 7V19H20V7H4ZM14 16C15.6569 16 17 14.6569 17 13C17 11.3431 15.6569 10 14 10C12.3431 10 11 11.3431 11 13C11 14.6569 12.3431 16 14 16ZM14 18C11.2386 18 9 15.7614 9 13C9 10.2386 11.2386 8 14 8C16.7614 8 19 10.2386 19 13C19 15.7614 16.7614 18 14 18ZM4 2H10V4H4V2Z"></path></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M2 6.00087C2 5.44811 2.45531 5 2.9918 5H21.0082C21.556 5 22 5.44463 22 6.00087V19.9991C22 20.5519 21.5447 21 21.0082 21H2.9918C2.44405 21 2 20.5554 2 19.9991V6.00087ZM4 7V19H20V7H4ZM14 16C15.6569 16 17 14.6569 17 13C17 11.3431 15.6569 10 14 10C12.3431 10 11 11.3431 11 13C11 14.6569 12.3431 16 14 16ZM14 18C11.2386 18 9 15.7614 9 13C9 10.2386 11.2386 8 14 8C16.7614 8 19 10.2386 19 13C19 15.7614 16.7614 18 14 18ZM4 2H10V4H4V2Z"></path></svg>
                               </div>
 
                               <p className='font-poppins lg:text-xl text-sm font-medium'>{deviceData?.backCamera}  <span className='lg:text-sm text-[8px]'>MP</span> </p>
@@ -645,14 +316,14 @@ const formatPropertyName = (name) => {
                             </div>
                             <div>
                               <div className='lg:max-w-[36px] max-w-5 lg:h-[36px] h-5 w-full'>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="rgba(0,0,0,1)"><path d="M14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM7 7V11H11V7H7Z"></path></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(0,0,0,1)"><path d="M14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM7 7V11H11V7H7Z"></path></svg>
                               </div>
                               <p className='font-poppins lg:text-xl text-sm font-medium'>{deviceData?.ram} <span className='lg:text-sm text-[8px]'>GB RAM</span></p>
                               <p className='font-poppins  lg:text-sm text-[8px] font-light'>{deviceData?.processor}</p>
                             </div>
                             <div>
                               <div className='lg:max-w-[36px] max-w-5 lg:h-[36px] h-5 w-full'>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="rgba(0,0,0,1)"><path d="M9 4V3C9 2.44772 9.44772 2 10 2H14C14.5523 2 15 2.44772 15 3V4H18C18.5523 4 19 4.44772 19 5V21C19 21.5523 18.5523 22 18 22H6C5.44772 22 5 21.5523 5 21V5C5 4.44772 5.44772 4 6 4H9ZM13 12V7L8 14H11V19L16 12H13Z"></path></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(0,0,0,1)"><path d="M9 4V3C9 2.44772 9.44772 2 10 2H14C14.5523 2 15 2.44772 15 3V4H18C18.5523 4 19 4.44772 19 5V21C19 21.5523 18.5523 22 18 22H6C5.44772 22 5 21.5523 5 21V5C5 4.44772 5.44772 4 6 4H9ZM13 12V7L8 14H11V19L16 12H13Z"></path></svg>
                               </div>
                               <p className='font-poppins lg:text-xl text-sm font-medium'>{deviceData?.battery} <span className='lg:text-sm text-[8px]'>mAh Li-Ion</span></p>
                               <p className='font-poppins  lg:text-sm text-[8px] font-light flex items-center gap-1'> <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3.92887 4.92896L5.34315 6.34323C3.89543 7.79094 3 9.79094 3 12.0001C3 14.2092 3.89543 16.2092 5.34315 17.6569L3.92887 19.0712C2.11925 17.2616 1 14.7616 1 12.0001C1 9.23858 2.11925 6.73858 3.92887 4.92896ZM20.0711 4.92896C21.8808 6.73858 23 9.23858 23 12.0001C23 14.7616 21.8808 17.2616 20.0711 19.0712L18.6569 17.6569C20.1046 16.2092 21 14.2092 21 12.0001C21 9.79145 20.105 7.79186 18.6579 6.34423L20.0711 4.92896ZM13 5.00008V11.0001H16L11 19.0001V13.0001H8L13 5.00008ZM6.75736 7.75744L8.17157 9.17165C7.44771 9.89551 7 10.8955 7 12.0001C7 13.1046 7.44771 14.1046 8.17157 14.8285L6.75736 16.2427C5.67157 15.1569 5 13.6569 5 12.0001C5 10.3432 5.67157 8.84323 6.75736 7.75744ZM17.2436 7.75842C18.3288 8.84413 19 10.3437 19 12.0001C19 13.6569 18.3284 15.1569 17.2426 16.2427L15.8284 14.8285C16.5523 14.1046 17 13.1046 17 12.0001C17 10.896 16.5527 9.89643 15.8294 9.17265L17.2436 7.75842Z"></path></svg></span> {deviceData?.chargingSpeed}</p>
@@ -827,20 +498,20 @@ const formatPropertyName = (name) => {
                         // specifications-tab
                         <div className='w-full' >
                           {
-  deviceData.data.map((d, i) => (
-    <div className={`border-b-4 md:border-b-[8px] border-gray-100 py-1 md:py-2 flex items-start gap-2 md:gap-4 ${i === deviceData.data.length - 1 ? 'last-child-no-border' : ''}`} key={i}>
-      <p className='uppercase text-sky-700 text-sm md:text-lg max-w-[80px] md:max-w-[100px] w-full py-0 md:py-1'>{formatPropertyName(d.type)}</p>
-      <div className='flex-col w-full'>
-        {d.subType.map((s, j) => (
-          <div key={j} className={`flex items-start w-full ${j === d.subType.length - 1 ? 'last-child-no-border' : ''} border-b-[1px] py-[2px] md:py-1`}>
-            <p className='max-w-[90px] md:max-w-[150px] w-full capitalize text-xs md:text-base text-gray-500'>{formatPropertyName(s.name)}</p>
-            <p className='text-gray-500 text-[10px] md:text-sm'>{s.subData}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  ))
-}
+                            deviceData.data.map((d, i) => (
+                              <div className={`border-b-4 md:border-b-[8px] border-gray-100 py-1 md:py-2 flex items-start gap-2 md:gap-4 ${i === deviceData.data.length - 1 ? 'last-child-no-border' : ''}`} key={i}>
+                                <p className='uppercase text-sky-700 text-sm md:text-lg max-w-[80px] md:max-w-[100px] w-full py-0 md:py-1'>{formatPropertyName(d.type)}</p>
+                                <div className='flex-col w-full'>
+                                  {d.subType.map((s, j) => (
+                                    <div key={j} className={`flex items-start w-full ${j === d.subType.length - 1 ? 'last-child-no-border' : ''} border-b-[1px] py-[2px] md:py-1`}>
+                                      <p className='max-w-[90px] md:max-w-[150px] w-full capitalize text-xs md:text-base text-gray-500'>{formatPropertyName(s.name)}</p>
+                                      <p className='text-gray-500 text-[10px] md:text-sm'>{s.subData}</p>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            ))
+                          }
 
 
 

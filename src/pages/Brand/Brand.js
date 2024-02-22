@@ -1,16 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import mobile1 from '../../assets/samsung-galaxy-s24-ultra-5g-sm-s928-0.jpg'
 import Navbar from '../../component/Navbar/Navbar';
 import Advertisement_Width_Full from '../../component/Advertisement_Width_Full/Advertisement_Width_Full';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import Select from 'react-select';
 import Advertisement_height_250 from '../../component/Advertisement_height_250/Advertisement_height_250';
 import RangeSlider from "react-range-slider-input";
 import banner from '../../assets/samsung-2024-1.jpg'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PhoneFind from '../../component/PhoneFind/PhoneFind';
 import PhoneSearchPanel from '../../component/PhoneSearchPanel/PhoneSearchPanel';
+import axios from 'axios';
+import { fetchBrandDevices } from '../../redux/actions/deviceAction';
+import Loading from '../../component/Loading/Loading';
 const Brand = () => {
+  const { id } = useParams()
+
   let location = useLocation()
   const pathname = location.pathname;
   const pathnameParts = pathname.split('/');
@@ -122,231 +127,168 @@ const Brand = () => {
 
   ]
 
-  const state = useSelector((state) => state);
+  const state = useSelector((state) => state.search);
   const sortedTopTenMobile = topTenMobile.sort((a, b) => b.hit - a.hit);
   const sortedTopTenMobileFan = topTenMobileFan.sort((a, b) => b.fav - a.fav);
+  const [brandData, setBrandData] = useState([]);
+  console.log("ssssssssssssss", brandData);
+  // const [brandName, setBrandName] = useState('TECNO'); // Set your default brand name here
+
+  useEffect(() => {
+    const fetchDevicesByBrand = async () => {
+      const api = `http://localhost:2000/api/brandName/${id}`
+      try {
+        const response = await axios.get(api);
+
+        setBrandData(response.data);
+      } catch (error) {
+        console.error('Error fetching devices:', error);
+        // Handle error, e.g., set an error state
+      }
+    };
+
+    fetchDevicesByBrand();
+  }, [id]);
+
+  const { brandDevices, brandLoading } = useSelector((state) => state.device);
+
+
+  console.log("brandWiseDevicebrandWiseDevice100", brandDevices);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchBrandDevices(id.toLocaleLowerCase()))
+  }, [id]);
+
+  //  if (brandLoading) {
+  //   return <Loading />;
+  // }
+
   return (
     <div>
       <Navbar />
       <div className='mt-[48px]'>
-         <Advertisement_Width_Full />
-      <div className='max-w-[1440px] w-full mx-auto'>
+        <Advertisement_Width_Full />
+        <div className='max-w-[1440px] w-full mx-auto'>
           <div className='flex flex-col md:flex-row gap-3 pt-0 sm:pt-4 px-0 sm:px-3'>
-            <div className={`md:hidden  ${state.mobileSearch ? 'block':'hidden'}`}>
-              <PhoneFind/>
+            <div className={`md:hidden  ${state.mobileSearch ? 'block' : 'hidden'}`}>
+              <PhoneFind />
             </div>
-          <div className='lg:max-w-[428px] max-w-[330px] w-full md:block hidden  '>
-          <PhoneFind />
+            <div className='lg:max-w-[428px] max-w-[330px] w-full md:block hidden  '>
+              <PhoneFind />
 
 
-            <Advertisement_height_250 />
-            <div className='my-3 w-full px-5'>
-              <h3 className='uppercase text-[#777] font-semibold text-lg h-[35px] relative before:absolute before:h-[35px] before:w-3 before:bg-gray-400 before:left-[-20px] before:top-[-4px]' >Top 10 by daily interest</h3>
+              <Advertisement_height_250 />
+              <div className='my-3 w-full px-5'>
+                <h3 className='uppercase text-[#777] font-semibold text-lg h-[35px] relative before:absolute before:h-[35px] before:w-3 before:bg-gray-400 before:left-[-20px] before:top-[-4px]' >Top 10 by daily interest</h3>
 
-              <table className='w-full'>
-                <thead className='bg-[#A4C08D] max-w-[400px] w-full'>
-                  <tr>
-                    <th>&nbsp;</th>
-                    <th className="text-left text-sm font-normal font-['inter'] text-white">Device</th>
-                    <th className="text-left text-sm font-normal font-['inter'] text-white">Daily hits</th>
+                <table className='w-full'>
+                  <thead className='bg-[#A4C08D] max-w-[400px] w-full'>
+                    <tr>
+                      <th>&nbsp;</th>
+                      <th className="text-left text-sm font-normal font-['inter'] text-white">Device</th>
+                      <th className="text-left text-sm font-normal font-['inter'] text-white">Daily hits</th>
 
-                  </tr>
-                </thead>
+                    </tr>
+                  </thead>
 
-                <tbody>
+                  <tbody>
 
-                  {
-                    sortedTopTenMobile.map((brand, index) => (
-                      <tr key={index}>
-                        <td className='text-black font-normal font-["inter"] text-sm pl-2 py-2'>{index + 1}</td>
-                        <td className='text-black font-normal font-["inter"] text-sm hover:text-red-500 py-2'>
-                          <Link className='' to="/">{brand?.model}</Link>
-                        </td>
-                        <td className='text-black font-normal font-["inter"] text-sm py-2'>{brand?.hit.toLocaleString()}</td>
-                      </tr>
-                    ))
-                  }
+                    {
+                      sortedTopTenMobile.map((brand, index) => (
+                        <tr key={index}>
+                          <td className='text-black font-normal font-["inter"] text-sm pl-2 py-2'>{index + 1}</td>
+                          <td className='text-black font-normal font-["inter"] text-sm hover:text-red-500 py-2'>
+                            <Link className='' to="/">{brand?.model}</Link>
+                          </td>
+                          <td className='text-black font-normal font-["inter"] text-sm py-2'>{brand?.hit.toLocaleString()}</td>
+                        </tr>
+                      ))
+                    }
 
 
-                </tbody>
-              </table>
+                  </tbody>
+                </table>
 
+              </div>
+              <Advertisement_height_250 />
+              <div className='my-3 w-full px-5'>
+                <h3 className='uppercase text-[#777] font-semibold text-lg h-[35px] relative before:absolute before:h-[35px] before:w-3 before:bg-gray-400 before:left-[-20px] before:top-[-4px]' >TOP 10 BY FANS</h3>
+
+                <table className='w-full'>
+                  <thead className='bg-gray-500 max-w-[400px] w-full'>
+                    <tr>
+                      <th>&nbsp;</th>
+                      <th className="text-left text-sm font-normal font-['inter'] text-white">Device</th>
+                      <th className="text-left text-sm font-normal font-['inter'] text-white">Favorites</th>
+
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {
+                      sortedTopTenMobileFan.map((brand, index) => (
+                        <tr key={index}>
+                          <td className='text-black font-normal font-["inter"] text-sm pl-2 py-2'>{index + 1}</td>
+                          <td className='text-black font-normal font-["inter"] text-sm hover:text-red-500 py-2 cursor-pointer'>
+                            <Link className='' to="/">{brand?.model}</Link>
+                          </td>
+                          <td className='text-black font-normal font-["inter"] text-sm py-2'>{brand?.fav.toLocaleString()}</td>
+                        </tr>
+                      ))
+                    }
+
+                  </tbody>
+                </table>
+
+              </div>
             </div>
-            <Advertisement_height_250 />
-            <div className='my-3 w-full px-5'>
-              <h3 className='uppercase text-[#777] font-semibold text-lg h-[35px] relative before:absolute before:h-[35px] before:w-3 before:bg-gray-400 before:left-[-20px] before:top-[-4px]' >TOP 10 BY FANS</h3>
 
-              <table className='w-full'>
-                <thead className='bg-gray-500 max-w-[400px] w-full'>
-                  <tr>
-                    <th>&nbsp;</th>
-                    <th className="text-left text-sm font-normal font-['inter'] text-white">Device</th>
-                    <th className="text-left text-sm font-normal font-['inter'] text-white">Favorites</th>
-
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {
-                    sortedTopTenMobileFan.map((brand, index) => (
-                      <tr key={index}>
-                        <td className='text-black font-normal font-["inter"] text-sm pl-2 py-2'>{index + 1}</td>
-                        <td className='text-black font-normal font-["inter"] text-sm hover:text-red-500 py-2 cursor-pointer'>
-                          <Link className='' to="/">{brand?.model}</Link>
-                        </td>
-                        <td className='text-black font-normal font-["inter"] text-sm py-2'>{brand?.fav.toLocaleString()}</td>
-                      </tr>
-                    ))
-                  }
-
-                </tbody>
-              </table>
-
-            </div>
-          </div>
-
-          {
-            state.searchPanel ?
-             <PhoneSearchPanel/>
-              :
-              <div className='w-full '>
+            {
+              state.searchPanel ?
+                <PhoneSearchPanel />
+                :
+                <div className='w-full '>
 
 
-                <div className={`max-w-[1000px] w-full md:h-[320px] h-[160px] bg-top bg-no-repeat relative bg-cover ]`} style={{ backgroundImage: `url(${banner})` }}>
-                  <h2 className='capitalize  md:text-4xl text-base font-inter absolute md:bottom-10 bottom-5 md:left-10 left-5 font-medium bg-slate-500 md:py-4 py-2 px-2 bg-opacity-30 backdrop-blur-sm rounded-md text-white '>
-                    <span>{ lastPathname}</span> Phone
-                  </h2>
-                </div>
-                <div className='h-12 bg-slate-400 w-full bg-[rgba(0,0,0,.2)]'>
+                  <div className={`max-w-[1000px] w-full md:h-[320px] h-[160px] bg-top bg-no-repeat relative bg-cover ]`} style={{ backgroundImage: `url(${brandData?.brand?.brandBannerImg})` }}>
+                    <h2 className='capitalize  md:text-4xl text-base font-inter absolute md:bottom-10 bottom-5 md:left-10 left-5 font-medium bg-slate-500 md:py-4 py-2 px-2 bg-opacity-30 backdrop-blur-sm rounded-md text-white '>
+                      <span>{lastPathname}</span> Phone
+                    </h2>
+                  </div>
+                  <div className='h-12 bg-slate-400 w-full bg-[rgba(0,0,0,.2)]'>
 
-                </div>
-                <div>
-                    <div className='m-2 md:pt-0 pt-10 md:m-5 flex flex-wrap gap-y-6 gap-x-1 md:gap-x-2'>
+                  </div>
+                  <div>
+                    <div className='m-2 md:pt-0 pt-10 md:m-5 flex flex-wrap gap-y-6 gap-x-1 md:gap-x-2 items-center'>
 
-                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </Link>
-                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </Link>
-                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </Link>
-                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </Link>
-                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </Link>
-                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </Link>
-                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </Link>
-                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </Link>
-                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </Link>
-                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </Link>
-                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </Link>
-                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </Link>
-                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </Link>
-                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </Link>
-                  <Link to={`${pathname}/samsung_galaxy_s24_ultra`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                    <div className='md:max-w-[135px] max-w-[100px] w-full '>
-                      <img className='w-full' src={mobile1} alt="" srcset="" />
-                    </div>
-                    <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                      Galaxy S24 Ultra
-                    </p>
-                  </Link>
+                      {
+                        brandDevices ? (
+                          <>
+                            {brandDevices.map((d, i) => (
+                              <Link to={`/${d.brand.toLowerCase()}/${d._id}`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group' key={i}>
+                                <div className='md:max-w-[135px] max-w-[100px] w-full '>
+                                  <img className='w-full' src={d?.banner_img} alt="" srcset="" />
+                                </div>
+                                <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1 w-full'>
+                                  {d?.deviceName}
+                                </p>
+                              </Link>
+                            ))}
+                          </>
+                        ) : (
+                          <div>
+                            <Loading />
+                          </div>
+                        )
+                      }
 
-                </div>
-                </div>
-                 {/* <div>
+
+
+
+
+                    </div>
+                  </div>
+                  {/* <div>
                   <div class="my-[50px] flex justify-center items-center gap-5">
                     <button>
                       <svg width="34" height="36" viewBox="0 0 34 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -392,12 +334,12 @@ const Brand = () => {
                   </div>
                 </div> */}
 
-              </div>
-          }
+                </div>
+            }
 
+          </div>
         </div>
       </div>
-     </div>
 
     </div>
   );

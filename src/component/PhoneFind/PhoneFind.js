@@ -381,7 +381,7 @@ const PhoneFind = () => {
 
   ]
 
-  const state = useSelector((state) => state);
+  const state = useSelector((state) => state.search);
 
   console.log(state.searchBox,"State");
   return (

@@ -18,182 +18,182 @@ const PhoneFindMobile = () => {
     const [searchPanel, setSearchPanel] = useState(false);
     const mobileBrand = [
       {
-  
+
         name: 'SAMSUNG',
         link: '/'
       },
       {
-  
+
         name: 'APPLE',
         link: '/'
       },
       {
-  
+
         name: 'HUAWEI',
         link: '/'
       },
       {
-  
+
         name: 'NOKIA',
         link: '/'
       },
       {
-  
+
         name: 'SONY',
         link: '/'
       },
       {
-  
+
         name: 'LG',
         link: '/'
       },
       {
-  
+
         name: 'HTC',
         link: '/'
       },
       {
-  
+
         name: 'MOTOROLA',
         link: '/'
       },
       {
-  
+
         name: 'LENOVO',
         link: '/'
       },
       {
-  
+
         name: 'XIAOMI',
         link: '/'
       },
       {
-  
+
         name: 'GOOGLE',
         link: '/'
       },
       {
-  
+
         name: 'HONOR',
         link: '/'
       },
       {
-  
+
         name: 'OPPO',
         link: '/'
       },
       {
-  
+
         name: 'REALME',
         link: '/'
       },
       {
-  
+
         name: 'ONEPLUS',
         link: '/'
       },
       {
-  
+
         name: 'VIVO',
         link: '/'
       },
       {
-  
+
         name: 'MEIZU',
         link: '/'
       },
       {
-  
+
         name: 'BLACKBERRY',
         link: '/'
       },
       {
-  
+
         name: 'ASUS',
         link: '/'
       },
       {
-  
+
         name: 'ALCATEL',
         link: '/'
       },
       {
-  
+
         name: 'ZTE',
         link: '/'
       },
       {
-  
+
         name: 'MICROSOFT',
         link: '/'
       },
       {
-  
+
         name: 'VODAFONE',
         link: '/'
       },
       {
-  
+
         name: 'ENERGIZER',
         link: '/'
       },
       {
-  
+
         name: 'CAT',
         link: '/'
       },
       {
-  
+
         name: 'SHARP',
         link: '/'
       },
       {
-  
+
         name: 'MICROMAX',
         link: '/'
       },
       {
-  
+
         name: 'INFINIX',
         link: '/'
       },
       {
-  
+
         name: 'ULEFONE',
         link: '/'
       },
       {
-  
+
         name: 'TECNO',
         link: '/'
       },
       {
-  
+
         name: 'DOOGEE',
         link: '/'
       },
       {
-  
+
         name: 'BLACKVIEW',
         link: '/'
       },
       {
-  
+
         name: 'CUBOT',
         link: '/'
       },
       {
-  
+
         name: 'OUKITEL',
         link: '/'
       },
       {
-  
+
         name: 'ITEL',
         link: '/'
       },
       {
-  
+
         name: 'TCL',
         link: '/'
       },
@@ -229,143 +229,143 @@ const PhoneFindMobile = () => {
       {
         id: 1,
         label: '512MB',
-  
+
       },
       {
         id: 2,
         label: '1GB',
-  
+
       },
       {
         id: 3,
         label: '2GB',
-  
+
       },
       {
         id: 4,
         label: '3GB',
-  
+
       },
       {
         id: 5,
         label: '4GB',
-  
+
       },
       {
         id: 6,
         label: '6GB',
-  
+
       },
       {
         id: 7,
         label: '4GB',
-  
+
       },
       {
         id: 8,
         label: '8GB',
-  
+
       },
       {
         id: 9,
         label: '12GB',
-  
+
       },
       {
         id: 10,
         label: '16GB',
-  
+
       },
       {
         id: 11,
         label: '24GB',
-  
+
       },
     ]
     const storage = [
       {
         id: 1,
         label: '512MB',
-  
+
       },
       {
         id: 2,
         label: '1GB',
-  
+
       },
       {
         id: 3,
         label: '2GB',
-  
+
       },
       {
         id: 4,
         label: '4GB',
-  
+
       },
       {
         id: 5,
         label: '8GB',
-  
+
       },
       {
         id: 6,
         label: '16GB',
-  
+
       },
       {
         id: 7,
         label: '32GB',
-  
+
       },
       {
         id: 8,
         label: '64GB',
-  
+
       },
       {
         id: 9,
         label: '128GB',
-  
+
       },
       {
         id: 10,
         label: '256GB',
-  
+
       },
       {
         id: 11,
         label: '512GB',
-  
+
       },
       {
         id: 12,
         label: '1TB',
-  
+
       },
     ]
     const Official = [
       {
         id: 1,
         label: 'Official',
-  
+
       },
       {
         id: 2,
         label: 'UnOfficial',
-  
+
       },
       {
         id: 3,
         label: 'Both',
-  
+
       },
-  
-  
+
+
     ]
-  
-    const state = useSelector((state) => state);
-  
+
+    const state = useSelector((state) => state.search);
+
     console.log(state.searchBox,"State");
     return (
         <div>
@@ -408,9 +408,9 @@ const PhoneFindMobile = () => {
         state.searchBox && <div className='w-full pb-4'>
 
           <div className='w-full'>
-            <div 
-            
-            // onClick={() => [setSearchBox(!searchBox), setSearchPanel(false)]} 
+            <div
+
+            // onClick={() => [setSearchBox(!searchBox), setSearchPanel(false)]}
             onClick={() => dispatch({ type: SEARCH_BOX_CLOSE })}
             className='w-full h-11 bg-gray-300 hover:bg-gray-500 cursor-pointer flex justify-center items-center group transition-all duration-300'>
               <div className='flex justify-center items-center gap-2 '>

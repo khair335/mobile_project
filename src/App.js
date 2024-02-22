@@ -18,7 +18,7 @@ function App() {
         </Route>
         <Route path="/search" element={<Search />} />
         <Route path="/brand/:id" index element={<Brand />} />
-        <Route path="/brand/:id/:phoneId" index element={<PhoneDetails />} />
+        <Route path="/:idBrand/:phoneId" index element={<PhoneDetails />} />
       </Routes>
    </div>
   );
