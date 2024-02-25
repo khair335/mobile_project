@@ -1,9 +1,10 @@
 import React from 'react';
+import master_motor from '../../assets/Master Motor.png'
 
 const Advertisement_Width_Full = () => {
   return (
     <div className='bg-slate-300 max-w-[1440px] sm:h-32 h-20 mx-auto flex justify-center items-center'>
-        <div className='text-center sm:text-6xl text-lg'>Advertisement</div>
+        <img className='w-full object-contain cursor-pointer' src={master_motor} alt="" srcset="" />
     </div>
   );
 };
