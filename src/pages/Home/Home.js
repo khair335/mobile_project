@@ -228,7 +228,7 @@ const Home = () => {
                   <div className='px-[6px] sm:px-0'>
                     <div className='mb-10'>
                       <p className='pb-2 font-inter font-medium text-2xl relative after:absolute after:h-[3px] after:w-5 after:bottom-2 after:bg-black'>Latest</p>
-                      <div className='m-0 sm:m-5 flex flex-wrap gap-y-6 gap-x-2  sm:gap-x-2 items-center'>
+                      <div className='m-0 sm:m-5 flex flex-wrap gap-y-6 gap-x-2  sm:gap-x-2 items-start'>
 
 
                         {
