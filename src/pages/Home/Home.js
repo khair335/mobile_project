@@ -17,7 +17,7 @@ const Home = () => {
   const [searchPanel, setSearchPanel] = useState(false);
   const state = useSelector((state) => state.search);
   const rootState = useSelector((state) => state);
-  console.log("statessssss",rootState);
+  console.log("statessssss", rootState);
   const topTenMobile = [
     {
       id: 1,
@@ -139,6 +139,9 @@ const Home = () => {
     // Dispatch the fetchDevices action
     dispatch(fetchDevices());
   }, [dispatch]);
+  const latestDevices = devices
+  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  .slice(-5);
   return (
     <div>
       <Navbar />
@@ -232,15 +235,18 @@ const Home = () => {
 
 
                         {
-                          devices.map((d, i) => <Link to={`/${d.brand.toLowerCase()}/${d._id}`} className='max-w-[110px] sm:max-w-[180px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                            <div className='max-w-[135px]  w-full '>
-                              <img className='w-full h-[135px] object-contain' src={d.banner_img} alt="" srcset="" />
-                            </div>
-                            <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1 w-full'>
-                              {d.deviceName}
-                            </p>
-                          </Link>)
+                          latestDevices.map((d, i) => (
+                            <Link key={i} to={`/${d.brand.toLowerCase()}/${d._id}`} className='max-w-[110px] sm:max-w-[180px] w-full flex flex-col justify-center items-center cursor-pointer group'>
+                              <div className='max-w-[135px]  w-full '>
+                                <img className='w-full h-[135px] object-contain' src={d.banner_img} alt="" srcset="" />
+                              </div>
+                              <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1 w-full'>
+                                {d.deviceName}
+                              </p>
+                            </Link>
+                          ))
                         }
+
 
 
 
