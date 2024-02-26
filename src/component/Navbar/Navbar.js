@@ -11,24 +11,24 @@ const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredDevices, setFilteredDevices] = useState([]);
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-    // dispatch(onSearch(event.target.value));
-  };
+const handleSearchChange = (event) => {
+  setSearchTerm(event.target.value);
+  // dispatch(onSearch(event.target.value));
+};
 
+useEffect(() => {
+  // Update filtered devices when searchTerm changes
+  setFilteredDevices(
+    devices.filter(
+      (device) =>
+        device.deviceName.toLowerCase().includes(searchTerm.toLowerCase()) && searchTerm.length >= 3
+    )
+  );
+}, [searchTerm, devices]);
 
-  useEffect(() => {
-    // Update filtered devices when searchTerm changes
-    setFilteredDevices(
-      devices.filter(
-        (device) =>
-          device.deviceName.toLowerCase().includes(searchTerm.toLowerCase()) && searchTerm.length >= 3
-      )
-    );
-  }, [searchTerm, devices]);
-  useEffect(() => {
-    console.log("shahadat", filteredDevices.slice(0, 2));
-  }, [filteredDevices]);
+useEffect(() => {
+  console.log("shahadat", filteredDevices.slice(0, 3));
+}, [filteredDevices])
 
   //  console.log("shahadat", filteredDevices.slice(0, 2));
 
@@ -115,20 +115,20 @@ const Navbar = () => {
       </div>
 
       {filteredDevices.length > 0 && (
-        <>
-          {filteredDevices.map((device, i) => (
-            <div key={i} className='absolute  w-[350px]  z-10 top-[48px] right-[44.4%] flex flex-col'>
-              <Link to={`/${device.brand.toLowerCase()}/${device._id}`} className='flex justify-start items-center gap-2 bg-slate-500 border-b-[1px] border-t-[1px] py-[1px] px-2'>
-                <div className='max-w-[28px] w-full'>
-                  <img className='w-full h-[36px] object-contain' src={device.banner_img} alt="" srcSet="" />
-                </div>
-                <p className='text-white font-inter'>{device.deviceName}</p>
-              </Link>
-              {/* ... (rest of your JSX for additional section) */}
-            </div>
-          ))}
-        </>
-      )}
+      <>
+        {filteredDevices.slice(0, 3).map((device, i) => (
+          <div key={i} className='absolute w-[350px] z-10 top-[48px] right-[44.4%] flex flex-col'>
+            <Link to={`/${device.brand.toLowerCase()}/${device._id}`} className='flex justify-start items-center gap-2 bg-slate-500 border-b-[1px] border-t-[1px] py-[1px] px-2'>
+              <div className='max-w-[28px] w-full'>
+                <img className='w-full h-[36px] object-contain' src={device.banner_img} alt="" />
+              </div>
+              <p className='text-white font-inter'>{device.deviceName}</p>
+            </Link>
+            {/* ... (rest of your JSX for additional section) */}
+          </div>
+        ))}
+      </>
+    )}
 
 
     </div>
