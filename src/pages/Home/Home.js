@@ -166,8 +166,8 @@ const Home = () => {
                   <thead className='bg-[#A4C08D] max-w-[400px] w-full'>
                     <tr>
                       <th>&nbsp;</th>
-                      <th className="text-left text-sm font-normal font-['inter'] text-white">Device</th>
-                      <th className="text-left text-sm font-normal font-['inter'] text-white">Daily hits</th>
+                      <th className="text-left text-sm font-normal font-inter text-white">Device</th>
+                      <th className="text-left text-sm font-normal font-inter text-white">Daily hits</th>
 
                     </tr>
                   </thead>
@@ -199,8 +199,8 @@ const Home = () => {
                   <thead className='bg-gray-500 max-w-[400px] w-full'>
                     <tr>
                       <th>&nbsp;</th>
-                      <th className="text-left text-sm font-normal font-['inter'] text-white">Device</th>
-                      <th className="text-left text-sm font-normal font-['inter'] text-white">Favorites</th>
+                      <th className="text-left text-sm font-normal font-inter text-white">Device</th>
+                      <th className="text-left text-sm font-normal font-inter text-white">Favorites</th>
 
                     </tr>
                   </thead>

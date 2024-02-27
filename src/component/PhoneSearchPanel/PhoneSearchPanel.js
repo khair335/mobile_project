@@ -148,19 +148,19 @@ const PhoneSearchPanel = () => {
               </svg>
             </button>
             <button class="w-[34px] h-9 px-2 py-1.5 rounded-[7px] border border-zinc-200 flex-col justify-center items-center gap-2.5 inline-flex bg-[#0057FF] text-white">
-              <p class="text-sm font-light font-['Inter'] leading-normal text-white">1</p>
+              <p class="text-sm font-light font-inter leading-normal text-white">1</p>
             </button>
             <button class="w-[34px] h-9 px-2 py-1.5 rounded-[7px] border border-zinc-200 flex-col justify-center items-center gap-2.5 inline-flex">
-              <p class="text-sm font-light font-['Inter'] leading-normal">2</p>
+              <p class="text-sm font-light font-inter leading-normal">2</p>
             </button>
             <button class="w-[34px] h-9 px-2 py-1.5 rounded-[7px] border border-zinc-200 flex-col justify-center items-center gap-2.5 inline-flex">
-              <p class="text-sm font-light font-['Inter'] leading-normal">3</p>
+              <p class="text-sm font-light font-inter leading-normal">3</p>
             </button>
             <button class="w-[34px] h-9 px-2 py-1.5 rounded-[7px] border border-zinc-200 flex-col justify-center items-center gap-2.5 inline-flex">
-              <p class="text-sm font-light font-['Inter'] leading-normal">4</p>
+              <p class="text-sm font-light font-inter leading-normal">4</p>
             </button>
             <button class="w-[34px] h-9 px-2 py-1.5 rounded-[7px] border border-zinc-200 flex-col justify-center items-center gap-2.5 inline-flex">
-              <p class="text-sm font-light font-['Inter'] leading-normal">5</p>
+              <p class="text-sm font-light font-inter leading-normal">5</p>
             </button>
             <button>
               <svg width="34" height="36" viewBox="0 0 34 36" fill="none" xmlns="http://www.w3.org/2000/svg">
