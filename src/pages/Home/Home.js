@@ -16,6 +16,9 @@ const Home = () => {
 
   const [searchPanel, setSearchPanel] = useState(false);
   const state = useSelector((state) => state.search);
+  const availableDevices = useSelector((state) => state.device.availableDevices);
+  const comingSoonDevices = useSelector((state) => state.device.comingSoonDevices);
+  console.log("comingSoonDevices", comingSoonDevices);
   const rootState = useSelector((state) => state);
   console.log("statessssss", rootState);
   const topTenMobile = [
@@ -139,9 +142,9 @@ const Home = () => {
     // Dispatch the fetchDevices action
     dispatch(fetchDevices());
   }, [dispatch]);
-  const latestDevices = devices
-  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-  .slice(-5);
+  const latestDevices = availableDevices
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(-5);
   return (
     <div>
       <Navbar />
@@ -236,14 +239,19 @@ const Home = () => {
 
                         {
                           latestDevices.map((d, i) => (
-                            <Link key={i} to={`/${d.brand.toLowerCase()}/${d._id}`} className='max-w-[110px] sm:max-w-[180px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                              <div className='max-w-[135px]  w-full '>
-                                <img className='w-full h-[135px] object-contain' src={d.banner_img} alt="" srcset="" />
+                            <Link
+                              key={i}
+                              to={`/${d.brand.toLowerCase()}/${d._id}`}
+                              className='max-w-[110px] sm:max-w-[180px] w-full flex flex-col justify-center items-center cursor-pointer group transition-transform transform-gpu transform-origin-center hover:scale-110'
+                            >
+                              <div className='max-w-[135px] w-full'>
+                                <img className='w-full h-[135px] object-contain' src={d.banner_img} alt="" />
                               </div>
                               <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1 w-full'>
                                 {d.deviceName}
                               </p>
                             </Link>
+
                           ))
                         }
 
@@ -256,46 +264,28 @@ const Home = () => {
                       <p className='pb-2 font-inter font-medium text-2xl relative after:absolute after:h-[3px] after:w-5 after:bottom-2 after:bg-black'>Upcoming</p>
                       <div className='m-0 sm:m-5 flex flex-wrap gap-y-6 gap-x-2 sm:gap-x-2'>
 
-                        <div className='max-w-[110px] sm:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                          <div className='max-w-[135px] w-full '>
-                            <img className='w-full' src={mobile1} alt="" srcset="" />
-                          </div>
-                          <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                            Galaxy S24 Ultra
-                          </p>
-                        </div>
-                        <div className='max-w-[110px] sm:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                          <div className='max-w-[135px] w-full '>
-                            <img className='w-full' src={mobile1} alt="" srcset="" />
-                          </div>
-                          <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                            Galaxy S24 Ultra
-                          </p>
-                        </div>
-                        <div className='max-w-[110px] sm:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                          <div className='max-w-[135px] w-full '>
-                            <img className='w-full' src={mobile1} alt="" srcset="" />
-                          </div>
-                          <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                            Galaxy S24 Ultra
-                          </p>
-                        </div>
-                        <div className='max-w-[110px] sm:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                          <div className='max-w-[135px] w-full '>
-                            <img className='w-full' src={mobile1} alt="" srcset="" />
-                          </div>
-                          <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                            Galaxy S24 Ultra
-                          </p>
-                        </div>
-                        <div className='max-w-[110px] sm:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group'>
-                          <div className='max-w-[135px] w-full '>
-                            <img className='w-full' src={mobile1} alt="" srcset="" />
-                          </div>
-                          <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1'>
-                            Galaxy S24 Ultra
-                          </p>
-                        </div>
+                        {
+                          comingSoonDevices
+                            .sort((a, b) => a.deviceName.localeCompare(b.deviceName))
+                            .slice(0, 5)
+                            .map((d, i) => (
+                              <Link
+                                key={i}
+                                to={`/${d.brand.toLowerCase()}/${d._id}`}
+                                className='max-w-[110px] sm:max-w-[180px] w-full flex flex-col justify-center items-center cursor-pointer group transition-transform transform-gpu transform-origin-center hover:scale-110'
+                              >
+                                <div className='max-w-[135px] w-full'>
+                                  <img className='w-full h-[135px] object-contain' src={d.banner_img} alt="" />
+                                </div>
+                                <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1 w-full'>
+                                  {d.deviceName}
+                                </p>
+                              </Link>
+                            ))
+                        }
+
+
+
 
 
                       </div>

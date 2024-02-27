@@ -7,6 +7,8 @@ const initialState = {
   brandDevices: [],
   brandLoading: false,
   searchTerm: '',
+  availableDevices: [],
+  comingSoonDevices: []
 };
 
 const deviceReducer = (state = initialState, action) => {
@@ -14,7 +16,17 @@ const deviceReducer = (state = initialState, action) => {
     case FETCH_DEVICES_REQUEST:
       return { ...state, loading: true, error: null };
     case FETCH_DEVICES_SUCCESS:
-      return { ...state, loading: false, devices: action.payload, error: null };
+      const { payload: devices } = action;
+      const availableDevices = devices.filter(device => device.status === 'Available');
+      const comingSoonDevices = devices.filter(device => device.status === 'Coming soon');
+      return {
+        ...state,
+        devices,
+        availableDevices,
+        comingSoonDevices,
+        loading: false,
+        error: null,
+      };
     case FETCH_DEVICES_FAILURE:
       return { ...state, loading: false, error: action.payload };
     case FETCH_BRAND_DEVICES_REQUEST:

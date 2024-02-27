@@ -3,7 +3,7 @@ import Home from './pages/Home/Home';
 import Search from './pages/Search/Search';
 import Brand from './pages/Brand/Brand';
 import PhoneDetails from './pages/PhoneDetails/PhoneDetails';
-
+import { Toaster } from 'react-hot-toast';
 
 
 
@@ -11,6 +11,10 @@ function App() {
 
   return (
     <div>
+       <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} >

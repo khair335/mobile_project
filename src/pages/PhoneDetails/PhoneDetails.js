@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../component/Navbar/Navbar';
 import Advertisement_Width_Full from '../../component/Advertisement_Width_Full/Advertisement_Width_Full';
-
+import toast from "react-hot-toast";
 import Advertisement_height_250 from '../../component/Advertisement_height_250/Advertisement_height_250';
 
 import "react-range-slider-input/dist/style.css";
@@ -36,7 +36,7 @@ const PhoneDetails = () => {
   const brandName = extractNameFromPath(pathname);
   const brandWiseDevice = useSelector((state) => state.device.brandDevices);
   const rootStae = useSelector((state) => state.device);
-  console.log("brandWiseDevice999",rootStae);
+  console.log("brandWiseDevice999", rootStae);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchBrandDevices(brandName.toLocaleLowerCase()))
@@ -59,6 +59,38 @@ const PhoneDetails = () => {
       });
   }, []);
 
+  const extractCurrencyAndPrice = (device) => {
+    // Check if the device exists and has the 'data' property
+    if (device && device.data && Array.isArray(device.data)) {
+      // Find the object with type "price"
+      const priceObject = device.data.find(item => item.type === 'price');
+
+      // Check if the priceObject has subType array
+      if (priceObject && priceObject.subType && Array.isArray(priceObject.subType)) {
+        // Find the object with subData containing the price value
+        const priceDataObject = priceObject.subType.find(subItem => subItem.subData.includes('BDT'));
+
+        // Check if the priceDataObject is found
+        if (priceDataObject) {
+          // Extract the currency code (BDT) and numerical value from the subData
+          const match = priceDataObject.subData.match(/([A-Z]+)\s*[-=]\s*([\d,]+)/);
+
+          // Check if the match is successful
+          if (match) {
+            const matchedNumber = match ? match[2] : null;
+
+            // Output the full number
+            console.log("Price Value:", matchedNumber);
+
+          }
+        }
+      }
+    }
+  };
+
+
+
+  extractCurrencyAndPrice(deviceData);
 
   if (!deviceData) {
     return <Loading />;
@@ -115,12 +147,36 @@ const PhoneDetails = () => {
     return name.replace(/_/g, ' ').replace(/\b\w/g, (match) => match.toUpperCase());
   };
 
-const formattedDate = new Date(deviceData.release_date).toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric'
-});
-  console.log("formattedDate",formattedDate);
+  // const formattedDate = new Date(deviceData.release_date).toLocaleDateString('en-US', {
+  //   year: 'numeric',
+  //   month: 'long',
+  //   day: 'numeric'
+  // });
+  // console.log("formattedDate",formattedDate);
+
+  const handleCopyLink = () => {
+    // Create a temporary input element
+    const input = document.createElement('input');
+
+    // Set its value to the current URL
+    input.value = window.location.href;
+
+    // Append the input element to the document
+    document.body.appendChild(input);
+
+    // Select the text inside the input
+    input.select();
+
+    // Execute the copy command
+    document.execCommand('copy');
+
+    // Remove the temporary input element
+    document.body.removeChild(input);
+
+    // Provide feedback to the user (optional)
+    toast.success("Link copied to clipboard!");
+    // alert('Link copied to clipboard!');
+  };
   return (
     <div>
       <Navbar />
@@ -201,7 +257,7 @@ const formattedDate = new Date(deviceData.release_date).toLocaleDateString('en-U
 
                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(255,255,255,1)"><path d="M8 2H1L9.26086 13.0145L1.44995 21.9999H4.09998L10.4883 14.651L16 22H23L14.3917 10.5223L21.8001 2H19.1501L13.1643 8.88578L8 2ZM17 20L5 4H7L19 20H17Z"></path></svg></div>
                               </div>
-                              <div className='bg-gray-400 md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer'>
+                              <div onClick={() => handleCopyLink()} className='bg-gray-400 md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer'>
                                 <div className='md:w-[36px] w-5 md:h-[36px] h-5'>
 
 
@@ -230,7 +286,7 @@ const formattedDate = new Date(deviceData.release_date).toLocaleDateString('en-U
                                 </div>
                                 <p className='font-poppins  xl:text-sm text-[10px] font-light'>
                                   {
-                                    deviceData.release_date ? <span className=''>Released {formattedDate} </span> : "No Data Found"
+                                    deviceData.release_date ? <span className=''>Released {deviceData.release_date} </span> : "No Data Found"
                                   }
                                 </p>
                               </div>
@@ -239,7 +295,7 @@ const formattedDate = new Date(deviceData.release_date).toLocaleDateString('en-U
                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4V20H17V4H7ZM6 2H18C18.5523 2 19 2.44772 19 3V21C19 21.5523 18.5523 22 18 22H6C5.44772 22 5 21.5523 5 21V3C5 2.44772 5.44772 2 6 2ZM12 17C12.5523 17 13 17.4477 13 18C13 18.5523 12.5523 19 12 19C11.4477 19 11 18.5523 11 18C11 17.4477 11.4477 17 12 17Z"></path></svg>
                                 </div>
                                 <p className='font-poppins xl:text-sm text-[10px] font-light'>
-                                  { deviceData?.weight && <span className=''>{deviceData?.weight}g </span> } ,
+                                  {deviceData?.weight && <span className=''>{deviceData?.weight}g </span>} ,
                                   {
                                     deviceData?.thickness && <span className='pl-2'>{deviceData?.thickness} thickness </span>
                                   }
@@ -257,7 +313,7 @@ const formattedDate = new Date(deviceData.release_date).toLocaleDateString('en-U
                               <div className='flex items-center gap-2 pt-2'>
                                 <div className='xl:w-[18px] w-3  xl:h-[18px] h-3'>
                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18H18V6H6V18ZM14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM8 8H16V16H8V8Z"></path></svg>  </div>
-                                <p className='font-poppins xl:text-sm text-[10px] font-light'>{console.log("deviceData.expandable_storage_type",deviceData)}
+                                <p className='font-poppins xl:text-sm text-[10px] font-light'>{console.log("deviceData.expandable_storage_type", deviceData)}
                                   {deviceData?.storage} storage, {deviceData?.expandable_storage ? deviceData.expandable_storage_type : "no card slot"}
 
                                 </p>
@@ -293,32 +349,32 @@ const formattedDate = new Date(deviceData.release_date).toLocaleDateString('en-U
                               </div>
 
                               <p className='font-poppins xl:text-xl text-[10px] font-medium'>{deviceData?.displaySize}"</p>
-                              <p className='font-poppins  xl:text-sm text-[8px] font-light'>{deviceData.displayResolution && <span className=''>{deviceData.displayResolution} pixels</span> }</p>
+                              <p className='font-poppins  xl:text-sm text-[8px] font-light'>{deviceData.displayResolution && <span className=''>{deviceData.displayResolution} pixels</span>}</p>
                             </div>
                             <div className='flex-col justify-start items-start'>
                               <div className='xl:max-w-[36px] max-w-5 xl:h-[36px] h-5 w-full '>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M2 6.00087C2 5.44811 2.45531 5 2.9918 5H21.0082C21.556 5 22 5.44463 22 6.00087V19.9991C22 20.5519 21.5447 21 21.0082 21H2.9918C2.44405 21 2 20.5554 2 19.9991V6.00087ZM4 7V19H20V7H4ZM14 16C15.6569 16 17 14.6569 17 13C17 11.3431 15.6569 10 14 10C12.3431 10 11 11.3431 11 13C11 14.6569 12.3431 16 14 16ZM14 18C11.2386 18 9 15.7614 9 13C9 10.2386 11.2386 8 14 8C16.7614 8 19 10.2386 19 13C19 15.7614 16.7614 18 14 18ZM4 2H10V4H4V2Z"></path></svg>
                               </div>
 
-                              <p className='font-poppins xl:text-xl text-[10px] font-medium'>{deviceData.backCamera &&  <> {deviceData.backCamera} <span className='xl:text-sm text-[8px]'> MP</span> </>  }</p>
-                              <p className='font-poppins  xl:text-sm text-[8px] font-light'>{deviceData?.backCameraVideo &&  <span className='xl:text-sm text-[8px]'>{deviceData?.backCameraVideo}p</span>}</p>
+                              <p className='font-poppins xl:text-xl text-[10px] font-medium'>{deviceData.backCamera && <> {deviceData.backCamera} <span className='xl:text-sm text-[8px]'> MP</span> </>}</p>
+                              <p className='font-poppins  xl:text-sm text-[8px] font-light'>{deviceData?.backCameraVideo && <span className='xl:text-sm text-[8px]'>{deviceData?.backCameraVideo}p</span>}</p>
                             </div>
                             <div>
 
-                                          {/* <span className='xl:text-xl text-[10px] font-medium'>{deviceData.backCamera && <>{ deviceData.backCamera}</>}  MP</span> */}
+                              {/* <span className='xl:text-xl text-[10px] font-medium'>{deviceData.backCamera && <>{ deviceData.backCamera}</>}  MP</span> */}
 
                               <div className='xl:max-w-[36px] max-w-5 xl:h-[36px] h-5 w-full'>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(0,0,0,1)"><path d="M14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM7 7V11H11V7H7Z"></path></svg>
                               </div>
                               <p className='font-poppins xl:text-xl text-[10px] font-medium'>{deviceData.ram && <> {deviceData.ram}   <span className='xl:text-sm text-[8px]'> GB RAM</span> </>} </p>
-                              <p className='font-poppins  xl:text-sm text-[8px] font-light'>{deviceData.processor && <span>{deviceData.processor}</span> }</p>
+                              <p className='font-poppins  xl:text-sm text-[8px] font-light'>{deviceData.processor && <span>{deviceData.processor}</span>}</p>
                             </div>
                             <div>
                               <div className='xl:max-w-[36px] max-w-5 xl:h-[36px] h-5 w-full'>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(0,0,0,1)"><path d="M9 4V3C9 2.44772 9.44772 2 10 2H14C14.5523 2 15 2.44772 15 3V4H18C18.5523 4 19 4.44772 19 5V21C19 21.5523 18.5523 22 18 22H6C5.44772 22 5 21.5523 5 21V5C5 4.44772 5.44772 4 6 4H9ZM13 12V7L8 14H11V19L16 12H13Z"></path></svg>
                               </div>
                               <p className='font-poppins xl:text-xl text-[10px] font-medium'>{deviceData?.battery} <span className='xl:text-sm text-[8px]'>mAh Li-Ion</span></p>
-                              <p className='font-poppins  xl:text-sm text-[8px] font-light flex items-center gap-1'> <div className='xl:max-w-[18px] max-w-3 xl:h-[18px] h-3 w-full'><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="currentColor"><path d="M3.92887 4.92896L5.34315 6.34323C3.89543 7.79094 3 9.79094 3 12.0001C3 14.2092 3.89543 16.2092 5.34315 17.6569L3.92887 19.0712C2.11925 17.2616 1 14.7616 1 12.0001C1 9.23858 2.11925 6.73858 3.92887 4.92896ZM20.0711 4.92896C21.8808 6.73858 23 9.23858 23 12.0001C23 14.7616 21.8808 17.2616 20.0711 19.0712L18.6569 17.6569C20.1046 16.2092 21 14.2092 21 12.0001C21 9.79145 20.105 7.79186 18.6579 6.34423L20.0711 4.92896ZM13 5.00008V11.0001H16L11 19.0001V13.0001H8L13 5.00008ZM6.75736 7.75744L8.17157 9.17165C7.44771 9.89551 7 10.8955 7 12.0001C7 13.1046 7.44771 14.1046 8.17157 14.8285L6.75736 16.2427C5.67157 15.1569 5 13.6569 5 12.0001C5 10.3432 5.67157 8.84323 6.75736 7.75744ZM17.2436 7.75842C18.3288 8.84413 19 10.3437 19 12.0001C19 13.6569 18.3284 15.1569 17.2426 16.2427L15.8284 14.8285C16.5523 14.1046 17 13.1046 17 12.0001C17 10.896 16.5527 9.89643 15.8294 9.17265L17.2436 7.75842Z"></path></svg></div> {deviceData?.chargingSpeed}w</p>
+                              <p className='font-poppins  xl:text-sm text-[8px] font-light flex items-center gap-1'> <div className='xl:max-w-[18px] max-w-3 xl:h-[18px] h-3 w-full'><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3.92887 4.92896L5.34315 6.34323C3.89543 7.79094 3 9.79094 3 12.0001C3 14.2092 3.89543 16.2092 5.34315 17.6569L3.92887 19.0712C2.11925 17.2616 1 14.7616 1 12.0001C1 9.23858 2.11925 6.73858 3.92887 4.92896ZM20.0711 4.92896C21.8808 6.73858 23 9.23858 23 12.0001C23 14.7616 21.8808 17.2616 20.0711 19.0712L18.6569 17.6569C20.1046 16.2092 21 14.2092 21 12.0001C21 9.79145 20.105 7.79186 18.6579 6.34423L20.0711 4.92896ZM13 5.00008V11.0001H16L11 19.0001V13.0001H8L13 5.00008ZM6.75736 7.75744L8.17157 9.17165C7.44771 9.89551 7 10.8955 7 12.0001C7 13.1046 7.44771 14.1046 8.17157 14.8285L6.75736 16.2427C5.67157 15.1569 5 13.6569 5 12.0001C5 10.3432 5.67157 8.84323 6.75736 7.75744ZM17.2436 7.75842C18.3288 8.84413 19 10.3437 19 12.0001C19 13.6569 18.3284 15.1569 17.2426 16.2427L15.8284 14.8285C16.5523 14.1046 17 13.1046 17 12.0001C17 10.896 16.5527 9.89643 15.8294 9.17265L17.2436 7.75842Z"></path></svg></div> {deviceData?.chargingSpeed}w</p>
                             </div>
                           </div>
                         </div>
@@ -331,7 +387,7 @@ const formattedDate = new Date(deviceData.release_date).toLocaleDateString('en-U
                               <div className='w-full h-[190px] bg-opacity-30 bg-slate-300  px-2 flex flex-col gap-y-1 justify-between'>
                                 <div className='flex items-center gap-1'>
                                   <div className='max-w-[20px] h-[20px] w-full ml-[-4px]'>
-                                    <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"  transform="matrix(6.123233995736766e-17,1,-1,6.123233995736766e-17,0,0)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" transform="matrix(6.123233995736766e-17,1,-1,6.123233995736766e-17,0,0)">
                                       <path d="M3 4H21C21.5523 4 22 4.44772 22 5V19C22 19.5523 21.5523 20 21 20H3C2.44772 20 2 19.5523 2 19V5C2 4.44772 2.44772 4 3 4ZM4 6V18H20V6H4Z" />
                                     </svg>
 
