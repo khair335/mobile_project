@@ -1,6 +1,7 @@
 // actions/deviceActions.js
 import axios from 'axios';
 import { FETCH_BRAND_DEVICES_FAILURE, FETCH_BRAND_DEVICES_REQUEST, FETCH_BRAND_DEVICES_SUCCESS, FETCH_DEVICES_FAILURE, FETCH_DEVICES_REQUEST, FETCH_DEVICES_SUCCESS, ON_SEARCH } from '../actionTypes/actionTypes';
+import { api } from '../../urlConfig';
 // import * as actionTypes from '../actionTypes/deviceActionTypes';
 
 
@@ -43,7 +44,7 @@ export const fetchDevices = () => {
     dispatch(fetchDevicesRequest());
 
     try {
-      const response = await axios.get('http://localhost:2000/api/allDeviceName');
+      const response = await axios.get(`${api}/allDeviceName`);
       dispatch(fetchDevicesSuccess(response.data));
     } catch (error) {
       dispatch(fetchDevicesFailure(error.message));
@@ -53,7 +54,7 @@ export const fetchDevices = () => {
 export const fetchBrandDevices = (brandName) => async (dispatch) => {
   dispatch(fetchBrandDevicesRequest());
   try {
-    const response = await axios.get(`http://localhost:2000/api/brand/${brandName}`);
+    const response = await axios.get(`${api}/brand/${brandName}`);
     dispatch(fetchBrandDevicesSuccess(response.data));
   } catch (error) {
     dispatch(fetchBrandDevicesFailure(error.message));

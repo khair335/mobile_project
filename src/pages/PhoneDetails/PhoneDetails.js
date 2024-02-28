@@ -20,6 +20,7 @@ import PhoneYoutubeVideo from '../../component/PhoneYoutubeVideo/PhoneYoutubeVid
 import { Link, useLocation, useParams } from 'react-router-dom';
 import Loading from '../../component/Loading/Loading';
 import { fetchBrandDevices } from '../../redux/actions/deviceAction';
+import { api } from '../../urlConfig';
 const PhoneDetails = () => {
 
   const { phoneId } = useParams()
@@ -48,7 +49,7 @@ const PhoneDetails = () => {
   const [deviceData, setDeviceData] = useState(null);
 
   useEffect(() => {
-    const apiUrl = `http://localhost:2000/api/devicesData/${phoneId}`;
+    const apiUrl = `${api}/devicesData/${phoneId}`;
     axios.get(apiUrl)
       .then(response => {
         console.log('Axios Response:', response.data);
@@ -59,38 +60,39 @@ const PhoneDetails = () => {
       });
   }, []);
 
-  const extractCurrencyAndPrice = (device) => {
-    // Check if the device exists and has the 'data' property
-    if (device && device.data && Array.isArray(device.data)) {
-      // Find the object with type "price"
-      const priceObject = device.data.find(item => item.type === 'price');
+  // const extractCurrencyAndPrice = (device) => {
+  //   // Check if the device exists and has the 'data' property
+  //   if (device && device.data && Array.isArray(device.data)) {
+  //     // Find the object with type "price"
+  //     const priceObject = device.data.find(item => item.type === 'price');
 
-      // Check if the priceObject has subType array
-      if (priceObject && priceObject.subType && Array.isArray(priceObject.subType)) {
-        // Find the object with subData containing the price value
-        const priceDataObject = priceObject.subType.find(subItem => subItem.subData.includes('BDT'));
+  //     // Check if the priceObject has subType array
+  //     if (priceObject && priceObject.subType && Array.isArray(priceObject.subType)) {
+  //       // Find the object with subData containing the price value
+  //       const priceDataObject = priceObject.subType.find(subItem => subItem.subData.includes('BDT'));
 
-        // Check if the priceDataObject is found
-        if (priceDataObject) {
-          // Extract the currency code (BDT) and numerical value from the subData
-          const match = priceDataObject.subData.match(/([A-Z]+)\s*[-=]\s*([\d,]+)/);
+  //       // Check if the priceDataObject is found
+  //       if (priceDataObject) {
+  //         // Extract the currency code (BDT) and numerical value from the subData
+  //         const match = priceDataObject.subData.match(/([A-Z]+)\s*[-=]\s*([\d,]+)/);
 
-          // Check if the match is successful
-          if (match) {
-            const matchedNumber = match ? match[2] : null;
+  //         // Check if the match is successful
+  //         if (match) {
+  //           const matchedNumber = match ? match[2] : null;
 
-            // Output the full number
-            console.log("Price Value:", matchedNumber);
+  //           // Output the full number
+  //           console.log("Price Value:", matchedNumber);
 
-          }
-        }
-      }
-    }
-  };
+  //         }
+  //       }
+  //     }
+  //   }
+  // };
 
 
 
-  extractCurrencyAndPrice(deviceData);
+
+  // extractCurrencyAndPrice(deviceData);
 
   if (!deviceData) {
     return <Loading />;

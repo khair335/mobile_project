@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ON_SEARCH, SEARCH_BOX_CLOSE, SEARCH_BOX_OPEN } from '../../redux/actionTypes/actionTypes';
 import axios from 'axios';
+import { api } from '../../urlConfig';
 const PhoneFind = () => {
     const dispatch = useDispatch();
   const [isClearable, setIsClearable] = useState(true);
@@ -22,7 +23,7 @@ const PhoneFind = () => {
     // Fetch data using Axios when the component mounts
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:2000/api/brandName');
+        const response = await axios.get(`${api}/brandName`);
         // Assuming the response.data is an array of objects with 'name' and 'link' properties
         setMobileBrand(response.data.brandNames);
         // console.log("mobileBrand",response.data.brandNames);

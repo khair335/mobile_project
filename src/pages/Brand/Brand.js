@@ -13,6 +13,7 @@ import PhoneSearchPanel from '../../component/PhoneSearchPanel/PhoneSearchPanel'
 import axios from 'axios';
 import { fetchBrandDevices } from '../../redux/actions/deviceAction';
 import Loading from '../../component/Loading/Loading';
+import { api } from '../../urlConfig';
 const Brand = () => {
   const { id } = useParams()
 
@@ -136,7 +137,7 @@ const Brand = () => {
 
   useEffect(() => {
     const fetchDevicesByBrand = async () => {
-      const api = `http://localhost:2000/api/brandName/${id}`
+      const api = `${api}/brandName/${id}`
       try {
         const response = await axios.get(api);
 

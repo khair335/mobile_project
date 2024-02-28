@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Slider from "react-slick";
+import { api } from '../../urlConfig';
 
 const Advertisement_Width_Full = () => {
   const [adData, setAdData] = useState(null);
@@ -8,7 +9,7 @@ const Advertisement_Width_Full = () => {
   useEffect(() => {
     const fetchAds = async () => {
       try {
-        const response = await axios.get('http://localhost:2000/api/get-ads/topAds');
+        const response = await axios.get(`${api}/get-ads/topAds`);
         setAdData(response.data);
       } catch (error) {
         console.error('Error fetching ads:', error);

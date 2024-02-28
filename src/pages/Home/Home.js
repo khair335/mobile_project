@@ -11,6 +11,7 @@ import PhoneFind from '../../component/PhoneFind/PhoneFind';
 import PhoneSearchPanel from '../../component/PhoneSearchPanel/PhoneSearchPanel';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDevices } from '../../redux/actions/deviceAction';
+import BudgetDevice from '../../component/BudgetDevice/BudgetDevice';
 // import { fetchDevices } from '../actions/deviceActions';
 const Home = () => {
 
@@ -290,7 +291,7 @@ const Home = () => {
 
                       </div>
                     </div>
-                    <div className='mb-10'>
+                    {/* <div className='mb-10'>
                       <p className='pb-2 font-inter font-medium text-2xl relative after:absolute after:h-[3px] after:w-5 after:bottom-2 after:bg-black'>Under 15k</p>
                       <div className='m-0 sm:m-5 flex flex-wrap gap-y-6 gap-x-2 sm:gap-x-2'>
 
@@ -337,7 +338,10 @@ const Home = () => {
 
 
                       </div>
-                    </div>
+                    </div> */}
+
+                    <BudgetDevice price={10000}/>
+                    <BudgetDevice price={20000}/>
                   </div>
 
 
