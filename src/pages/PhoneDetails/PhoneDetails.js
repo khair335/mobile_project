@@ -29,7 +29,14 @@ const PhoneDetails = () => {
   const location = useLocation();
   const pathname = location?.pathname
 
-
+  const updateVisitorCount = async (deviceId) => {
+  console.log("deviceId----100",deviceId);
+  try {
+    await axios.put(`${api}/updateVisitorCount/${deviceId}`);
+  } catch (error) {
+    console.error('Error updating visitor count:', error);
+  }
+};
   const extractNameFromPath = (pathname) => {
     const parts = pathname.split('/');
     return parts.length >= 2 ? parts[1] : 'defaultName';
@@ -41,6 +48,7 @@ const PhoneDetails = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchBrandDevices(brandName.toLocaleLowerCase()))
+    updateVisitorCount(phoneId)
   }, [phoneId]);
 
   const [shareModal, setShareModal] = useState(false);
@@ -327,16 +335,16 @@ const PhoneDetails = () => {
 
                                 <div className='xl:w-8 xl:h-8 w-4 h-4'>
                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(0,0,0,1)"><path d="M9 7.53861L15 21.5386L18.6594 13H23V11H17.3406L15 16.4614L9 2.46143L5.3406 11H1V13H6.6594L9 7.53861Z"></path></svg>  </div>
-                                <p className='text-black xl:text-2xl text-sm'>93%</p>
+                                {/* <p className='text-black xl:text-2xl text-sm'>93%</p> */}
                               </div>
-                              <p className='pt-3 xl:text-sm text-[8px] text-center'>2,672,789 HITS</p>
+                              <p className='pt-3 xl:text-sm text-[8px] text-center'>{deviceData?.visitorCount?.toLocaleString()} HITS</p>
                             </div>
                             <div>
                               <div className='flex gap-3'>
 
                                 <div className='xl:w-8 xl:h-8 w-4 h-4'>  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12.001 4.52853C14.35 2.42 17.98 2.49 20.2426 4.75736C22.5053 7.02472 22.583 10.637 20.4786 12.993L11.9999 21.485L3.52138 12.993C1.41705 10.637 1.49571 7.01901 3.75736 4.75736C6.02157 2.49315 9.64519 2.41687 12.001 4.52853ZM18.827 6.1701C17.3279 4.66794 14.9076 4.60701 13.337 6.01687L12.0019 7.21524L10.6661 6.01781C9.09098 4.60597 6.67506 4.66808 5.17157 6.17157C3.68183 7.66131 3.60704 10.0473 4.97993 11.6232L11.9999 18.6543L19.0201 11.6232C20.3935 10.0467 20.319 7.66525 18.827 6.1701Z"></path></svg>
                                 </div>
-                                <p className='text-black xl:text-2xl text-sm'>624</p>
+                                <p className='text-black xl:text-2xl text-sm'>{deviceData?.favCount?.toLocaleString()}</p>
                               </div>
                               <p className='pt-3 uppercase xl:text-sm text-[8px] text-center'>Become a fan</p>
                             </div>
@@ -511,9 +519,9 @@ const PhoneDetails = () => {
                             <div className='w-5 h-5'>
                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(0,0,0,1)"><path d="M9 7.53861L15 21.5386L18.6594 13H23V11H17.3406L15 16.4614L9 2.46143L5.3406 11H1V13H6.6594L9 7.53861Z"></path></svg>
                             </div>
-                            <p className='text-black text-sm'>93%</p>
+                            {/* <p className='text-black text-sm'>93%</p> */}
                           </div>
-                          <p className='text-xs uppercase'>2,672,789 HITS</p>
+                          <p className='text-xs uppercase'>{deviceData?.favCount?.toLocaleString()} HITS</p>
                         </div>
                         <div>
                           <div className='flex gap-3'>

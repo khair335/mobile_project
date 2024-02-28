@@ -14,6 +14,8 @@ import axios from 'axios';
 import { fetchBrandDevices } from '../../redux/actions/deviceAction';
 import Loading from '../../component/Loading/Loading';
 import { api } from '../../urlConfig';
+import TopDevicesLast10Days from '../../component/TopDevicesLast10Days/TopDevicesLast10Days';
+import TopFavDevicesLast10Days from '../../component/TopFavDevicesLast10Days/TopFavDevicesLast10Days';
 const Brand = () => {
   const { id } = useParams()
 
@@ -179,69 +181,9 @@ const Brand = () => {
 
 
               <Advertisement_height_250 />
-              <div className='my-3 w-full px-5'>
-                <h3 className='uppercase text-[#777] font-semibold text-lg h-[35px] relative before:absolute before:h-[35px] before:w-3 before:bg-gray-400 before:left-[-20px] before:top-[-4px]' >Top 10 by daily interest</h3>
-
-                <table className='w-full'>
-                  <thead className='bg-[#A4C08D] max-w-[400px] w-full'>
-                    <tr>
-                      <th>&nbsp;</th>
-                      <th className="text-left text-sm font-normal font-inter text-white">Device</th>
-                      <th className="text-left text-sm font-normal font-inter text-white">Daily hits</th>
-
-                    </tr>
-                  </thead>
-
-                  <tbody>
-
-                    {
-                      sortedTopTenMobile.map((brand, index) => (
-                        <tr key={index}>
-                          <td className='text-black font-normal font-["inter"] text-sm pl-2 py-2'>{index + 1}</td>
-                          <td className='text-black font-normal font-["inter"] text-sm hover:text-red-500 py-2'>
-                            <Link className='' to="/">{brand?.model}</Link>
-                          </td>
-                          <td className='text-black font-normal font-["inter"] text-sm py-2'>{brand?.hit.toLocaleString()}</td>
-                        </tr>
-                      ))
-                    }
-
-
-                  </tbody>
-                </table>
-
-              </div>
+              <TopDevicesLast10Days/>
               <Advertisement_height_250 />
-              <div className='my-3 w-full px-5'>
-                <h3 className='uppercase text-[#777] font-semibold text-lg h-[35px] relative before:absolute before:h-[35px] before:w-3 before:bg-gray-400 before:left-[-20px] before:top-[-4px]' >TOP 10 BY FANS</h3>
-
-                <table className='w-full'>
-                  <thead className='bg-gray-500 max-w-[400px] w-full'>
-                    <tr>
-                      <th>&nbsp;</th>
-                      <th className="text-left text-sm font-normal font-inter text-white">Device</th>
-                      <th className="text-left text-sm font-normal font-inter text-white">Favorites</th>
-
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {
-                      sortedTopTenMobileFan.map((brand, index) => (
-                        <tr key={index}>
-                          <td className='text-black font-normal font-["inter"] text-sm pl-2 py-2'>{index + 1}</td>
-                          <td className='text-black font-normal font-["inter"] text-sm hover:text-red-500 py-2 cursor-pointer'>
-                            <Link className='' to="/">{brand?.model}</Link>
-                          </td>
-                          <td className='text-black font-normal font-["inter"] text-sm py-2'>{brand?.fav.toLocaleString()}</td>
-                        </tr>
-                      ))
-                    }
-
-                  </tbody>
-                </table>
-
-              </div>
+               <TopFavDevicesLast10Days/>
             </div>
 
             {
