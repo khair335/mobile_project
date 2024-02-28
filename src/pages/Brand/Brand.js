@@ -137,9 +137,9 @@ const Brand = () => {
 
   useEffect(() => {
     const fetchDevicesByBrand = async () => {
-      const api = `${api}/brandName/${id}`
+      const apiUrl = `${api}/brandName/${id}`
       try {
-        const response = await axios.get(api);
+        const response = await axios.get(apiUrl);
 
         setBrandData(response.data);
       } catch (error) {
