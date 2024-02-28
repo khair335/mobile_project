@@ -7,7 +7,7 @@ const initialState = {
   mobileSearch: false,
 };
 
-console.log("initialState",initialState);
+
 const searchReducer = (state = initialState, action) => {
 
   // const handleSearch = state.search
@@ -32,11 +32,11 @@ const searchReducer = (state = initialState, action) => {
     case MOBILE_SEARCH_BOX_SHOW:
       let value ;
       if(state.mobileSearch === false){
-       
+
         value = true
       }
       if(state.mobileSearch === true){
-       
+
         value = false
       }
       return {

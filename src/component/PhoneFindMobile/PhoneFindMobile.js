@@ -366,7 +366,7 @@ const PhoneFindMobile = () => {
 
     const state = useSelector((state) => state.search);
 
-    console.log(state.searchBox,"State");
+
     return (
         <div>
       {

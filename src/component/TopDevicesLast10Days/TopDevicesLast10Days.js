@@ -24,7 +24,7 @@ const TopDevicesLast10Days = () => {
     fetchData();
   }, []);
 
-  const sortedTopTenMobile = topDevices.sort((a, b) => b.visitorCount - a.visitorCount);
+
   return (
       <div className='my-3 w-full px-5'>
                 <h3 className='uppercase text-[#777] font-semibold text-lg h-[35px] relative before:absolute before:h-[35px] before:w-3 before:bg-gray-400 before:left-[-20px] before:top-[-4px]' >Top 10 by daily interest</h3>
@@ -42,7 +42,7 @@ const TopDevicesLast10Days = () => {
                   <tbody>
 
                     {
-                      sortedTopTenMobile.map((brand, index) => (
+                      topDevices.map((brand, index) => (
                         <tr key={index}>
                           <td className='text-black font-normal font-inter text-sm pl-2 py-2'>{index + 1}</td>
                           <td className='text-black font-normal font-inter capitalize text-sm hover:text-red-500 py-2'>

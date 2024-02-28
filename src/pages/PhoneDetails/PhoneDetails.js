@@ -30,7 +30,7 @@ const PhoneDetails = () => {
   const pathname = location?.pathname
 
   const updateVisitorCount = async (deviceId) => {
-  console.log("deviceId----100",deviceId);
+
   try {
     await axios.put(`${api}/updateVisitorCount/${deviceId}`);
   } catch (error) {
@@ -44,7 +44,7 @@ const PhoneDetails = () => {
   const brandName = extractNameFromPath(pathname);
   const brandWiseDevice = useSelector((state) => state.device.brandDevices);
   const rootStae = useSelector((state) => state.device);
-  console.log("brandWiseDevice999", rootStae);
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchBrandDevices(brandName.toLocaleLowerCase()))
@@ -60,13 +60,13 @@ const PhoneDetails = () => {
     const apiUrl = `${api}/devicesData/${phoneId}`;
     axios.get(apiUrl)
       .then(response => {
-        console.log('Axios Response:', response.data);
+
         setDeviceData(response.data);
       })
       .catch(error => {
         console.error('Axios Error:', error.message);
       });
-  }, []);
+  }, [phoneId]);
 
   // const extractCurrencyAndPrice = (device) => {
   //   // Check if the device exists and has the 'data' property
@@ -157,12 +157,7 @@ const PhoneDetails = () => {
     return name.replace(/_/g, ' ').replace(/\b\w/g, (match) => match.toUpperCase());
   };
 
-  // const formattedDate = new Date(deviceData.release_date).toLocaleDateString('en-US', {
-  //   year: 'numeric',
-  //   month: 'long',
-  //   day: 'numeric'
-  // });
-  // console.log("formattedDate",formattedDate);
+
 
   const handleCopyLink = () => {
     // Create a temporary input element
@@ -210,6 +205,7 @@ const PhoneDetails = () => {
                     brandWiseDevice.slice(0, 6).map((d, i) => (
                       <Link
                         to={`/${d.brand.toLowerCase()}/${d._id}`}
+                        // to="http://localhost:3000/tecno/65d4a3c7c7119b99afc5411e"
 
                         key={d._id} className='max-w-[122px] w-full flex flex-col justify-center items-center cursor-pointer group'>
                         <div className='max-w-[80px] w-full '>

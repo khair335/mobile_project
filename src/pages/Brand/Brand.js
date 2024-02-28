@@ -134,7 +134,7 @@ const Brand = () => {
   const sortedTopTenMobile = topTenMobile.sort((a, b) => b.hit - a.hit);
   const sortedTopTenMobileFan = topTenMobileFan.sort((a, b) => b.fav - a.fav);
   const [brandData, setBrandData] = useState([]);
-  console.log("ssssssssssssss", brandData);
+
   // const [brandName, setBrandName] = useState('TECNO'); // Set your default brand name here
 
   useEffect(() => {
@@ -145,7 +145,7 @@ const Brand = () => {
 
         setBrandData(response.data);
       } catch (error) {
-        console.error('Error fetching devices:', error);
+
         // Handle error, e.g., set an error state
       }
     };
@@ -156,7 +156,6 @@ const Brand = () => {
   const { brandDevices, brandLoading } = useSelector((state) => state.device);
 
 
-  console.log("brandWiseDevicebrandWiseDevice100", brandDevices);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchBrandDevices(id.toLocaleLowerCase()))
@@ -208,14 +207,18 @@ const Brand = () => {
                         brandDevices ? (
                           <>
                             {brandDevices.map((d, i) => (
-                              <Link to={`/${d.brand.toLowerCase()}/${d._id}`} className='max-w-[110px] md:max-w-[185px] w-full flex flex-col justify-center items-center cursor-pointer group' key={i}>
-                                <div className='md:max-w-[135px] max-w-[100px] w-full '>
-                                  <img className='w-full' src={d?.banner_img} alt="" srcset="" />
-                                </div>
-                                <p className='text-center text-[#777] font-inter md:text-sm text-xs py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1 w-full'>
-                                  {d?.deviceName}
-                                </p>
-                              </Link>
+                              <Link
+                              key={i}
+                              to={`/${d.brand.toLowerCase()}/${d._id}`}
+                              className='max-w-[110px] sm:max-w-[180px] w-full flex flex-col justify-center items-center cursor-pointer group transition-transform transform-gpu transform-origin-center hover:scale-110'
+                            >
+                              <div className='max-w-[135px] w-full'>
+                                <img className='w-full h-[135px] object-contain' src={d.banner_img} alt="" />
+                              </div>
+                              <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1 w-full'>
+                                {d.deviceName}
+                              </p>
+                            </Link>
                             ))}
                           </>
                         ) : (

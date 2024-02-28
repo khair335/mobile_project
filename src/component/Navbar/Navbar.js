@@ -27,10 +27,10 @@ const Navbar = () => {
   }, [searchTerm, devices]);
 
   useEffect(() => {
-    console.log("shahadat", filteredDevices.slice(0, 3));
+
   }, [filteredDevices])
 
-  //  console.log("shahadat", filteredDevices.slice(0, 2));
+
 
   return (
     <div className='w-full bg-[#9e9e9e] h-12 mx-auto fixed top-0 z-50'>

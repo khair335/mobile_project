@@ -21,9 +21,9 @@ const Home = () => {
   const state = useSelector((state) => state.search);
   const availableDevices = useSelector((state) => state.device.availableDevices);
   const comingSoonDevices = useSelector((state) => state.device.comingSoonDevices);
-  console.log("comingSoonDevices", comingSoonDevices);
+
   const rootState = useSelector((state) => state);
-  console.log("statessssss", rootState);
+
   const topTenMobile = [
     {
       id: 1,
@@ -139,7 +139,7 @@ const Home = () => {
 
   // useSelector hook to access the Redux store state
   const { devices, loading, error } = useSelector((state) => state.device);
-  console.log("devices-----------", devices);
+
   // useEffect hook to fetch devices on component mount
   useEffect(() => {
     // Dispatch the fetchDevices action

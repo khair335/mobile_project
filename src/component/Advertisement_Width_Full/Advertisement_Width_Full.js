@@ -5,7 +5,7 @@ import { api } from '../../urlConfig';
 
 const Advertisement_Width_Full = () => {
   const [adData, setAdData] = useState(null);
-  console.log("adData",adData);
+
   useEffect(() => {
     const fetchAds = async () => {
       try {
