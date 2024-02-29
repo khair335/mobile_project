@@ -7,8 +7,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ON_SEARCH, SEARCH_BOX_CLOSE, SEARCH_BOX_OPEN } from '../../redux/actionTypes/actionTypes';
 import axios from 'axios';
 import { api } from '../../urlConfig';
+import { useMutation } from 'react-query';
+import { onSearch } from '../../redux/reducers/searchReducer';
+const postData = async (requestData) => {
+  try {
+    const response = await axios.post(`${api}/filterDevices`, requestData);
+    return response.data;
+  } catch (error) {
+    throw new Error('Error posting data');
+  }
+};
 const PhoneFind = () => {
   const dispatch = useDispatch();
+
+
   const [isClearable, setIsClearable] = useState(true);
   const [isSearchable, setIsSearchable] = useState(true);
   const [isDisabled, setIsDisabled] = useState(false);
@@ -23,154 +35,40 @@ const PhoneFind = () => {
   const [selectedRam, setSelectedRam] = useState(null);
   const [selectedStorage, setSelectedStorage] = useState(null);
   const [selectedBattery, setSelectedBattery] = useState(null);
-  console.log("selectedRam", selectedBattery);
-
-  const handlePhoneFinder = () => {
-    const phonedData = {
-      brand: selectedBrand.label,
-      battery: selectedBattery.label,
-      ram: selectedRam.label,
-      storage: selectedStorage.label,
-      minPrice: value[0],
-      maxPrice: value[1],
-    }
-
-    console.log("phonedData", phonedData);
-    //      {
-    //     "brand": "tecno",
-    //     "battery": "4000",
-    //     "ram": "3GB",
-    //     "storage": "8GB",
-    //     "minPrice": 164527,
-    //     "maxPrice": 500000
-    // }
-
-    const demoData = [
-      {
-        "_id": "65d4a3c7c7119b99afc5411e",
-        "brand": "TECNO",
-        "deviceName": "Tecno Spark Go 2024",
-
-        "battery": "5000",
-
-        "ram": "3/4",
-        "storage": "64GB/128GB",
-        "data": [
-
-          {
-            "type": "price",
-            "subType": [
-              {
-                "subData": "4GB/64GB - 10,699 BDT",
-                "name": "Price",
-                "_id": "65d4a3cdc7119b99afc54151"
-              }
-            ],
-            "_id": "65d4a3cdc7119b99afc54150"
-          }
-        ],
-        "__v": 0,
-        "status": "Available",
-        "favCount": 10,
-        "visitorCount": 17
-      },
-      {
-        "_id": "65d4a711c7119b99afc54161",
-        "brand": "TECNO",
-        "deviceName": "Tecno Spark 20C",
-
-
-        "battery": "5000",
-
-        "ram": "4/8",
-        "storage": "128",
-        "data": [
-
-          {
-            "type": "price",
-            "subType": [
-              {
-                "subData": "4GB/ 128GB - 12,999 BDT",
-                "name": "Price",
-                "_id": "65d4a712c7119b99afc54193"
-              },
-              {
-                "subData": "8GB/ 128GB - 14,499 BDT",
-                "name": "",
-                "_id": "65d4a712c7119b99afc54194"
-              }
-            ],
-            "_id": "65d4a712c7119b99afc54192"
-          }
-        ],
-        "__v": 0,
-        "status": "Available",
-        "favCount": 9,
-        "visitorCount": 13
-      },
-      {
-        "_id": "65d4a977c7119b99afc5419b",
-        "brand": "TECNO",
-        "deviceName": "Tecno Spark 20",
-
-        "battery": "5000",
-
-        "ram": "8",
-        "storage": "128GB/256GB",
-        "data": [
-
-          {
-            "type": "price",
-            "subType": [
-              {
-                "subData": "8 GB+ 256GB = 16,999 BDT",
-                "name": "Price",
-                "_id": "65d4a977c7119b99afc541ce"
-              },
-              {
-                "subData": "8 GB+ 128GB = 14,999 BDT",
-                "name": "",
-                "_id": "65d4a977c7119b99afc541cf"
-              }
-            ],
-            "_id": "65d4a977c7119b99afc541cd"
-          }
-        ],
-        "__v": 0,
-        "status": "Available",
-        "favCount": 7,
-        "visitorCount": 12
-      },
-      {
-        "_id": "65d620a631a78e49fe57495f",
-        "brand": "SAMSUNG",
-        "deviceName": "Samsung Galaxy S24 Ultra",
-
-        "battery": "5000",
-
-        "ram": "12",
-        "storage": "256GB/512GB/1TB",
-        "data": [
-
-          {
-            "type": "price",
-            "subType": [
-              {
-                "subData": "12 GB + 256 GB - 243,999 BDT",
-                "name": "Price",
-                "_id": "65d620a631a78e49fe57499e"
-              }
-            ],
-            "_id": "65d620a631a78e49fe57499d"
-          }
-        ],
-        "__v": 0,
-        "status": "Available",
-        "favCount": 20,
-        "visitorCount": 5
-      },
-    ]
+const mutation = useMutation(
+  (requestData) => postData(requestData),
+  {
+    onSuccess: (data) => {
+      dispatch(onSearch(data));
+    },
   }
+);
+
+
+  // console.log("mutation", mutation);
+
+const handlePhoneFinder = () => {
+  if (mutation.isLoading) {
+    // Prevent multiple clicks during loading
+    return;
+  }
+
+  const requestData = {
+    brand: selectedBrand?.label,
+    battery: selectedBattery?.label,
+    ram: selectedRam?.label,
+    storage: selectedStorage?.label,
+    minPrice: value[0],
+    maxPrice: value[1],
+  };
+
+  mutation.mutate(requestData);
+
+    // if (mutation.isSuccess) {
+    //   dispatch(onSearch(mutation.data))
+
+    // }
+};
   useEffect(() => {
     // Fetch data using Axios when the component mounts
     const fetchData = async () => {
@@ -186,188 +84,7 @@ const PhoneFind = () => {
 
     fetchData();
   }, []);
-  // const mobileBrand = [
-  //   {
 
-  //     name: 'SAMSUNG',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'APPLE',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'HUAWEI',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'NOKIA',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'SONY',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'LG',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'HTC',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'MOTOROLA',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'LENOVO',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'XIAOMI',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'GOOGLE',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'HONOR',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'OPPO',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'REALME',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'ONEPLUS',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'VIVO',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'MEIZU',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'BLACKBERRY',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'ASUS',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'ALCATEL',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'ZTE',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'MICROSOFT',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'VODAFONE',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'ENERGIZER',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'CAT',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'SHARP',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'MICROMAX',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'INFINIX',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'ULEFONE',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'TECNO',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'DOOGEE',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'BLACKVIEW',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'CUBOT',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'OUKITEL',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'ITEL',
-  //     link: '/'
-  //   },
-  //   {
-
-  //     name: 'TCL',
-  //     link: '/'
-  //   },
-  // ]
   const mobileBrand2 = [
     {
       id: 1,
@@ -398,64 +115,64 @@ const PhoneFind = () => {
   const ramData = [
     {
       id: 1,
-      label: '512MB',
+      label: '512',
 
     },
     {
       id: 2,
-      label: '1GB',
+      label: '1',
 
     },
     {
       id: 3,
-      label: '2GB',
+      label: '2',
 
     },
     {
       id: 4,
-      label: '3GB',
+      label: '3',
 
     },
     {
       id: 5,
-      label: '4GB',
+      label: '4',
 
     },
     {
       id: 6,
-      label: '6GB',
+      label: '6',
 
     },
     {
       id: 7,
-      label: '4GB',
+      label: '4',
 
     },
     {
       id: 8,
-      label: '8GB',
+      label: '8',
 
     },
     {
       id: 9,
-      label: '12GB',
+      label: '12',
 
     },
     {
       id: 10,
-      label: '16GB',
+      label: '16',
 
     },
     {
       id: 11,
-      label: '24GB',
+      label: '24',
 
     },
   ]
   const storage = [
     {
       id: 1,
-      label: '512MB',
+      label: '512',
 
     },
     {
@@ -717,7 +434,7 @@ const PhoneFind = () => {
 
           <div className='w-full sm:px-0 px-5'>
             <button onClick={() => handlePhoneFinder()} className='w-full h-9 bg-gray-500 text-white text-xl font-raleway font-medium text-center rounded-sm mt-5 hover:border-[1px] hover:bg-transparent hover:text-gray-500 hover:border-gray-500 transition-all duration-300'>
-              Search
+                {mutation.isLoading ? 'Searching...' : 'Search'}
             </button>
           </div>
         </div>

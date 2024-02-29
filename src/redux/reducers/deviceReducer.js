@@ -9,6 +9,7 @@ const initialState = {
   searchTerm: '',
   availableDevices: [],
   comingSoonDevices: []
+
 };
 
 const deviceReducer = (state = initialState, action) => {
