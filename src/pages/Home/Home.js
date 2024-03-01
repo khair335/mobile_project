@@ -24,115 +24,6 @@ const Home = () => {
 
   const rootState = useSelector((state) => state);
 
-  const topTenMobile = [
-    {
-      id: 1,
-      model: 'Samsung Galaxy S24 Ultra',
-      hit: 71588,
-    },
-    {
-      id: 2,
-      model: 'Xiaomi Redmi Note 13 Pro',
-      hit: 48520,
-    },
-    {
-      id: 3,
-      model: 'Samsung Galaxy S24',
-      hit: 5740,
-    },
-    {
-      id: 4,
-      model: 'Xiaomi Poco X6 Pro',
-      hit: 32683,
-    },
-    {
-      id: 5,
-      model: 'OnePlus 12',
-      hit: 21134,
-    },
-    {
-      id: 6,
-      model: 'Realme 12 Pro+',
-      hit: 30559,
-    },
-    {
-      id: 7,
-      model: 'Xiaomi Redmi Note 13',
-      hit: 30198,
-    },
-    {
-      id: 8,
-      model: 'Apple iPhone 11',
-      hit: 29516,
-    },
-    {
-      id: 9,
-      model: 'Samsung Galaxy A54',
-      hit: 29023,
-    },
-    {
-      id: 10,
-      model: 'Xiaomi Redmi Note 13 Pro+',
-      hit: 23023,
-    },
-
-  ]
-  const topTenMobileFan = [
-    {
-      id: 1,
-      model: 'Samsung Galaxy S23 Ultra',
-      fav: 1518,
-    },
-    {
-      id: 2,
-      model: 'Samsung Galaxy A54',
-      fav: 864,
-    },
-    {
-      id: 3,
-      model: 'Apple iPhone 14 Pro Max',
-      fav: 864,
-    },
-    {
-      id: 4,
-      model: 'Google Pixel 7 Pro',
-      fav: 754,
-    },
-    {
-      id: 5,
-      model: 'Samsung Galaxy S23',
-      fav: 692,
-    },
-    {
-      id: 6,
-      model: 'Xiaomi 13 Pro',
-      fav: 606,
-    },
-    {
-      id: 7,
-      model: 'Samsung Galaxy S24 Ultra',
-      fav: 590,
-    },
-    {
-      id: 8,
-      model: 'Xiaomi Poco F5',
-      fav: 583,
-    },
-    {
-      id: 9,
-      model: 'Sony Xperia 1 V',
-      fav: 563,
-    },
-    {
-      id: 10,
-      model: 'OnePlus 11',
-      fav: 517,
-    },
-
-  ]
-
-  const sortedTopTenMobile = topTenMobile.sort((a, b) => b.hit - a.hit);
-  const sortedTopTenMobileFan = topTenMobileFan.sort((a, b) => b.fav - a.fav);
 
   // useDispatch hook to dispatch actions
   const dispatch = useDispatch();
@@ -146,8 +37,8 @@ const Home = () => {
     dispatch(fetchDevices());
   }, [dispatch]);
   const latestDevices = availableDevices
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(-5);
+    .sort((b, a) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(-10);
   return (
     <div>
       <Navbar />
@@ -181,7 +72,7 @@ const Home = () => {
 
 
                         {
-                          latestDevices.map((d, i) => (
+                          latestDevices.reverse().map((d, i) => (
                             <Link
                               key={i}
                               to={`/${d.brand.toLowerCase()}/${d._id}`}

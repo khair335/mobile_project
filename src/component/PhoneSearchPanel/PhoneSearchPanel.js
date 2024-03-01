@@ -6,32 +6,35 @@ import { ONLY_SEARCH_BOX_CLOSE, SEARCH_BOX_CLOSE } from '../../redux/actionTypes
 const PhoneSearchPanel = () => {
   const searchData = useSelector((state) => state.search.searchData);
   const dispatch = useDispatch();
+
   return (
     <div className='w-full pb-4 sm:px-0 px-1'>
 
       <p className='py-2  font-raleway font-medium text-lg'>Search Result</p>
       <div>
-        <div className='m-2 sm:pt-0 pt-10 sm:m-5 flex flex-wrap gap-y-6 gap-x-[1px] sm:gap-x-2 items-start'>
+        <div className='m-2 sm:pt-0 pt-10 sm:m-5 flex flex-wrap gap-y-6 gap-x-[10px] sm:gap-x-2 items-start'>
           {
-            searchData.length > 0 ? <> {
-              searchData.map((d, i) => (
-                <Link
-                  key={i}
-                  to={`/${d.brand.toLowerCase()}/${d._id}`}
-                  onClick={() => dispatch({ type: ONLY_SEARCH_BOX_CLOSE })}
-                  className='max-w-[110px] sm:max-w-[180px] w-full flex flex-col justify-center items-center cursor-pointer group transition-transform transform-gpu transform-origin-center hover:scale-110'
-                >
-                  <div className='max-w-[135px] w-full'>
-                    <img className='w-full h-[135px] object-contain' src={d.banner_img} alt="" />
-                  </div>
-                  <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1 w-full'>
-                    {d.deviceName}
-                  </p>
-                </Link>
+  searchData.length > 0 ? <>
+    {
+      [...searchData].reverse().map((d, i) => (
+        <Link
+          key={i}
+          to={`/${d.brand.toLowerCase()}/${d._id}`}
+          onClick={() => dispatch({ type: ONLY_SEARCH_BOX_CLOSE })}
+          className='max-w-[105px] sm:max-w-[180px] w-full flex flex-col justify-center items-center cursor-pointer group transition-transform transform-gpu transform-origin-center hover:scale-110'
+        >
+          <div className='max-w-[135px] w-full'>
+            <img className='w-full h-[135px] object-contain' src={d.banner_img} alt="" />
+          </div>
+          <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1 w-full'>
+            {d.deviceName}
+          </p>
+        </Link>
+      ))
+    } </>
+    : "No Data Found"
+}
 
-              ))
-            } </> : "No Data Found"
-          }
 
 
         </div>
