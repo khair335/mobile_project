@@ -1,0 +1,36 @@
+/* Firefox (uncomment to work in Firefox, although other properties will not work!)  */
+/** {
+  scrollbar-width: thin;
+  scrollbar-color: #000000 #DFE9EB;
+}*/
+
+/* Chrome, Edge and Safari */
+.comment-scrollbar::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+.comment-scrollbar::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background-color: #DFE9EB;
+}
+
+.comment-scrollbar::-webkit-scrollbar-track:hover {
+  background-color: #B8C0C2;
+}
+
+.comment-scrollbar::-webkit-scrollbar-track:active {
+  background-color: #B8C0C2;
+}
+
+.comment-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: #000000;
+}
+
+.comment-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #13200F;
+}
+
+.comment-scrollbar::-webkit-scrollbar-thumb:active {
+  background-color: #121F0E;
+}

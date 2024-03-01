@@ -3,13 +3,7 @@ import Navbar from "../../component/Navbar/Navbar";
 import Advertisement_Width_Full from "../../component/Advertisement_Width_Full/Advertisement_Width_Full";
 import toast from "react-hot-toast";
 import Advertisement_height_250 from "../../component/Advertisement_height_250/Advertisement_height_250";
-
 import "react-range-slider-input/dist/style.css";
-import mobile1 from "../../assets/samsung-galaxy-s24-ultra-5g-sm-s928-0.jpg";
-import mobile2 from "../../assets/samsung-galaxy-s24-ultra-5g-sm-s928-1.jpg";
-import mobile3 from "../../assets/samsung-galaxy-s24-ultra-5g-sm-s928-2.jpg";
-import mobile4 from "../../assets/samsung-galaxy-s24-ultra-5g-sm-s928-3.jpg";
-import mobile5 from "../../assets/samsung-galaxy-s24-ultra-5g-sm-s928-4.jpg";
 import PhoneFind from "../../component/PhoneFind/PhoneFind";
 import PhoneSearchPanel from "../../component/PhoneSearchPanel/PhoneSearchPanel";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,13 +15,12 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import Loading from "../../component/Loading/Loading";
 import { fetchBrandDevices } from "../../redux/actions/deviceAction";
 import { api } from "../../urlConfig";
+import Comments from '../../component/Comments/Comments';
 const PhoneDetails = () => {
   const { phoneId } = useParams();
-
   const state = useSelector((state) => state.search);
   const location = useLocation();
   const pathname = location?.pathname;
-
   const updateVisitorCount = async (deviceId) => {
     try {
       await axios.put(`${api}/updateVisitorCount/${deviceId}`);
@@ -51,7 +44,7 @@ const PhoneDetails = () => {
 
   const [shareModal, setShareModal] = useState(false);
   const [tab, setTab] = useState("specifications");
-
+  const [isHovered, setIsHovered] = useState(false);
   const [deviceData, setDeviceData] = useState(null);
 
   useEffect(() => {
@@ -115,7 +108,7 @@ const PhoneDetails = () => {
       ),
     },
     {
-      tabName: "options",
+      tabName: "Comments",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -192,35 +185,31 @@ const PhoneDetails = () => {
     slidesToScroll: 1,
   };
   const formatPropertyName = (name) => {
-    // Replace underscores with spaces and capitalize each word
     return name
       .replace(/_/g, " ")
       .replace(/\b\w/g, (match) => match.toUpperCase());
   };
 
   const handleCopyLink = () => {
-    // Create a temporary input element
     const input = document.createElement("input");
-
-    // Set its value to the current URL
     input.value = window.location.href;
-
-    // Append the input element to the document
     document.body.appendChild(input);
-
-    // Select the text inside the input
     input.select();
-
-    // Execute the copy command
     document.execCommand("copy");
-
-    // Remove the temporary input element
     document.body.removeChild(input);
-
-    // Provide feedback to the user (optional)
     toast.success("Link copied to clipboard!");
-    // alert('Link copied to clipboard!');
   };
+  const handleFacebookShare = () => {
+    const url = 'https://example.com'; // Replace with your desired URL
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+  }
+
+  const handleTwitterShare = () => {
+    const url = 'https://example.com'; // Replace with your desired URL
+    const text = 'Check out this awesome content!'; // Replace with your desired tweet text
+    window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
+  }
+
   return (
     <div>
       <Navbar />
@@ -229,9 +218,8 @@ const PhoneDetails = () => {
         <div className="max-w-[1440px] w-full mx-auto">
           <div className="flex flex-col md:flex-row gap-3 pt-0 sm:pt-4 px-0 sm:px-3">
             <div
-              className={`md:hidden  ${
-                state.mobileSearch ? "block" : "hidden"
-              }`}
+              className={`md:hidden  ${state.mobileSearch ? "block" : "hidden"
+                }`}
             >
               <PhoneFind />
             </div>
@@ -292,7 +280,7 @@ const PhoneDetails = () => {
                       <div className="flex items-center">
                         {shareModal && (
                           <div className="flex items-center ">
-                            <div className="bg-blue-500 md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer">
+                            <div onClick={handleFacebookShare} className="bg-blue-500 md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer">
                               <div className="md:w-[36px] w-5 md:h-[36px] h-5">
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -303,7 +291,7 @@ const PhoneDetails = () => {
                                 </svg>
                               </div>
                             </div>
-                            <div className="bg-black md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer">
+                            <div onClick={handleTwitterShare} className="bg-black md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer">
                               <div className="md:w-[36px] w-5 md:h-[36px] h-5">
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -330,18 +318,38 @@ const PhoneDetails = () => {
                             </div>
                           </div>
                         )}
-                        <div
-                          onClick={() => setShareModal(!shareModal)}
-                          className="md:w-[36px] w-5 md:h-[36px] h-5 cursor-pointer"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="rgba(255,255,255,1)"
+                        {
+                          shareModal ? <div
+                            onClick={() => setShareModal(false)}
+                            className="md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer bg-slate-500"
                           >
-                            <path d="M13 14H11C7.54202 14 4.53953 15.9502 3.03239 18.8107C3.01093 18.5433 3 18.2729 3 18C3 12.4772 7.47715 8 13 8V2.5L23.5 11L13 19.5V14ZM11 12H15V15.3078L20.3214 11L15 6.69224V10H13C10.5795 10 8.41011 11.0749 6.94312 12.7735C8.20873 12.2714 9.58041 12 11 12Z"></path>
-                          </svg>
-                        </div>
+
+                            <div
+
+
+                              className="md:w-[36px] w-5 md:h-[36px] h-5"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffff"><path d="M10.5859 12L2.79297 4.20706L4.20718 2.79285L12.0001 10.5857L19.793 2.79285L21.2072 4.20706L13.4143 12L21.2072 19.7928L19.793 21.2071L12.0001 13.4142L4.20718 21.2071L2.79297 19.7928L10.5859 12Z"></path></svg>
+
+                            </div>
+
+                          </div> :
+
+                            <div
+                              onClick={() => setShareModal(true)}
+                              className="md:w-[36px] w-5 md:h-[36px] h-5 cursor-pointer"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="#ffff"
+                              >
+                                <path d="M13 14H11C7.54202 14 4.53953 15.9502 3.03239 18.8107C3.01093 18.5433 3 18.2729 3 18C3 12.4772 7.47715 8 13 8V2.5L23.5 11L13 19.5V14ZM11 12H15V15.3078L20.3214 11L15 6.69224V10H13C10.5795 10 8.41011 11.0749 6.94312 12.7735C8.20873 12.2714 9.58041 12 11 12Z"></path>
+                              </svg>
+                            </div>
+                        }
+
+
                       </div>
                     </div>
                     <div className="pt-[40px] md:pt-[60px] pb-[10px] flex md:gap-2 gap-2 md:justify-start justify-center  backdrop-blur-[100px] relative z-[1] h-full">
@@ -459,79 +467,22 @@ const PhoneDetails = () => {
                           </div>
                           <div>
                             <div className="flex gap-3">
-                              <div className="xl:w-8 xl:h-8 w-4 h-4">
-                                {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12.001 4.52853C14.35 2.42 17.98 2.49 20.2426 4.75736C22.5053 7.02472 22.583 10.637 20.4786 12.993L11.9999 21.485L3.52138 12.993C1.41705 10.637 1.49571 7.01901 3.75736 4.75736C6.02157 2.49315 9.64519 2.41687 12.001 4.52853ZM18.827 6.1701C17.3279 4.66794 14.9076 4.60701 13.337 6.01687L12.0019 7.21524L10.6661 6.01781C9.09098 4.60597 6.67506 4.66808 5.17157 6.17157C3.68183 7.66131 3.60704 10.0473 4.97993 11.6232L11.9999 18.6543L19.0201 11.6232C20.3935 10.0467 20.319 7.66525 18.827 6.1701Z"></path></svg> */}
+                              <div
+                                className="xl:w-8 xl:h-8 w-4 h-4 cursor-pointer"
+                                onMouseEnter={() => setIsHovered(true)}
+                                onMouseLeave={() => setIsHovered(false)}
+                              >
 
-                                <svg
-                                  version="1.1"
-                                  id="Layer_1"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  x="0px"
-                                  y="0px"
-                                  viewBox="0 0 496 496"
-                                  style={{
-                                    enableBackground: "new 0 0 496 496",
-                                  }}
-                                >
-                                  <path
-                                    style={{ fill: "#FFC200" }}
-                                    d="M216,356c0-57.816,38.816-98.192,94.4-98.192c17.572,0,36.04,4.268,53.648,12.372
-	c0.516-0.236,1.024-0.468,1.54-0.7c1.368-0.608,2.724-1.18,4.072-1.74c1.108-0.452,2.208-0.9,3.304-1.312
-	c1.364-0.524,2.736-1.008,4.1-1.484c1.092-0.384,2.204-0.76,3.308-1.112c1.396-0.44,2.78-0.84,4.176-1.24l0.636-0.18
-	c0.88-0.248,1.752-0.492,2.624-0.72c1.44-0.368,2.872-0.684,4.3-1l0.864-0.192c0.768-0.172,1.544-0.344,2.308-0.496
-	c1.336-0.256,2.672-0.468,4.008-0.676l1.34-0.216c0.716-0.116,1.424-0.236,2.144-0.324c1.588-0.208,3.196-0.348,4.796-0.492
-	l0.916-0.088c0.576-0.06,1.144-0.116,1.716-0.156c2.472-0.164,4.944-0.252,7.4-0.252c31.508,0,57.608,12.976,74.328,34.752
-	C494.556,278.092,496,263.22,496,248C496,111.032,384.96,0,248,0S0,111.032,0,248s111.04,248,248,248
-	c21.548,0,42.444-2.756,62.376-7.92C267.704,462.236,216,416.62,216,356z"
-                                  />
-                                  <path
-                                    style={{ fill: "#F2B800" }}
-                                    d="M229.368,408.376c-41.864-4.52-80.592-24.164-108.336-55.444c-4.224-4.76-10.288-7.5-16.66-7.5
-	c-5.448,0-10.692,1.992-14.768,5.608c-4.44,3.944-7.084,9.384-7.444,15.32c-0.356,5.936,1.624,11.66,5.572,16.1
-	c40.252,45.408,98.672,71.452,160.276,71.452c5.432,0,10.828-0.276,16.204-0.68C250.472,440.208,238.128,425.204,229.368,408.376z"
-                                  />
-                                  <g>
-                                    <path
-                                      d="M196,196c-6.624,0-12-5.372-12-12c0-19.848-16.148-36-36-36s-36,16.152-36,36
-		c0,6.628-5.376,12-12,12s-12-5.372-12-12c0-33.084,26.916-60,60-60s60,26.916,60,60C208,190.628,202.624,196,196,196z"
-                                    />
-                                    <path
-                                      style={{ fill: "#263740" }}
-                                      d="M396,196c-6.624,0-12-5.372-12-12c0-19.848-16.148-36-36-36s-36,16.152-36,36
-		c0,6.628-5.376,12-12,12s-12-5.372-12-12c0-33.084,26.916-60,60-60s60,26.916,60,60C408,190.628,402.624,196,396,196z"
-                                    />
-                                  </g>
-                                  {/* <!--left side  --> */}
-                                  <path
-                                    style={{ fill: "#E16B5A" }}
-                                    d="M364,288c-64.428-34.108-132-4.908-132,68s92,128,132,140c40-12,132-67.092,132-140
-	S428.428,253.892,364,288z"
-                                  />
-                                  {/* <!--right side  --> */}
-                                  <path
-                                    style={{ fill: "#CC6152" }}
-                                    d="M364,288v208c40-12,132-67.092,132-140S428.428,253.892,364,288z"
-                                  />
-                                  <g>
-                                    <path
-                                      style={{ fill: "#F2B800" }}
-                                      d="M456,248c0,5.672-0.256,11.28-0.632,16.856c14.704,5.932,27.128,15.416,36.564,27.7
-		C494.556,278.092,496,263.22,496,248C496,111.032,384.96,0,248,0c-6.744,0-13.4,0.344-20,0.872C355.592,11.068,456,117.772,456,248
-		z"
-                                    />
-                                    <path
-                                      style={{ fill: "#F2B800" }}
-                                      d="M296.984,479.464c-21.696,8.34-44.852,13.736-68.984,15.664c6.6,0.528,13.256,0.872,20,0.872
-		c21.548,0,42.444-2.756,62.376-7.92C305.984,485.42,301.5,482.54,296.984,479.464z"
-                                    />
-                                  </g>
-                                  <path
-                                    style={{ fill: "#F5F5F5" }}
-                                    d="M236.2,420.1c-47.652-3.056-92.152-24.432-123.5-59.788c-4.076-4.6-11.104-5.032-15.712-0.944
-	c-4.596,4.08-5.02,11.112-0.94,15.712c38.144,43.032,93.532,67.704,151.952,67.704c1.928,0,3.852-0.092,5.772-0.148
-	C247.336,435.592,241.384,428.084,236.2,420.1z"
-                                  />
-                                </svg>
+                                {
+                                  !isHovered && <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3C19.5376 3 22 5.5 22 9C22 16 14.5 20 12 21.5C9.5 20 2 16 2 9C2 5.5 4.5 3 7.5 3C9.35997 3 11 4 12 5C13 4 14.64 3 16.5 3ZM12.9339 18.6038C13.8155 18.0485 14.61 17.4955 15.3549 16.9029C18.3337 14.533 20 11.9435 20 9C20 6.64076 18.463 5 16.5 5C15.4241 5 14.2593 5.56911 13.4142 6.41421L12 7.82843L10.5858 6.41421C9.74068 5.56911 8.5759 5 7.5 5C5.55906 5 4 6.6565 4 9C4 11.9435 5.66627 14.533 8.64514 16.9029C9.39 17.4955 10.1845 18.0485 11.0661 18.6038C11.3646 18.7919 11.6611 18.9729 12 19.1752C12.3389 18.9729 12.6354 18.7919 12.9339 18.6038Z"></path></svg>
+                                }
+
+
+                                {isHovered && (
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(15,90,178,1)">
+                                    <path d="M16.5 3C19.5376 3 22 5.5 22 9C22 16 14.5 20 12 21.5C9.5 20 2 16 2 9C2 5.5 4.5 3 7.5 3C9.35997 3 11 4 12 5C13 4 14.64 3 16.5 3Z"></path>
+                                  </svg>
+                                )}
                               </div>
                               <p className="text-black xl:text-2xl text-sm">
                                 {deviceData?.favCount?.toLocaleString()}
@@ -876,17 +827,15 @@ const PhoneDetails = () => {
                           onClick={() =>
                             setTab(data.tabName.toLocaleLowerCase())
                           }
-                          className={`flex justify-center items-center gap-1 cursor-pointer group transition-all duration-300 lg:h-[50px] md:h-[40px] h-8 hover:bg-black md:px-2 px-1 ${
-                            tab == data.tabName && "bg-black"
-                          }`}
+                          className={`flex justify-center items-center gap-1 cursor-pointer group transition-all duration-300 lg:h-[50px] md:h-[40px] h-8 hover:bg-black md:px-2 px-1 ${tab == data.tabName && "bg-black"
+                            }`}
                         >
                           <div className="lg:w-[24px] md:w-[18px] w-[14px] lg:h-[24px] md:h-[18px] h-[14px]">
                             {data.icon}
                           </div>
                           <p
-                            className={`lg:text-lg md:tex text-[9px] text-black font-poppins uppercase group-hover:text-white ${
-                              tab == data.tabName && "text-white"
-                            }`}
+                            className={`lg:text-lg md:tex text-[9px] text-black font-poppins uppercase group-hover:text-white ${tab == data.tabName && "text-white"
+                              }`}
                           >
                             {data.tabName}
                           </p>
@@ -900,11 +849,8 @@ const PhoneDetails = () => {
                       <div className="w-full">
                         {deviceData.data.map((d, i) => (
                           <div
-                            className={`border-b-4 md:border-b-[8px] border-gray-100 py-1 md:py-2 flex items-start gap-2 md:gap-4 ${
-                              i === deviceData.data.length - 1
-                                ? "last-child-no-border"
-                                : ""
-                            }`}
+                            className={`border-b-4 md:border-b-[6px] border-gray-100 py-[2px] md:py-1 flex items-start gap-2 md:gap-4
+                              }`}
                             key={i}
                           >
                             <p className="uppercase text-sky-700 text-sm md:text-lg max-w-[80px] md:max-w-[100px] w-full py-0 md:py-1">
@@ -914,11 +860,10 @@ const PhoneDetails = () => {
                               {d.subType.map((s, j) => (
                                 <div
                                   key={j}
-                                  className={`flex items-start w-full ${
-                                    j === d.subType.length - 1
-                                      ? "last-child-no-border"
-                                      : ""
-                                  } border-b-[1px] py-[2px] md:py-1`}
+                                  className={`flex items-start w-full ${j === d.subType.length - 1
+                                    ? "last-child-no-border"
+                                    : ""
+                                    } border-b-[1px] py-[2px] md:py-1`}
                                 >
                                   <p className="max-w-[90px] md:max-w-[150px] w-full capitalize text-xs md:text-base text-gray-500">
                                     {formatPropertyName(s.name)}
@@ -933,7 +878,7 @@ const PhoneDetails = () => {
                         ))}
                       </div>
                     )}
-                    {tab === "options" && <div>options</div>}
+                    {tab === "comments" && <div className='w-full'><Comments /></div>}
                     {tab === "pictures" && (
                       <div>
                         <div className="">
