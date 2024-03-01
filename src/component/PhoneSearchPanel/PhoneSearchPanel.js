@@ -11,7 +11,7 @@ const PhoneSearchPanel = () => {
 
       <p className='py-2  font-raleway font-medium text-lg'>Search Result</p>
       <div>
-        <div className='m-2 sm:pt-0 pt-10 sm:m-5 flex flex-wrap gap-y-6 gap-x-[1px] sm:gap-x-2'>
+        <div className='m-2 sm:pt-0 pt-10 sm:m-5 flex flex-wrap gap-y-6 gap-x-[1px] sm:gap-x-2 items-start'>
           {
             searchData.length > 0 ? <> {
               searchData.map((d, i) => (

@@ -57,7 +57,7 @@ const handlePhoneFinder = () => {
     brand: selectedBrand?.label,
     battery: selectedBattery?.label,
     ram: selectedRam?.label,
-    storage: selectedStorage?.label,
+    storage: selectedStorage?.label.toLowerCase(),
     minPrice: value[0],
     maxPrice: value[1],
   };
