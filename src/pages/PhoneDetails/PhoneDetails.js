@@ -15,12 +15,16 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import Loading from "../../component/Loading/Loading";
 import { fetchBrandDevices } from "../../redux/actions/deviceAction";
 import { api } from "../../urlConfig";
-import Comments from '../../component/Comments/Comments';
+import Comments from "../../component/Comments/Comments";
+import { useAuthState } from "react-firebase-hooks/auth";
+import auth from "../../firebase.init";
 const PhoneDetails = () => {
   const { phoneId } = useParams();
   const state = useSelector((state) => state.search);
   const location = useLocation();
   const pathname = location?.pathname;
+
+
   const updateVisitorCount = async (deviceId) => {
     try {
       await axios.put(`${api}/updateVisitorCount/${deviceId}`);
@@ -28,6 +32,22 @@ const PhoneDetails = () => {
       console.error("Error updating visitor count:", error);
     }
   };
+
+  const handleFavCount = async (id) => {
+    if (user) {
+      console.log("favCount Function");
+      try {
+        // Assuming user.uid is the user's ID
+        await axios.post(`${api}/updateFavCount/${user.uid}/${id}`);
+      } catch (error) {
+        console.error("Error updating favCount:", error);
+        // Handle error, show a message, etc.
+      }
+    } else {
+      toast.error("Sign In Required");
+    }
+  };
+  
   const extractNameFromPath = (pathname) => {
     const parts = pathname.split("/");
     return parts.length >= 2 ? parts[1] : "defaultName";
@@ -58,6 +78,8 @@ const PhoneDetails = () => {
         console.error("Axios Error:", error.message);
       });
   }, [phoneId]);
+  const [user] = useAuthState(auth);
+
 
   // const extractCurrencyAndPrice = (device) => {
   //   // Check if the device exists and has the 'data' property
@@ -200,15 +222,23 @@ const PhoneDetails = () => {
     toast.success("Link copied to clipboard!");
   };
   const handleFacebookShare = () => {
-    const url = 'https://example.com'; // Replace with your desired URL
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
-  }
+    const url = "https://example.com"; // Replace with your desired URL
+    window.open(
+      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+      "_blank"
+    );
+  };
 
   const handleTwitterShare = () => {
-    const url = 'https://example.com'; // Replace with your desired URL
-    const text = 'Check out this awesome content!'; // Replace with your desired tweet text
-    window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
-  }
+    const url = "https://example.com"; // Replace with your desired URL
+    const text = "Check out this awesome content!"; // Replace with your desired tweet text
+    window.open(
+      `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+        url
+      )}&text=${encodeURIComponent(text)}`,
+      "_blank"
+    );
+  };
 
   return (
     <div>
@@ -218,8 +248,9 @@ const PhoneDetails = () => {
         <div className="max-w-[1440px] w-full mx-auto">
           <div className="flex flex-col md:flex-row gap-3 pt-0 sm:pt-4 px-0 sm:px-3">
             <div
-              className={`md:hidden  ${state.mobileSearch ? "block" : "hidden"
-                }`}
+              className={`md:hidden  ${
+                state.mobileSearch ? "block" : "hidden"
+              }`}
             >
               <PhoneFind />
             </div>
@@ -280,7 +311,10 @@ const PhoneDetails = () => {
                       <div className="flex items-center">
                         {shareModal && (
                           <div className="flex items-center ">
-                            <div onClick={handleFacebookShare} className="bg-blue-500 md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer">
+                            <div
+                              onClick={handleFacebookShare}
+                              className="bg-blue-500 md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer"
+                            >
                               <div className="md:w-[36px] w-5 md:h-[36px] h-5">
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -291,7 +325,10 @@ const PhoneDetails = () => {
                                 </svg>
                               </div>
                             </div>
-                            <div onClick={handleTwitterShare} className="bg-black md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer">
+                            <div
+                              onClick={handleTwitterShare}
+                              className="bg-black md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer"
+                            >
                               <div className="md:w-[36px] w-5 md:h-[36px] h-5">
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -318,38 +355,35 @@ const PhoneDetails = () => {
                             </div>
                           </div>
                         )}
-                        {
-                          shareModal ? <div
+                        {shareModal ? (
+                          <div
                             onClick={() => setShareModal(false)}
                             className="md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer bg-slate-500"
                           >
-
-                            <div
-
-
-                              className="md:w-[36px] w-5 md:h-[36px] h-5"
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffff"><path d="M10.5859 12L2.79297 4.20706L4.20718 2.79285L12.0001 10.5857L19.793 2.79285L21.2072 4.20706L13.4143 12L21.2072 19.7928L19.793 21.2071L12.0001 13.4142L4.20718 21.2071L2.79297 19.7928L10.5859 12Z"></path></svg>
-
-                            </div>
-
-                          </div> :
-
-                            <div
-                              onClick={() => setShareModal(true)}
-                              className="md:w-[36px] w-5 md:h-[36px] h-5 cursor-pointer"
-                            >
+                            <div className="md:w-[36px] w-5 md:h-[36px] h-5">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
                                 fill="#ffff"
                               >
-                                <path d="M13 14H11C7.54202 14 4.53953 15.9502 3.03239 18.8107C3.01093 18.5433 3 18.2729 3 18C3 12.4772 7.47715 8 13 8V2.5L23.5 11L13 19.5V14ZM11 12H15V15.3078L20.3214 11L15 6.69224V10H13C10.5795 10 8.41011 11.0749 6.94312 12.7735C8.20873 12.2714 9.58041 12 11 12Z"></path>
+                                <path d="M10.5859 12L2.79297 4.20706L4.20718 2.79285L12.0001 10.5857L19.793 2.79285L21.2072 4.20706L13.4143 12L21.2072 19.7928L19.793 21.2071L12.0001 13.4142L4.20718 21.2071L2.79297 19.7928L10.5859 12Z"></path>
                               </svg>
                             </div>
-                        }
-
-
+                          </div>
+                        ) : (
+                          <div
+                            onClick={() => setShareModal(true)}
+                            className="md:w-[36px] w-5 md:h-[36px] h-5 cursor-pointer"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="#ffff"
+                            >
+                              <path d="M13 14H11C7.54202 14 4.53953 15.9502 3.03239 18.8107C3.01093 18.5433 3 18.2729 3 18C3 12.4772 7.47715 8 13 8V2.5L23.5 11L13 19.5V14ZM11 12H15V15.3078L20.3214 11L15 6.69224V10H13C10.5795 10 8.41011 11.0749 6.94312 12.7735C8.20873 12.2714 9.58041 12 11 12Z"></path>
+                            </svg>
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="pt-[40px] md:pt-[60px] pb-[10px] flex md:gap-2 gap-2 md:justify-start justify-center  backdrop-blur-[100px] relative z-[1] h-full">
@@ -437,10 +471,7 @@ const PhoneDetails = () => {
                                 </svg>{" "}
                               </div>
                               <p className="font-poppins xl:text-sm text-[10px] font-light">
-                                {console.log(
-                                  "deviceData.expandable_storage_type",
-                                  deviceData
-                                )}
+                                
                                 {deviceData?.storage} storage,{" "}
                                 {deviceData?.expandable_storage
                                   ? deviceData.expandable_storage_type
@@ -449,7 +480,7 @@ const PhoneDetails = () => {
                             </div>
                           </div>
 
-                          <div>
+                          <div className="flex flex-col  items-center">
                             <div className="flex gap-3">
                               <div className="xl:w-8 xl:h-8 w-4 h-4">
                                 <svg
@@ -465,21 +496,30 @@ const PhoneDetails = () => {
                               {deviceData?.visitorCount?.toLocaleString()} HITS
                             </p>
                           </div>
-                          <div>
+                          <div className="flex flex-col  items-center">
                             <div className="flex gap-3">
                               <div
                                 className="xl:w-8 xl:h-8 w-4 h-4 cursor-pointer"
                                 onMouseEnter={() => setIsHovered(true)}
                                 onMouseLeave={() => setIsHovered(false)}
+                                onClick={()=>handleFavCount(phoneId)}
                               >
-
-                                {
-                                  !isHovered && <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3C19.5376 3 22 5.5 22 9C22 16 14.5 20 12 21.5C9.5 20 2 16 2 9C2 5.5 4.5 3 7.5 3C9.35997 3 11 4 12 5C13 4 14.64 3 16.5 3ZM12.9339 18.6038C13.8155 18.0485 14.61 17.4955 15.3549 16.9029C18.3337 14.533 20 11.9435 20 9C20 6.64076 18.463 5 16.5 5C15.4241 5 14.2593 5.56911 13.4142 6.41421L12 7.82843L10.5858 6.41421C9.74068 5.56911 8.5759 5 7.5 5C5.55906 5 4 6.6565 4 9C4 11.9435 5.66627 14.533 8.64514 16.9029C9.39 17.4955 10.1845 18.0485 11.0661 18.6038C11.3646 18.7919 11.6611 18.9729 12 19.1752C12.3389 18.9729 12.6354 18.7919 12.9339 18.6038Z"></path></svg>
-                                }
-
+                                {!isHovered && (
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                  >
+                                    <path d="M16.5 3C19.5376 3 22 5.5 22 9C22 16 14.5 20 12 21.5C9.5 20 2 16 2 9C2 5.5 4.5 3 7.5 3C9.35997 3 11 4 12 5C13 4 14.64 3 16.5 3ZM12.9339 18.6038C13.8155 18.0485 14.61 17.4955 15.3549 16.9029C18.3337 14.533 20 11.9435 20 9C20 6.64076 18.463 5 16.5 5C15.4241 5 14.2593 5.56911 13.4142 6.41421L12 7.82843L10.5858 6.41421C9.74068 5.56911 8.5759 5 7.5 5C5.55906 5 4 6.6565 4 9C4 11.9435 5.66627 14.533 8.64514 16.9029C9.39 17.4955 10.1845 18.0485 11.0661 18.6038C11.3646 18.7919 11.6611 18.9729 12 19.1752C12.3389 18.9729 12.6354 18.7919 12.9339 18.6038Z"></path>
+                                  </svg>
+                                )}
 
                                 {isHovered && (
-                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(15,90,178,1)">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="rgba(15,90,178,1)"
+                                  >
                                     <path d="M16.5 3C19.5376 3 22 5.5 22 9C22 16 14.5 20 12 21.5C9.5 20 2 16 2 9C2 5.5 4.5 3 7.5 3C9.35997 3 11 4 12 5C13 4 14.64 3 16.5 3Z"></path>
                                   </svg>
                                 )}
@@ -634,7 +674,11 @@ const PhoneDetails = () => {
                                     {deviceData?.displaySize}"
                                   </p>
                                   <p className="font-poppins  text-xs font-light">
-                                    {deviceData?.displayResolution}
+                                    {deviceData.displayResolution && (
+                                      <span className="">
+                                        {deviceData.displayResolution} pixels
+                                      </span>
+                                    )}
                                   </p>
                                 </div>
                               </div>
@@ -651,10 +695,23 @@ const PhoneDetails = () => {
 
                                 <div>
                                   <p className="font-poppins text-base font-medium">
-                                    200MP
+                                    {deviceData.backCamera && (
+                                      <>
+                                        {" "}
+                                        {deviceData.backCamera}{" "}
+                                        <span className="xl:text-sm text-[8px]">
+                                          {" "}
+                                          MP
+                                        </span>{" "}
+                                      </>
+                                    )}
                                   </p>
                                   <p className="font-poppins  text-xs font-light">
-                                    4320p
+                                    {deviceData?.backCameraVideo && (
+                                      <span className="">
+                                        {deviceData?.backCameraVideo}p
+                                      </span>
+                                    )}
                                   </p>
                                 </div>
                               </div>
@@ -672,10 +729,19 @@ const PhoneDetails = () => {
 
                                 <div>
                                   <p className="font-poppins text-base font-medium">
-                                    12 <span className="text-xs">GB RAM </span>{" "}
+                                    {/* 12 <span className="text-xs">GB RAM </span>{" "} */}
+                                    {deviceData.ram && (
+                                      <>
+                                        {" "}
+                                        {deviceData.ram}{" "}
+                                        <span className="text-xs"> GB RAM</span>{" "}
+                                      </>
+                                    )}{" "}
                                   </p>
                                   <p className="font-poppins  text-xs font-light">
-                                    Snapdragon 8 Gen 3
+                                  {deviceData.processor && (
+                                <span>{deviceData.processor}</span>
+                              )}
                                   </p>
                                 </div>
                               </div>
@@ -692,7 +758,7 @@ const PhoneDetails = () => {
 
                                 <div>
                                   <p className="font-poppins text-base font-medium">
-                                    5000 <span className="text-xs">mAh</span>
+                                  {deviceData?.battery} <span className="text-xs">mAh</span>
                                   </p>
                                   <p className="font-poppins  text-xs font-light">
                                     Li-Ion
@@ -800,22 +866,33 @@ const PhoneDetails = () => {
                           {/* <p className='text-black text-sm'>93%</p> */}
                         </div>
                         <p className="text-xs uppercase">
-                          {deviceData?.favCount?.toLocaleString()} HITS
+                          {deviceData?.visitorCount?.toLocaleString()} HITS
                         </p>
                       </div>
                       <div>
                         <div className="flex gap-3">
                           <div className="w-5 h-5">
-                            {" "}
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              fill="currentColor"
-                            >
-                              <path d="M12.001 4.52853C14.35 2.42 17.98 2.49 20.2426 4.75736C22.5053 7.02472 22.583 10.637 20.4786 12.993L11.9999 21.485L3.52138 12.993C1.41705 10.637 1.49571 7.01901 3.75736 4.75736C6.02157 2.49315 9.64519 2.41687 12.001 4.52853ZM18.827 6.1701C17.3279 4.66794 14.9076 4.60701 13.337 6.01687L12.0019 7.21524L10.6661 6.01781C9.09098 4.60597 6.67506 4.66808 5.17157 6.17157C3.68183 7.66131 3.60704 10.0473 4.97993 11.6232L11.9999 18.6543L19.0201 11.6232C20.3935 10.0467 20.319 7.66525 18.827 6.1701Z"></path>
-                            </svg>
+                          {!isHovered && (
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                  >
+                                    <path d="M16.5 3C19.5376 3 22 5.5 22 9C22 16 14.5 20 12 21.5C9.5 20 2 16 2 9C2 5.5 4.5 3 7.5 3C9.35997 3 11 4 12 5C13 4 14.64 3 16.5 3ZM12.9339 18.6038C13.8155 18.0485 14.61 17.4955 15.3549 16.9029C18.3337 14.533 20 11.9435 20 9C20 6.64076 18.463 5 16.5 5C15.4241 5 14.2593 5.56911 13.4142 6.41421L12 7.82843L10.5858 6.41421C9.74068 5.56911 8.5759 5 7.5 5C5.55906 5 4 6.6565 4 9C4 11.9435 5.66627 14.533 8.64514 16.9029C9.39 17.4955 10.1845 18.0485 11.0661 18.6038C11.3646 18.7919 11.6611 18.9729 12 19.1752C12.3389 18.9729 12.6354 18.7919 12.9339 18.6038Z"></path>
+                                  </svg>
+                                )}
+
+                                {isHovered && (
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="rgba(15,90,178,1)"
+                                  >
+                                    <path d="M16.5 3C19.5376 3 22 5.5 22 9C22 16 14.5 20 12 21.5C9.5 20 2 16 2 9C2 5.5 4.5 3 7.5 3C9.35997 3 11 4 12 5C13 4 14.64 3 16.5 3Z"></path>
+                                  </svg>
+                                )}
                           </div>
-                          <p className="text-black text-sm">624</p>
+                          <p className="text-black text-sm">{deviceData?.favCount?.toLocaleString()}</p>
                         </div>
                         <p className=" uppercase text-xs">Become a fan</p>
                       </div>
@@ -827,15 +904,17 @@ const PhoneDetails = () => {
                           onClick={() =>
                             setTab(data.tabName.toLocaleLowerCase())
                           }
-                          className={`flex justify-center items-center gap-1 cursor-pointer group transition-all duration-300 lg:h-[50px] md:h-[40px] h-8 hover:bg-black md:px-2 px-1 ${tab == data.tabName && "bg-black"
-                            }`}
+                          className={`flex justify-center items-center gap-1 cursor-pointer group transition-all duration-300 lg:h-[50px] md:h-[40px] h-8 hover:bg-black md:px-2 px-1 ${
+                            tab == data.tabName && "bg-black"
+                          }`}
                         >
                           <div className="lg:w-[24px] md:w-[18px] w-[14px] lg:h-[24px] md:h-[18px] h-[14px]">
                             {data.icon}
                           </div>
                           <p
-                            className={`lg:text-lg md:tex text-[9px] text-black font-poppins uppercase group-hover:text-white ${tab == data.tabName && "text-white"
-                              }`}
+                            className={`lg:text-lg md:tex text-[9px] text-black font-poppins uppercase group-hover:text-white ${
+                              tab == data.tabName && "text-white"
+                            }`}
                           >
                             {data.tabName}
                           </p>
@@ -860,10 +939,11 @@ const PhoneDetails = () => {
                               {d.subType.map((s, j) => (
                                 <div
                                   key={j}
-                                  className={`flex items-start w-full ${j === d.subType.length - 1
-                                    ? "last-child-no-border"
-                                    : ""
-                                    } border-b-[1px] py-[2px] md:py-1`}
+                                  className={`flex items-start w-full ${
+                                    j === d.subType.length - 1
+                                      ? "last-child-no-border"
+                                      : ""
+                                  } border-b-[1px] py-[2px] md:py-1`}
                                 >
                                   <p className="max-w-[90px] md:max-w-[150px] w-full capitalize text-xs md:text-base text-gray-500">
                                     {formatPropertyName(s.name)}
@@ -878,7 +958,11 @@ const PhoneDetails = () => {
                         ))}
                       </div>
                     )}
-                    {tab === "comments" && <div className='w-full'><Comments /></div>}
+                    {tab === "comments" && (
+                      <div className="w-full">
+                        <Comments />
+                      </div>
+                    )}
                     {tab === "pictures" && (
                       <div>
                         <div className="">

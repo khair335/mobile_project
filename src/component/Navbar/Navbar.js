@@ -9,6 +9,7 @@ import {
 import { onSearch } from "../../redux/actions/deviceAction";
 import { useAuthState, useSignInWithGoogle } from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
+import axios from "axios";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -16,6 +17,8 @@ const Navbar = () => {
   const { devices } = useSelector((state) => state.device);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredDevices, setFilteredDevices] = useState([]);
+  const [loginModal, setLoginModal] = useState(false);
+  const [accountModal, setAccountModal] = useState(false);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -35,11 +38,47 @@ const Navbar = () => {
 
   useEffect(() => {}, [filteredDevices]);
   const [user] = useAuthState(auth);
-
+  // console.log("user", user.uid);
   const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
+  // console.log("gUser", gUser);
+  const handleLogin = () => {
+    signInWithGoogle()
+      .then((user) => {
+        if (user) {
+          console.log("user", user);
+          saveUserInfo(user);
+        }
+      })
+      .catch((error) => {
+        console.error("Error signing in:", error);
+        // Handle error, show a message, etc.
+      });
+  };
+  // console.log("user",user);
+  const saveUserInfo = async (user) => {
+    const { uid, displayName, email } = user.user;
+    setLoginModal(false);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:2000/api/saveUserInfo",
+        {
+          uid,
+          displayName,
+          email,
+        }
+      );
+
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error saving user information:", error);
+      // Handle error, show a message, etc.
+    }
+  };
 
   const signOut = () => {
     auth.signOut();
+    setAccountModal(false)
   };
 
   return (
@@ -139,29 +178,67 @@ const Navbar = () => {
 
             <div className="flex w-full justify-center items-center lg:gap-7 gap-3  px-3">
               {user ? (
-                <div className="w-full cursor-pointer"  >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  width="24"
-                  height="24"
-                  fill="rgba(255,255,255,1)"
-                >
-                  <path d="M4 15H6V20H18V4H6V9H4V3C4 2.44772 4.44772 2 5 2H19C19.5523 2 20 2.44772 20 3V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V15ZM10 11V8L15 12L10 16V13H2V11H10Z"></path>
-                </svg>
-              </div>
+                <>
+                  {accountModal ? (
+                    <div
+                      className="w-[24px] h-6 cursor-pointer"
+                      onClick={() => setAccountModal(!true)}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="#fff"
+                      >
+                        <path d="M10.5859 12L2.79297 4.20706L4.20718 2.79285L12.0001 10.5857L19.793 2.79285L21.2072 4.20706L13.4143 12L21.2072 19.7928L19.793 21.2071L12.0001 13.4142L4.20718 21.2071L2.79297 19.7928L10.5859 12Z"></path>
+                      </svg>
+                    </div>
+                  ) : (
+                    <div
+                      className="w-[24px] h-6 cursor-pointer"
+                      onClick={() => setAccountModal(true)}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="#fff"
+                      >
+                        <path d="M3 4.99509C3 3.89323 3.89262 3 4.99509 3H19.0049C20.1068 3 21 3.89262 21 4.99509V19.0049C21 20.1068 20.1074 21 19.0049 21H4.99509C3.89323 21 3 20.1074 3 19.0049V4.99509ZM5 5V19H19V5H5ZM7.97216 18.1808C7.35347 17.9129 6.76719 17.5843 6.22083 17.2024C7.46773 15.2753 9.63602 14 12.1022 14C14.5015 14 16.6189 15.2071 17.8801 17.0472C17.3438 17.4436 16.7664 17.7877 16.1555 18.0718C15.2472 16.8166 13.77 16 12.1022 16C10.3865 16 8.87271 16.8641 7.97216 18.1808ZM12 13C10.067 13 8.5 11.433 8.5 9.5C8.5 7.567 10.067 6 12 6C13.933 6 15.5 7.567 15.5 9.5C15.5 11.433 13.933 13 12 13ZM12 11C12.8284 11 13.5 10.3284 13.5 9.5C13.5 8.67157 12.8284 8 12 8C11.1716 8 10.5 8.67157 10.5 9.5C10.5 10.3284 11.1716 11 12 11Z"></path>
+                      </svg>
+                    </div>
+                  )}
+                </>
               ) : (
-                <div className="w-full cursor-pointer" onClick={() => signInWithGoogle()}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    height="24"
-                    fill="rgba(255,255,255,1)"
-                  >
-                    <path d="M3 4.99509C3 3.89323 3.89262 3 4.99509 3H19.0049C20.1068 3 21 3.89262 21 4.99509V19.0049C21 20.1068 20.1074 21 19.0049 21H4.99509C3.89323 21 3 20.1074 3 19.0049V4.99509ZM5 5V19H19V5H5ZM7.97216 18.1808C7.35347 17.9129 6.76719 17.5843 6.22083 17.2024C7.46773 15.2753 9.63602 14 12.1022 14C14.5015 14 16.6189 15.2071 17.8801 17.0472C17.3438 17.4436 16.7664 17.7877 16.1555 18.0718C15.2472 16.8166 13.77 16 12.1022 16C10.3865 16 8.87271 16.8641 7.97216 18.1808ZM12 13C10.067 13 8.5 11.433 8.5 9.5C8.5 7.567 10.067 6 12 6C13.933 6 15.5 7.567 15.5 9.5C15.5 11.433 13.933 13 12 13ZM12 11C12.8284 11 13.5 10.3284 13.5 9.5C13.5 8.67157 12.8284 8 12 8C11.1716 8 10.5 8.67157 10.5 9.5C10.5 10.3284 11.1716 11 12 11Z"></path>
-                  </svg>
-                </div>
+                <>
+                  {loginModal ? (
+                    <div
+                      className="w-[24px] h-6 cursor-pointer"
+                      onClick={() => setLoginModal(!true)}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="#fff"
+                      >
+                        <path d="M10.5859 12L2.79297 4.20706L4.20718 2.79285L12.0001 10.5857L19.793 2.79285L21.2072 4.20706L13.4143 12L21.2072 19.7928L19.793 21.2071L12.0001 13.4142L4.20718 21.2071L2.79297 19.7928L10.5859 12Z"></path>
+                      </svg>
+                    </div>
+                  ) : (
+                    <div
+                      className="w-full cursor-pointer"
+                      onClick={() => setLoginModal(true)}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        height="24"
+                        fill="rgba(255,255,255,1)"
+                      >
+                        <path d="M4 15H6V20H18V4H6V9H4V3C4 2.44772 4.44772 2 5 2H19C19.5523 2 20 2.44772 20 3V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V15ZM10 11V8L15 12L10 16V13H2V11H10Z"></path>
+                      </svg>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -210,6 +287,35 @@ const Navbar = () => {
                 <p className="text-white font-inter">{device.deviceName}</p>
               </Link>
             ))}
+          </div>
+        </>
+      )}
+
+      {loginModal && (
+        <>
+          <div
+            onClick={() => handleLogin()}
+            className="max-w-[250px] flex gap-2 justify-center items-center w-full h-[50px] bg-slate-500 absolute z-10 right-[39px] top-[48px] cursor-pointer"
+          >
+            <div className="w-[30px] h-[30px]">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="#fff"
+              >
+                <path d="M3.06364 7.50914C4.70909 4.24092 8.09084 2 12 2C14.6954 2 16.959 2.99095 18.6909 4.60455L15.8227 7.47274C14.7864 6.48185 13.4681 5.97727 12 5.97727C9.39542 5.97727 7.19084 7.73637 6.40455 10.1C6.2045 10.7 6.09086 11.3409 6.09086 12C6.09086 12.6591 6.2045 13.3 6.40455 13.9C7.19084 16.2636 9.39542 18.0227 12 18.0227C13.3454 18.0227 14.4909 17.6682 15.3864 17.0682C16.4454 16.3591 17.15 15.3 17.3818 14.05H12V10.1818H21.4181C21.5364 10.8363 21.6 11.5182 21.6 12.2273C21.6 15.2727 20.5091 17.8363 18.6181 19.5773C16.9636 21.1046 14.7 22 12 22C8.09084 22 4.70909 19.7591 3.06364 16.4909C2.38638 15.1409 2 13.6136 2 12C2 10.3864 2.38638 8.85911 3.06364 7.50914Z"></path>
+              </svg>
+            </div>{" "}
+            <p className="text-white">Continue with Google</p>
+          </div>
+        </>
+      )}
+      {accountModal && (
+        <>
+          <div className="max-w-[250px] flex gap-2 justify-center items-center w-full  absolute z-10 right-[39px] top-[48px] cursor-pointer">
+            <div onClick={()=>signOut()} className="h-[50px] flex justify-center items-center w-full bg-slate-500 border-b-2 border-white cursor-pointer">
+                <p className="text-white">LogOut</p>
+            </div>
           </div>
         </>
       )}

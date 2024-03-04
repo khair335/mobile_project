@@ -357,7 +357,7 @@ const handlePhoneFinder = () => {
                 </p>
               </div>
             </div>
-            <p className='py-2 font-raleway font-medium text-lg sm:px-0 px-5'>Brands</p>
+            <p className='py-2 font-raleway font-medium sm:text-lg text-sm  sm:px-0 px-5'>Brands</p>
 
             <Select
               className="basic-single sm:px-0 px-5"
@@ -372,9 +372,9 @@ const handlePhoneFinder = () => {
               onChange={setSelectedBrand}
             />
           </div>
-          <div className='w-full mt-3 flex gap-4 justify-between items-center sm:px-0 px-5'>
+          <div className='w-full sm:mt-3 mt-1  flex gap-4 justify-between items-center sm:px-0 px-5'>
             <div className='max-w-48 w-full'>
-              <p className='py-2 font-raleway font-medium text-lg'>Ram</p>
+              <p className='py-2 font-raleway font-medium sm:text-lg text-sm'>Ram</p>
               <Select
                 className="basic-single"
                 classNamePrefix="select"
@@ -388,7 +388,7 @@ const handlePhoneFinder = () => {
               />
             </div>
             <div className='max-w-48 w-full'>
-              <p className='py-2 font-raleway font-medium text-lg'>Storage</p>
+              <p className='py-2 font-raleway font-medium sm:text-lg text-sm'>Storage</p>
               <Select
                 className="basic-single"
                 classNamePrefix="select"
@@ -404,8 +404,8 @@ const handlePhoneFinder = () => {
             </div>
 
           </div>
-          <div className='w-full mt-3  sm:px-0 px-5'>
-            <p className='py-2 font-raleway font-medium text-lg'>Battery</p>
+          <div className='w-full sm:mt-3 mt-1  sm:px-0 px-5'>
+            <p className='py-2 font-raleway font-medium sm:text-lg text-sm'>Battery</p>
             <Select
               className="basic-single"
               classNamePrefix="select"
@@ -419,9 +419,9 @@ const handlePhoneFinder = () => {
               options={battery}
             />
           </div>
-          <div className='w-full mt-3 sm:px-0 px-5'>
-            <p className='py-2 font-raleway font-medium text-lg'>Price Range</p>
-            <div className='w-full flex justify-between items-center py-4'>
+          <div className='w-full sm:mt-3 mt-1  sm:px-0 px-5'>
+            <p className='py-2 font-raleway font-medium sm:text-lg text-sm'>Price Range</p>
+            <div className='w-full flex justify-between items-center sm:py-4 py-1'>
               <input className='max-w-[100px] w-full h-9 outline-none border-[1px] px-2 text-center' value={value[0].toLocaleString()} disabled type="text" />
               <input className='max-w-[100px] w-full h-9 outline-none border-[1px] px-2 text-center' value={value[1].toLocaleString()} disabled type="text" />
             </div>
