@@ -18,6 +18,8 @@ import { api } from "../../urlConfig";
 import Comments from "../../component/Comments/Comments";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
+import Specifications from '../../component/Specifications/Specifications';
+import Compare from '../../component/Compare/Compare';
 const PhoneDetails = () => {
   const { phoneId } = useParams();
   const state = useSelector((state) => state.search);
@@ -47,7 +49,7 @@ const PhoneDetails = () => {
       toast.error("Sign In Required");
     }
   };
-  
+
   const extractNameFromPath = (pathname) => {
     const parts = pathname.split("/");
     return parts.length >= 2 ? parts[1] : "defaultName";
@@ -471,7 +473,7 @@ const PhoneDetails = () => {
                                 </svg>{" "}
                               </div>
                               <p className="font-poppins xl:text-sm text-[10px] font-light">
-                                
+
                                 {deviceData?.storage} storage,{" "}
                                 {deviceData?.expandable_storage
                                   ? deviceData.expandable_storage_type
@@ -924,39 +926,40 @@ const PhoneDetails = () => {
                   </div>
                   <div className="py-4 md:px-6 px-1 w-full">
                     {tab === "specifications" && (
-                      // specifications-tab
-                      <div className="w-full">
-                        {deviceData.data.map((d, i) => (
-                          <div
-                            className={`border-b-4 md:border-b-[6px] border-gray-100 py-[2px] md:py-1 flex items-start gap-2 md:gap-4
-                              }`}
-                            key={i}
-                          >
-                            <p className="uppercase text-sky-700 text-sm md:text-lg max-w-[80px] md:max-w-[100px] w-full py-0 md:py-1">
-                              {formatPropertyName(d.type)}
-                            </p>
-                            <div className="flex-col w-full">
-                              {d.subType.map((s, j) => (
-                                <div
-                                  key={j}
-                                  className={`flex items-start w-full ${
-                                    j === d.subType.length - 1
-                                      ? "last-child-no-border"
-                                      : ""
-                                  } border-b-[1px] py-[2px] md:py-1`}
-                                >
-                                  <p className="max-w-[90px] md:max-w-[150px] w-full capitalize text-xs md:text-base text-gray-500">
-                                    {formatPropertyName(s.name)}
-                                  </p>
-                                  <p className="text-gray-500 text-[10px] md:text-sm">
-                                    {s.subData}
-                                  </p>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                        // specifications-tab
+                        <Specifications deviceData={deviceData?.data} />
+                      // <div className="w-full">
+                      //   {deviceData.data.map((d, i) => (
+                      //     <div
+                      //       className={`border-b-4 md:border-b-[6px] border-gray-100 py-[2px] md:py-1 flex items-start gap-2 md:gap-4
+                      //         }`}
+                      //       key={i}
+                      //     >
+                      //       <p className="uppercase text-sky-700 text-sm md:text-lg max-w-[80px] md:max-w-[100px] w-full py-0 md:py-1">
+                      //         {formatPropertyName(d.type)}
+                      //       </p>
+                      //       <div className="flex-col w-full">
+                      //         {d.subType.map((s, j) => (
+                      //           <div
+                      //             key={j}
+                      //             className={`flex items-start w-full ${
+                      //               j === d.subType.length - 1
+                      //                 ? "last-child-no-border"
+                      //                 : ""
+                      //             } border-b-[1px] py-[2px] md:py-1`}
+                      //           >
+                      //             <p className="max-w-[90px] md:max-w-[150px] w-full capitalize text-xs md:text-base text-gray-500">
+                      //               {formatPropertyName(s.name)}
+                      //             </p>
+                      //             <p className="text-gray-500 text-[10px] md:text-sm">
+                      //               {s.subData}
+                      //             </p>
+                      //           </div>
+                      //         ))}
+                      //       </div>
+                      //     </div>
+                      //   ))}
+                      // </div>
                     )}
                     {tab === "comments" && (
                       <div className="w-full">
@@ -981,7 +984,9 @@ const PhoneDetails = () => {
                         </div>
                       </div>
                     )}
-                    {tab === "compare" && <div>compare</div>}
+                      {tab === "compare" && <div className='w-full'>
+                      <Compare deviceData={deviceData?.data} />
+                      </div>}
                     {tab === "price" && <div>price</div>}
                   </div>
                 </div>
