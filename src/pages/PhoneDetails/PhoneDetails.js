@@ -37,10 +37,11 @@ const PhoneDetails = () => {
 
   const handleFavCount = async (id) => {
     if (user) {
+      console.log("user",user);
       console.log("favCount Function");
       try {
         // Assuming user.uid is the user's ID
-        await axios.post(`${api}/updateFavCount/${user.uid}/${id}`);
+        await axios.post(`${api}/updateFavCount/${user.email}/${id}`);
       } catch (error) {
         console.error("Error updating favCount:", error);
         // Handle error, show a message, etc.

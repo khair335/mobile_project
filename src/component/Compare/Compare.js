@@ -30,13 +30,13 @@ const Compare = ({ deviceData }) => {
                   <p className="max-w-[90px] md:max-w-[150px] w-full capitalize text-xs md:text-base text-gray-500">
                     {formatPropertyName(s.name)}
                   </p>
-                  <p className="text-gray-500 text-[10px] md:text-sm">
+                  <p className="text-gray-500 text-[10px] md:text-sm min-w-[254px] max-w-[254px]">
                     {s.subData}
                   </p>
                 </div>
               ))}
             </div>
-            <div className="flex-col w-full">
+            <div className="flex-col w-full min-w-[254px] max-w-[254px]">
               {d.subType.map((s, j) => (
                 <div
                   key={j}

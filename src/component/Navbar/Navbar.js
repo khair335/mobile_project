@@ -83,8 +83,8 @@ const Navbar = () => {
   };
 
   return (
-    <div className="w-full bg-[#9e9e9e] h-12 mx-auto fixed top-0 z-50">
-      <div className="max-w-[1440px] mx-auto">
+    <div className="w-full bg-[#9e9e9e] h-12 mx-auto fixed top-0 z-50 re">
+      <div className="max-w-[1440px] mx-auto relative">
         <div className="w-full bg-[#616161] h-12 mx-auto flex justify-between sm:px-4 px-2 items-center">
           <Link
             onClick={() => dispatch({ type: SEARCH_BOX_CLOSE })}
@@ -252,11 +252,9 @@ const Navbar = () => {
             </div>
           </div>
         </div>
-      </div>
-
-      {filteredDevices.length > 0 && (
+         {filteredDevices.length > 0 && (
         <>
-          <div className="absolute w-[300px] z-10 top-[48px] right-[45.4%] flex flex-col">
+          <div className="absolute w-[300px] z-10 top-[48px] right-[42.1%] flex flex-col">
             {filteredDevices.slice(0, 3).map((device, i) => (
               <Link
                 key={i}
@@ -275,13 +273,12 @@ const Navbar = () => {
             ))}
           </div>
         </>
-      )}
-
-      {loginModal && (
+        )}
+        {loginModal && (
         <>
           <div
             onClick={() => handleLogin()}
-            className="max-w-[250px] flex gap-2 justify-center items-center w-full h-[50px] bg-slate-500 absolute z-10 right-[39px] top-[48px] cursor-pointer"
+            className="max-w-[250px] flex gap-2 justify-center items-center w-full h-[50px] bg-slate-500 absolute z-10 right-[0px] top-[48px] cursor-pointer"
           >
             <div className="w-[30px] h-[30px]">
               <svg
@@ -298,13 +295,18 @@ const Navbar = () => {
       )}
       {accountModal && (
         <>
-          <div className="max-w-[250px] flex gap-2 justify-center items-center w-full  absolute z-10 right-[39px] top-[48px] cursor-pointer">
+          <div className="max-w-[250px] flex gap-2 justify-center items-center w-full  absolute z-10 right-[0px] top-[48px] cursor-pointer">
             <div onClick={()=>signOut()} className="h-[50px] flex justify-center items-center w-full bg-slate-500 border-b-2 border-white cursor-pointer">
                 <p className="text-white">LogOut</p>
             </div>
           </div>
         </>
       )}
+      </div>
+
+
+
+
     </div>
   );
 };

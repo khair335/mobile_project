@@ -3,12 +3,13 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { api } from "../../urlConfig";
 
-const BudgetDevice = ({ price }) => {
+const BudgetDevice = ({ price,priceThreshold }) => {
   const [devices, setDevices] = useState([]);
 
   useEffect(() => {
     // Define the API endpoint
-    const apiUrl = `${api}/budget/${price}`;
+    const apiUrl = `${api}/budget/${price}?priceThreshold=${priceThreshold}`;
+    console.log("apiUrl",apiUrl);
 
     // Make a GET request using Axios
     axios
@@ -26,7 +27,7 @@ const BudgetDevice = ({ price }) => {
   return (
     <div className='mb-10'>
     <p className='pb-2 font-inter font-medium text-2xl relative after:absolute after:h-[3px] after:w-5 after:bottom-2 after:bg-black'>Under {price}</p>
-    <div className='m-0 sm:m-5 flex flex-wrap gap-y-6 gap-x-2 sm:gap-x-2'>
+    <div className='m-0 sm:m-5 flex flex-wrap items-start gap-y-6 gap-x-2 sm:gap-x-2'>
 
       {
         devices

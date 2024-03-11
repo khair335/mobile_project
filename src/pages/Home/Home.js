@@ -23,15 +23,8 @@ const Home = () => {
   const comingSoonDevices = useSelector((state) => state.device.comingSoonDevices);
 
   const rootState = useSelector((state) => state);
-
-
-  // useDispatch hook to dispatch actions
   const dispatch = useDispatch();
-
-  // useSelector hook to access the Redux store state
   const { devices, loading, error } = useSelector((state) => state.device);
-
-  // useEffect hook to fetch devices on component mount
   useEffect(() => {
     // Dispatch the fetchDevices action
     dispatch(fetchDevices());
@@ -175,6 +168,7 @@ const Home = () => {
 
                     <BudgetDevice price={10000}/>
                     <BudgetDevice price={20000}/>
+                    <BudgetDevice price={300000} priceThreshold={100000} />
                   </div>
 
 
