@@ -20,6 +20,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
 import Specifications from '../../component/Specifications/Specifications';
 import Compare from '../../component/Compare/Compare';
+import { useQuery } from 'react-query';
 const PhoneDetails = () => {
   const { phoneId } = useParams();
   const state = useSelector((state) => state.search);
@@ -35,21 +36,7 @@ const PhoneDetails = () => {
     }
   };
 
-  const handleFavCount = async (id) => {
-    if (user) {
-      console.log("user",user);
-      console.log("favCount Function");
-      try {
-        // Assuming user.uid is the user's ID
-        await axios.post(`${api}/updateFavCount/${user.email}/${id}`);
-      } catch (error) {
-        console.error("Error updating favCount:", error);
-        // Handle error, show a message, etc.
-      }
-    } else {
-      toast.error("Sign In Required");
-    }
-  };
+
 
   const extractNameFromPath = (pathname) => {
     const parts = pathname.split("/");
@@ -64,24 +51,104 @@ const PhoneDetails = () => {
     dispatch(fetchBrandDevices(brandName.toLocaleLowerCase()));
     updateVisitorCount(phoneId);
   }, [phoneId]);
-
+  const [user] = useAuthState(auth);
+  // console.log("user",user);
   const [shareModal, setShareModal] = useState(false);
   const [tab, setTab] = useState("specifications");
   const [isHovered, setIsHovered] = useState(false);
-  const [deviceData, setDeviceData] = useState(null);
+  const [favDevice, setFavDevice] = useState(null);
+  console.log("favDevice", favDevice?.deviceId);
+  // const [deviceData, setDeviceData] = useState(null);
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   const apiUrl = `${api}/devicesData/${phoneId}`;
+  //   axios
+  //     .get(apiUrl)
+  //     .then((response) => {
+  //       setDeviceData(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Axios Error:", error.message);
+  //     });
+  // }, [phoneId]);
+useEffect(() => {
+  // Check if user exists before making the API request
+  if (user) {
+    const fetchDeviceDetails = async () => {
+      const apiUrl = `http://localhost:2000/api/users/${user.email}/devices/${phoneId}`;
+      console.log("apiUrl", apiUrl);
+
+      try {
+        const response = await axios.get(apiUrl);
+        setFavDevice(response.data.device);
+      } catch (error) {
+        console.error("Error fetching device details:", error);
+        // Handle error if needed
+      }
+    };
+
+    fetchDeviceDetails();
+  }
+}, [user, phoneId]);
+
+
+
+  const fetchDeviceData = async () => {
     const apiUrl = `${api}/devicesData/${phoneId}`;
-    axios
-      .get(apiUrl)
-      .then((response) => {
-        setDeviceData(response.data);
-      })
-      .catch((error) => {
-        console.error("Axios Error:", error.message);
-      });
-  }, [phoneId]);
-  const [user] = useAuthState(auth);
+    const response = await axios.get(apiUrl);
+    return response.data;
+  };
+
+  const { data: deviceData, isLoading, isError } = useQuery(['device', phoneId], fetchDeviceData);
+
+  if (isLoading) {
+    return <Loading/>;
+  }
+
+  if (isError) {
+    return <p>Error loading device data</p>;
+  }
+
+  // http://localhost:2000/api/users/${userEmail}/devices/${deviceId}
+
+  const handleFavCount = async (id) => {
+    if (user) {
+      console.log("user", user);
+      console.log("favCount Function");
+      try {
+        // Assuming user.uid is the user's ID
+        await axios.post(`${api}/updateFavCount/${user.email}/${id}`);
+      } catch (error) {
+        console.error("Error updating favCount:", error);
+        // Handle error, show a message, etc.
+      }
+    } else {
+      toast.error("Sign In Required");
+    }
+  };
+  const handleRemoveFavorite = async (id) => {
+    // setLoading(true);
+    if (user) {
+      try {
+        // Send a DELETE request to the backend API
+        await axios.delete(`${api}/users/${user.email}/favorite-devices/${id}`);
+
+        // Handle success (you might want to refresh the user's data, etc.)
+        console.log("Favorite device removed successfully");
+      } catch (error) {
+        // Handle error
+        console.error("Error removing favorite device:", error.response?.data?.error || "Internal Server Error");
+      } finally {
+        // setLoading(false);
+      }
+    } else {
+      toast.error("Sign In Required");
+    }
+
+  };
+
+
+
 
 
   // const extractCurrencyAndPrice = (device) => {
@@ -251,9 +318,8 @@ const PhoneDetails = () => {
         <div className="max-w-[1440px] w-full mx-auto">
           <div className="flex flex-col md:flex-row gap-3 pt-0 sm:pt-4 px-0 sm:px-3">
             <div
-              className={`md:hidden  ${
-                state.mobileSearch ? "block" : "hidden"
-              }`}
+              className={`md:hidden  ${state.mobileSearch ? "block" : "hidden"
+                }`}
             >
               <PhoneFind />
             </div>
@@ -500,12 +566,19 @@ const PhoneDetails = () => {
                             </p>
                           </div>
                           <div className="flex flex-col  items-center">
-                            <div className="flex gap-3">
-                              <div
+                              <div className="flex gap-3">
+                                {
+                                  favDevice?.deviceId == phoneId  ?  <div  className="xl:w-8 xl:h-8 w-4 h-4 cursor-pointer" onClick={() => handleRemoveFavorite(phoneId)}><svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="rgba(15,90,178,1)"
+                                  >
+                                    <path d="M16.5 3C19.5376 3 22 5.5 22 9C22 16 14.5 20 12 21.5C9.5 20 2 16 2 9C2 5.5 4.5 3 7.5 3C9.35997 3 11 4 12 5C13 4 14.64 3 16.5 3Z"></path>
+                                  </svg></div> : <div
                                 className="xl:w-8 xl:h-8 w-4 h-4 cursor-pointer"
                                 onMouseEnter={() => setIsHovered(true)}
                                 onMouseLeave={() => setIsHovered(false)}
-                                onClick={()=>handleFavCount(phoneId)}
+                                onClick={() => handleFavCount(phoneId)}
                               >
                                 {!isHovered && (
                                   <svg
@@ -527,6 +600,8 @@ const PhoneDetails = () => {
                                   </svg>
                                 )}
                               </div>
+                                }
+
                               <p className="text-black xl:text-2xl text-sm">
                                 {deviceData?.favCount?.toLocaleString()}
                               </p>
@@ -534,7 +609,9 @@ const PhoneDetails = () => {
                             <p className="pt-3 uppercase xl:text-sm text-[8px] text-center">
                               Become a fan
                             </p>
-                          </div>
+                            </div>
+
+
                         </div>
                         <div className="flex justify-between w-[95%] xl:gap-4 gap-2">
                           <div className="flex-col justify-start items-start">
@@ -742,9 +819,9 @@ const PhoneDetails = () => {
                                     )}{" "}
                                   </p>
                                   <p className="font-poppins  text-xs font-light">
-                                  {deviceData.processor && (
-                                <span>{deviceData.processor}</span>
-                              )}
+                                    {deviceData.processor && (
+                                      <span>{deviceData.processor}</span>
+                                    )}
                                   </p>
                                 </div>
                               </div>
@@ -761,7 +838,7 @@ const PhoneDetails = () => {
 
                                 <div>
                                   <p className="font-poppins text-base font-medium">
-                                  {deviceData?.battery} <span className="text-xs">mAh</span>
+                                    {deviceData?.battery} <span className="text-xs">mAh</span>
                                   </p>
                                   <p className="font-poppins  text-xs font-light">
                                     Li-Ion
@@ -875,25 +952,25 @@ const PhoneDetails = () => {
                       <div>
                         <div className="flex gap-3">
                           <div className="w-5 h-5">
-                          {!isHovered && (
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                  >
-                                    <path d="M16.5 3C19.5376 3 22 5.5 22 9C22 16 14.5 20 12 21.5C9.5 20 2 16 2 9C2 5.5 4.5 3 7.5 3C9.35997 3 11 4 12 5C13 4 14.64 3 16.5 3ZM12.9339 18.6038C13.8155 18.0485 14.61 17.4955 15.3549 16.9029C18.3337 14.533 20 11.9435 20 9C20 6.64076 18.463 5 16.5 5C15.4241 5 14.2593 5.56911 13.4142 6.41421L12 7.82843L10.5858 6.41421C9.74068 5.56911 8.5759 5 7.5 5C5.55906 5 4 6.6565 4 9C4 11.9435 5.66627 14.533 8.64514 16.9029C9.39 17.4955 10.1845 18.0485 11.0661 18.6038C11.3646 18.7919 11.6611 18.9729 12 19.1752C12.3389 18.9729 12.6354 18.7919 12.9339 18.6038Z"></path>
-                                  </svg>
-                                )}
+                            {!isHovered && (
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                              >
+                                <path d="M16.5 3C19.5376 3 22 5.5 22 9C22 16 14.5 20 12 21.5C9.5 20 2 16 2 9C2 5.5 4.5 3 7.5 3C9.35997 3 11 4 12 5C13 4 14.64 3 16.5 3ZM12.9339 18.6038C13.8155 18.0485 14.61 17.4955 15.3549 16.9029C18.3337 14.533 20 11.9435 20 9C20 6.64076 18.463 5 16.5 5C15.4241 5 14.2593 5.56911 13.4142 6.41421L12 7.82843L10.5858 6.41421C9.74068 5.56911 8.5759 5 7.5 5C5.55906 5 4 6.6565 4 9C4 11.9435 5.66627 14.533 8.64514 16.9029C9.39 17.4955 10.1845 18.0485 11.0661 18.6038C11.3646 18.7919 11.6611 18.9729 12 19.1752C12.3389 18.9729 12.6354 18.7919 12.9339 18.6038Z"></path>
+                              </svg>
+                            )}
 
-                                {isHovered && (
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    fill="rgba(15,90,178,1)"
-                                  >
-                                    <path d="M16.5 3C19.5376 3 22 5.5 22 9C22 16 14.5 20 12 21.5C9.5 20 2 16 2 9C2 5.5 4.5 3 7.5 3C9.35997 3 11 4 12 5C13 4 14.64 3 16.5 3Z"></path>
-                                  </svg>
-                                )}
+                            {isHovered && (
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="rgba(15,90,178,1)"
+                              >
+                                <path d="M16.5 3C19.5376 3 22 5.5 22 9C22 16 14.5 20 12 21.5C9.5 20 2 16 2 9C2 5.5 4.5 3 7.5 3C9.35997 3 11 4 12 5C13 4 14.64 3 16.5 3Z"></path>
+                              </svg>
+                            )}
                           </div>
                           <p className="text-black text-sm">{deviceData?.favCount?.toLocaleString()}</p>
                         </div>
@@ -907,17 +984,15 @@ const PhoneDetails = () => {
                           onClick={() =>
                             setTab(data.tabName.toLocaleLowerCase())
                           }
-                          className={`flex justify-center items-center gap-1 cursor-pointer group transition-all duration-300 lg:h-[50px] md:h-[40px] h-8 hover:bg-black md:px-2 px-1 ${
-                            tab == data.tabName && "bg-black"
-                          }`}
+                          className={`flex justify-center items-center gap-1 cursor-pointer group transition-all duration-300 lg:h-[50px] md:h-[40px] h-8 hover:bg-black md:px-2 px-1 ${tab == data.tabName && "bg-black"
+                            }`}
                         >
                           <div className="lg:w-[24px] md:w-[18px] w-[14px] lg:h-[24px] md:h-[18px] h-[14px]">
                             {data.icon}
                           </div>
                           <p
-                            className={`lg:text-lg md:tex text-[9px] text-black font-poppins uppercase group-hover:text-white ${
-                              tab == data.tabName && "text-white"
-                            }`}
+                            className={`lg:text-lg md:tex text-[9px] text-black font-poppins uppercase group-hover:text-white ${tab == data.tabName && "text-white"
+                              }`}
                           >
                             {data.tabName}
                           </p>
@@ -927,8 +1002,8 @@ const PhoneDetails = () => {
                   </div>
                   <div className="py-4 md:px-6 px-1 w-full">
                     {tab === "specifications" && (
-                        // specifications-tab
-                        <Specifications deviceData={deviceData?.data} />
+                      // specifications-tab
+                      <Specifications deviceData={deviceData?.data} />
                       // <div className="w-full">
                       //   {deviceData.data.map((d, i) => (
                       //     <div
@@ -985,9 +1060,9 @@ const PhoneDetails = () => {
                         </div>
                       </div>
                     )}
-                      {tab === "compare" && <div className='w-full'>
+                    {tab === "compare" && <div className='w-full'>
                       <Compare deviceData={deviceData?.data} />
-                      </div>}
+                    </div>}
                     {tab === "price" && <div>price</div>}
                   </div>
                 </div>
