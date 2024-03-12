@@ -65,7 +65,7 @@ const handlePhoneFinder = () => {
   mutation.mutate(requestData);
 
     // if (mutation.isSuccess) {
-    //   dispatch(onSearch(mutation.data))      
+    //   dispatch(onSearch(mutation.data))
 
     // }
 };
@@ -282,7 +282,7 @@ const handlePhoneFinder = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:2000/api/brandName");
+        const response = await axios.get(`${api}/brandName`);
 
         const formattedData = response.data.brandNames.map((brand) => ({
           label: brand.name,

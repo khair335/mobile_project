@@ -75,7 +75,7 @@ useEffect(() => {
   // Check if user exists before making the API request
   if (user) {
     const fetchDeviceDetails = async () => {
-      const apiUrl = `http://localhost:2000/api/users/${user.email}/devices/${phoneId}`;
+      const apiUrl = `${api}/users/${user.email}/devices/${phoneId}`;
       console.log("apiUrl", apiUrl);
 
       try {
@@ -109,7 +109,7 @@ useEffect(() => {
     return <p>Error loading device data</p>;
   }
 
-  // http://localhost:2000/api/users/${userEmail}/devices/${deviceId}
+
 
   const handleFavCount = async (id) => {
     if (user) {

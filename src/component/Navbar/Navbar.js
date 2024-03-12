@@ -11,6 +11,7 @@ import { useAuthState, useSignInWithGoogle } from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
 import axios from "axios";
 import logo from "../../assets/logo.svg";
+import { api } from '../../urlConfig';
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -62,7 +63,7 @@ const Navbar = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:2000/api/saveUserInfo",
+        `${api}/saveUserInfo`,
         {
           uid,
           displayName,
