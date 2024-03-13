@@ -57,7 +57,7 @@ const PhoneDetails = () => {
   const [tab, setTab] = useState("specifications");
   const [isHovered, setIsHovered] = useState(false);
   const [favDevice, setFavDevice] = useState(null);
-  console.log("favDevice", favDevice?.deviceId);
+  // console.log("favDevice", favDevice?.deviceId);
   // const [deviceData, setDeviceData] = useState(null);
 
   // useEffect(() => {
@@ -71,6 +71,7 @@ const PhoneDetails = () => {
   //       console.error("Axios Error:", error.message);
   //     });
   // }, [phoneId]);
+  const [addComment, setAddComment]= useState(false)
 useEffect(() => {
   // Check if user exists before making the API request
   if (user) {
@@ -99,8 +100,8 @@ useEffect(() => {
     return response.data;
   };
 
-  const { data: deviceData, isLoading, isError } = useQuery(['device', phoneId], fetchDeviceData);
-
+  const { data: deviceData, isLoading, isError } = useQuery(['device', phoneId,addComment], fetchDeviceData);
+// console.log("deviceData",deviceData);
   if (isLoading) {
     return <Loading/>;
   }
@@ -200,7 +201,7 @@ useEffect(() => {
       ),
     },
     {
-      tabName: "Comments",
+      tabName: "comments",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -1039,7 +1040,7 @@ useEffect(() => {
                     )}
                     {tab === "comments" && (
                       <div className="w-full">
-                        <Comments />
+                        <Comments comments={deviceData?.comments} setAddComment={setAddComment} phoneId={phoneId} />
                       </div>
                     )}
                     {tab === "pictures" && (
@@ -1061,7 +1062,7 @@ useEffect(() => {
                       </div>
                     )}
                     {tab === "compare" && <div className='w-full'>
-                      <Compare deviceData={deviceData?.data} />
+                      <Compare deviceData={deviceData?.data} s />
                     </div>}
                     {tab === "price" && <div>price</div>}
                   </div>

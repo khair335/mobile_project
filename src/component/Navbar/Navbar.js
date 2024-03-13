@@ -21,7 +21,7 @@ const Navbar = () => {
   const [filteredDevices, setFilteredDevices] = useState([]);
   const [loginModal, setLoginModal] = useState(false);
   const [accountModal, setAccountModal] = useState(false);
-
+console.log("searchTerm",searchTerm);
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
     // dispatch(onSearch(event.target.value));
@@ -40,9 +40,7 @@ const Navbar = () => {
 
   useEffect(() => {}, [filteredDevices]);
   const [user] = useAuthState(auth);
-  // console.log("user", user.uid);
   const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
-  // console.log("gUser", gUser);
   const handleLogin = () => {
     signInWithGoogle()
       .then((user) => {
