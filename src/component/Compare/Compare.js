@@ -83,7 +83,7 @@ const Compare = ({ deviceData }) => {
                 ))}
               </div>
               <div className="flex flex-col max-w-[404px] w-full">
-                {deviceData?.data?.subType.map((s, j) => (
+                {d.subType.map((s, j) => (
                   <div
                     key={j}
                     className={`flex items-start w-full ${j === d.subType.length - 1
