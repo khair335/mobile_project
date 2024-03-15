@@ -59,7 +59,42 @@ const PhoneDetails = () => {
   const [favDevice, setFavDevice] = useState(null);
   // console.log("favDevice", favDevice?.deviceId);
   // const [deviceData, setDeviceData] = useState(null);
+  const { devices } = useSelector((state) => state.device);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [compareDeviceData, setCompareDeviceData] = useState("");
+  console.log("setCompareDeviceData", compareDeviceData);
+  useEffect(() => {
+    // Update filtered devices when searchTerm changes
+    setFilteredDevices(
+      devices.filter(
+        (device) =>
+          device.deviceName.toLowerCase().includes(searchTerm.toLowerCase()) &&
+          searchTerm.length >= 3
+      )
+    );
+  }, [searchTerm, devices]);
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+    // dispatch(onSearch(event.target.value));
+  };
+  const [filteredDevices, setFilteredDevices] = useState([]);
+
+  const handleCompareDevice = async (deviceId) => {
+    console.log("deviceId", deviceId);
+    try {
+      const response = await axios.get(`${api}/devicesData/${deviceId}`);
+      console.log("deviceData", response.data);
+      setCompareDeviceData(response.data);
+      setSearchTerm("")
+
+      // Handle the deviceData as needed, you can log it for now
+      // console.log('Device Data:', deviceData.data);
+    } catch (error) {
+      console.error('Error fetching device data:', error);
+      // Handle the error state if needed
+    }
+  };
   // useEffect(() => {
   //   const apiUrl = `${api}/devicesData/${phoneId}`;
   //   axios
@@ -276,6 +311,8 @@ const PhoneDetails = () => {
     );
   };
 
+
+
   return (
     <div>
       <Navbar />
@@ -342,514 +379,519 @@ const PhoneDetails = () => {
                         {deviceData.deviceName
                           ? deviceData.deviceName
                           : "No Name Found"}
-                        </h3>
-                        {
-                          tab == "compare" ? <div className='flex flex-col items-end '>
-          {/* <label htmlFor="compare">Search Your Compare Devices</label> */}
-                            <input type="text" id='compare' className='max-w-[300px] h-10 w-full border outline-none rounded-sm px-2 placeholder:text-xs'
-                              // onChange={handleSearchChange}
-                              placeholder='Search Your Compare Devices' />
-        </div> : <div className="flex items-center">
-                        {shareModal && (
-                          <div className="flex items-center ">
+                      </h3>
+                      {
+                        tab == "compare" ? <div className='flex flex-col items-end max-w-[242px] w-full'>
+                          {/* <label htmlFor="compare">Search Your Compare Devices</label> */}
+                          <input type="text" id='compare' className='max-w-[242px] h-10 w-full border outline-none rounded-sm px-2 placeholder:text-xs'
+                            onChange={handleSearchChange}
+                            placeholder='Search Your Compare Devices' />
+                        </div> : <div className="flex items-center">
+                          {shareModal && (
+                            <div className="flex items-center ">
+                              <div
+                                onClick={handleFacebookShare}
+                                className="bg-blue-500 md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer"
+                              >
+                                <div className="md:w-[36px] w-5 md:h-[36px] h-5">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="rgba(255,255,255,1)"
+                                  >
+                                    <path d="M14 13.5H16.5L17.5 9.5H14V7.5C14 6.47062 14 5.5 16 5.5H17.5V2.1401C17.1743 2.09685 15.943 2 14.6429 2C11.9284 2 10 3.65686 10 6.69971V9.5H7V13.5H10V22H14V13.5Z"></path>
+                                  </svg>
+                                </div>
+                              </div>
+                              <div
+                                onClick={handleTwitterShare}
+                                className="bg-black md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer"
+                              >
+                                <div className="md:w-[36px] w-5 md:h-[36px] h-5">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="rgba(255,255,255,1)"
+                                  >
+                                    <path d="M8 2H1L9.26086 13.0145L1.44995 21.9999H4.09998L10.4883 14.651L16 22H23L14.3917 10.5223L21.8001 2H19.1501L13.1643 8.88578L8 2ZM17 20L5 4H7L19 20H17Z"></path>
+                                  </svg>
+                                </div>
+                              </div>
+                              <div
+                                onClick={() => handleCopyLink()}
+                                className="bg-gray-400 md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer"
+                              >
+                                <div className="md:w-[36px] w-5 md:h-[36px] h-5">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="rgba(255,255,255,1)"
+                                  >
+                                    <path d="M6.9998 6V3C6.9998 2.44772 7.44752 2 7.9998 2H19.9998C20.5521 2 20.9998 2.44772 20.9998 3V17C20.9998 17.5523 20.5521 18 19.9998 18H16.9998V20.9991C16.9998 21.5519 16.5499 22 15.993 22H4.00666C3.45059 22 3 21.5554 3 20.9991L3.0026 7.00087C3.0027 6.44811 3.45264 6 4.00942 6H6.9998ZM5.00242 8L5.00019 20H14.9998V8H5.00242ZM8.9998 6H16.9998V16H18.9998V4H8.9998V6Z"></path>
+                                  </svg>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          {shareModal ? (
                             <div
-                              onClick={handleFacebookShare}
-                              className="bg-blue-500 md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer"
+                              onClick={() => setShareModal(false)}
+                              className="md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer bg-slate-500"
                             >
                               <div className="md:w-[36px] w-5 md:h-[36px] h-5">
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
                                   viewBox="0 0 24 24"
-                                  fill="rgba(255,255,255,1)"
+                                  fill="#ffff"
                                 >
-                                  <path d="M14 13.5H16.5L17.5 9.5H14V7.5C14 6.47062 14 5.5 16 5.5H17.5V2.1401C17.1743 2.09685 15.943 2 14.6429 2C11.9284 2 10 3.65686 10 6.69971V9.5H7V13.5H10V22H14V13.5Z"></path>
+                                  <path d="M10.5859 12L2.79297 4.20706L4.20718 2.79285L12.0001 10.5857L19.793 2.79285L21.2072 4.20706L13.4143 12L21.2072 19.7928L19.793 21.2071L12.0001 13.4142L4.20718 21.2071L2.79297 19.7928L10.5859 12Z"></path>
                                 </svg>
                               </div>
                             </div>
+                          ) : (
                             <div
-                              onClick={handleTwitterShare}
-                              className="bg-black md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer"
+                              onClick={() => setShareModal(true)}
+                              className="md:w-[36px] w-5 md:h-[36px] h-5 cursor-pointer"
                             >
-                              <div className="md:w-[36px] w-5 md:h-[36px] h-5">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 24 24"
-                                  fill="rgba(255,255,255,1)"
-                                >
-                                  <path d="M8 2H1L9.26086 13.0145L1.44995 21.9999H4.09998L10.4883 14.651L16 22H23L14.3917 10.5223L21.8001 2H19.1501L13.1643 8.88578L8 2ZM17 20L5 4H7L19 20H17Z"></path>
-                                </svg>
-                              </div>
-                            </div>
-                            <div
-                              onClick={() => handleCopyLink()}
-                              className="bg-gray-400 md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer"
-                            >
-                              <div className="md:w-[36px] w-5 md:h-[36px] h-5">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 24 24"
-                                  fill="rgba(255,255,255,1)"
-                                >
-                                  <path d="M6.9998 6V3C6.9998 2.44772 7.44752 2 7.9998 2H19.9998C20.5521 2 20.9998 2.44772 20.9998 3V17C20.9998 17.5523 20.5521 18 19.9998 18H16.9998V20.9991C16.9998 21.5519 16.5499 22 15.993 22H4.00666C3.45059 22 3 21.5554 3 20.9991L3.0026 7.00087C3.0027 6.44811 3.45264 6 4.00942 6H6.9998ZM5.00242 8L5.00019 20H14.9998V8H5.00242ZM8.9998 6H16.9998V16H18.9998V4H8.9998V6Z"></path>
-                                </svg>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                        {shareModal ? (
-                          <div
-                            onClick={() => setShareModal(false)}
-                            className="md:w-[50px] w-[32px] md:h-[50px] h-[32px] flex justify-center items-center cursor-pointer bg-slate-500"
-                          >
-                            <div className="md:w-[36px] w-5 md:h-[36px] h-5">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
                                 fill="#ffff"
                               >
-                                <path d="M10.5859 12L2.79297 4.20706L4.20718 2.79285L12.0001 10.5857L19.793 2.79285L21.2072 4.20706L13.4143 12L21.2072 19.7928L19.793 21.2071L12.0001 13.4142L4.20718 21.2071L2.79297 19.7928L10.5859 12Z"></path>
+                                <path d="M13 14H11C7.54202 14 4.53953 15.9502 3.03239 18.8107C3.01093 18.5433 3 18.2729 3 18C3 12.4772 7.47715 8 13 8V2.5L23.5 11L13 19.5V14ZM11 12H15V15.3078L20.3214 11L15 6.69224V10H13C10.5795 10 8.41011 11.0749 6.94312 12.7735C8.20873 12.2714 9.58041 12 11 12Z"></path>
                               </svg>
                             </div>
-                          </div>
-                        ) : (
-                          <div
-                            onClick={() => setShareModal(true)}
-                            className="md:w-[36px] w-5 md:h-[36px] h-5 cursor-pointer"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              fill="#ffff"
-                            >
-                              <path d="M13 14H11C7.54202 14 4.53953 15.9502 3.03239 18.8107C3.01093 18.5433 3 18.2729 3 18C3 12.4772 7.47715 8 13 8V2.5L23.5 11L13 19.5V14ZM11 12H15V15.3078L20.3214 11L15 6.69224V10H13C10.5795 10 8.41011 11.0749 6.94312 12.7735C8.20873 12.2714 9.58041 12 11 12Z"></path>
-                            </svg>
-                          </div>
-                        )}
-                      </div>
-                        }
+                          )}
+                        </div>
+                      }
 
                     </div>
                     {
-                      tab == "compare" ? <div className="pt-[40px] max-w-[1000px] md:pt-[60px] pb-[10px] flex md:gap-2 gap-2 md:justify-start justify-center  backdrop-blur-[100px] relative z-[1] h-full">
-                        <div className='flex w-[50%]'>
-                          <div
-                            className=" md:max-w-[270px] md:min-w-[270px] max-w-[198.5px] w-full cursor-pointer"
-                            onClick={() => setTab("pictures")}
-                          >
-                            <img
-                              className=" md:max-w-[270px] md:min-w-[270px] max-w-full  md:h-[280px] min-h-[200px] h-[200px] w-full object-contain"
-                              src={deviceData?.banner_img}
-                              alt=""
-                            />
-                          </div>
-                          <div className="max-w-[45%]  w-full ">
-                            <Slider {...settings}>
-                              <div>
-                                <div className="w-full h-[192px] sm:h-[265px] bg-opacity-30 bg-slate-300  px-2 flex flex-col gap-y-1 justify-between">
-                                  <div className="flex items-center gap-1">
-                                    <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                        transform="matrix(6.123233995736766e-17,1,-1,6.123233995736766e-17,0,0)"
-                                      >
-                                        <path d="M3 4H21C21.5523 4 22 4.44772 22 5V19C22 19.5523 21.5523 20 21 20H3C2.44772 20 2 19.5523 2 19V5C2 4.44772 2.44772 4 3 4ZM4 6V18H20V6H4Z" />
-                                      </svg>
-                                    </div>
+                      tab == "compare" ?
+                        <div className="pt-[40px] max-w-[1000px] md:pt-[60px] pb-[10px] flex md:gap-2 gap-2 md:justify-start justify-center  backdrop-blur-[100px] relative z-[1] h-full">
+                          <div className='flex w-[50%]'>
+                            <div
+                              className=" md:max-w-[270px] md:min-w-[270px] max-w-[198.5px] w-full cursor-pointer"
+                              onClick={() => setTab("pictures")}
+                            >
+                              <img
+                                className=" md:max-w-[270px] md:min-w-[270px] max-w-full  md:h-[280px] min-h-[200px] h-[200px] w-full object-contain"
+                                src={deviceData?.banner_img}
+                                alt=""
+                              />
+                            </div>
+                            <div className="max-w-[45%]  w-full ">
+                              <Slider {...settings}>
+                                <div>
+                                  <div className="w-full h-[192px] sm:h-[265px] bg-opacity-30 bg-slate-300  px-2 flex flex-col gap-y-1 justify-between">
+                                    <div className="flex items-center gap-1">
+                                      <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          viewBox="0 0 24 24"
+                                          fill="currentColor"
+                                          transform="matrix(6.123233995736766e-17,1,-1,6.123233995736766e-17,0,0)"
+                                        >
+                                          <path d="M3 4H21C21.5523 4 22 4.44772 22 5V19C22 19.5523 21.5523 20 21 20H3C2.44772 20 2 19.5523 2 19V5C2 4.44772 2.44772 4 3 4ZM4 6V18H20V6H4Z" />
+                                        </svg>
+                                      </div>
 
-                                    <div>
-                                      <p className="font-poppins text-base font-medium">
-                                        {deviceData?.displaySize}"
-                                      </p>
-                                      <p className="font-poppins  text-xs font-light">
-                                        {deviceData.displayResolution && (
-                                          <span className="">
-                                            {deviceData.displayResolution} pixels
-                                          </span>
-                                        )}
-                                      </p>
+                                      <div>
+                                        <p className="font-poppins text-base font-medium">
+                                          {deviceData?.displaySize}"
+                                        </p>
+                                        <p className="font-poppins  text-xs font-light">
+                                          {deviceData.displayResolution && (
+                                            <span className="">
+                                              {deviceData.displayResolution} pixels
+                                            </span>
+                                          )}
+                                        </p>
+                                      </div>
                                     </div>
-                                  </div>
-                                  <div className="flex items-center gap-1">
-                                    <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                      >
-                                        <path d="M2 6.00087C2 5.44811 2.45531 5 2.9918 5H21.0082C21.556 5 22 5.44463 22 6.00087V19.9991C22 20.5519 21.5447 21 21.0082 21H2.9918C2.44405 21 2 20.5554 2 19.9991V6.00087ZM4 7V19H20V7H4ZM14 16C15.6569 16 17 14.6569 17 13C17 11.3431 15.6569 10 14 10C12.3431 10 11 11.3431 11 13C11 14.6569 12.3431 16 14 16ZM14 18C11.2386 18 9 15.7614 9 13C9 10.2386 11.2386 8 14 8C16.7614 8 19 10.2386 19 13C19 15.7614 16.7614 18 14 18ZM4 2H10V4H4V2Z"></path>
-                                      </svg>
-                                    </div>
+                                    <div className="flex items-center gap-1">
+                                      <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          viewBox="0 0 24 24"
+                                          fill="currentColor"
+                                        >
+                                          <path d="M2 6.00087C2 5.44811 2.45531 5 2.9918 5H21.0082C21.556 5 22 5.44463 22 6.00087V19.9991C22 20.5519 21.5447 21 21.0082 21H2.9918C2.44405 21 2 20.5554 2 19.9991V6.00087ZM4 7V19H20V7H4ZM14 16C15.6569 16 17 14.6569 17 13C17 11.3431 15.6569 10 14 10C12.3431 10 11 11.3431 11 13C11 14.6569 12.3431 16 14 16ZM14 18C11.2386 18 9 15.7614 9 13C9 10.2386 11.2386 8 14 8C16.7614 8 19 10.2386 19 13C19 15.7614 16.7614 18 14 18ZM4 2H10V4H4V2Z"></path>
+                                        </svg>
+                                      </div>
 
-                                    <div>
-                                      <p className="font-poppins text-base font-medium">
-                                        {deviceData.backCamera && (
-                                          <>
-                                            {" "}
-                                            {deviceData.backCamera}{" "}
-                                            <span className="xl:text-sm text-[8px]">
+                                      <div>
+                                        <p className="font-poppins text-base font-medium">
+                                          {deviceData.backCamera && (
+                                            <>
                                               {" "}
-                                              MP
-                                            </span>{" "}
-                                          </>
-                                        )}
-                                      </p>
-                                      <p className="font-poppins  text-xs font-light">
-                                        {deviceData?.backCameraVideo && (
-                                          <span className="">
-                                            {deviceData?.backCameraVideo}p
-                                          </span>
-                                        )}
-                                      </p>
-                                    </div>
-                                  </div>
-
-                                  <div className="flex items-center gap-1">
-                                    <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="rgba(0,0,0,1)"
-                                      >
-                                        <path d="M14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM7 7V11H11V7H7Z"></path>
-                                      </svg>
+                                              {deviceData.backCamera}{" "}
+                                              <span className="xl:text-sm text-[8px]">
+                                                {" "}
+                                                MP
+                                              </span>{" "}
+                                            </>
+                                          )}
+                                        </p>
+                                        <p className="font-poppins  text-xs font-light">
+                                          {deviceData?.backCameraVideo && (
+                                            <span className="">
+                                              {deviceData?.backCameraVideo}p
+                                            </span>
+                                          )}
+                                        </p>
+                                      </div>
                                     </div>
 
-                                    <div>
-                                      <p className="font-poppins text-base font-medium">
-                                        {/* 12 <span className="text-xs">GB RAM </span>{" "} */}
-                                        {deviceData.ram && (
-                                          <>
-                                            {" "}
-                                            {deviceData.ram}{" "}
-                                            <span className="text-xs"> GB RAM</span>{" "}
-                                          </>
-                                        )}{" "}
-                                      </p>
-                                      <p className="font-poppins  text-xs font-light">
-                                        {deviceData.processor && (
-                                          <span>{deviceData.processor}</span>
-                                        )}
-                                      </p>
-                                    </div>
-                                  </div>
-                                  <div className="flex items-center gap-1">
-                                    <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="rgba(0,0,0,1)"
-                                      >
-                                        <path d="M9 4V3C9 2.44772 9.44772 2 10 2H14C14.5523 2 15 2.44772 15 3V4H18C18.5523 4 19 4.44772 19 5V21C19 21.5523 18.5523 22 18 22H6C5.44772 22 5 21.5523 5 21V5C5 4.44772 5.44772 4 6 4H9ZM13 12V7L8 14H11V19L16 12H13Z"></path>
-                                      </svg>
-                                    </div>
+                                    <div className="flex items-center gap-1">
+                                      <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          viewBox="0 0 24 24"
+                                          fill="rgba(0,0,0,1)"
+                                        >
+                                          <path d="M14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM7 7V11H11V7H7Z"></path>
+                                        </svg>
+                                      </div>
 
-                                    <div>
-                                      <p className="font-poppins text-base font-medium">
-                                        {deviceData?.battery} <span className="text-xs">mAh</span>
-                                      </p>
-                                      <p className="font-poppins  text-xs font-light">
-                                        Li-Ion
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div>
-                                <div className="w-full h-[192px] sm:h-[265px] bg-opacity-30 bg-slate-300  px-3 flex flex-col justify-between gap-y-1 py-1">
-                                  <div className="flex items-center gap-2">
-                                    <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                      >
-                                        <path d="M9 1V3H15V1H17V3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H7V1H9ZM20 11H4V19H20V11ZM7 5H4V9H20V5H17V7H15V5H9V7H7V5Z"></path>
-                                      </svg>
-                                    </div>
-
-                                    <div>
-                                      <p className="font-poppins text-xs ">
-                                        {" "}
-                                        {deviceData.release_date
-                                          ? deviceData.release_date
-                                          : "No Data Found"}
-                                      </p>
-                                    </div>
-                                  </div>
-
-                                  <div className="flex items-center gap-2">
-                                    <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                      >
-                                        <path d="M7 4V20H17V4H7ZM6 2H18C18.5523 2 19 2.44772 19 3V21C19 21.5523 18.5523 22 18 22H6C5.44772 22 5 21.5523 5 21V3C5 2.44772 5.44772 2 6 2ZM12 17C12.5523 17 13 17.4477 13 18C13 18.5523 12.5523 19 12 19C11.4477 19 11 18.5523 11 18C11 17.4477 11.4477 17 12 17Z"></path>
-                                      </svg>
-                                    </div>
-
-                                    <div>
-                                      <p className="font-poppins text-xs">
-                                        {deviceData?.weight},{" "}
-                                        {deviceData?.thickness} thickness
-                                      </p>
-                                    </div>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                      >
-                                        <path d="M23 12L15.9289 19.0711L14.5147 17.6569L20.1716 12L14.5147 6.34317L15.9289 4.92896L23 12ZM3.82843 12L9.48528 17.6569L8.07107 19.0711L1 12L8.07107 4.92896L9.48528 6.34317L3.82843 12Z"></path>
-                                      </svg>
-                                    </div>
-
-                                    <div>
-                                      <p className="font-poppins text-xs">
-                                        {deviceData.os_android},{" "}
-                                        {deviceData.os_brand}
-                                      </p>
-                                    </div>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                      >
-                                        <path d="M6 18H18V6H6V18ZM14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM8 8H16V16H8V8Z"></path>
-                                      </svg>
-                                    </div>
-
-                                    <div>
-                                      <p className="font-poppins text-xs">
-                                        {deviceData?.storage} storage,{" "}
-                                        {deviceData?.expandable_storage
-                                          ? deviceData.expandable_storage_type
-                                          : "no card slot"}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </Slider>
-                          </div>
-                        </div>
-                        <div className='flex w-[50%]'>
-                          <div
-                            className=" md:max-w-[270px] md:min-w-[270px] max-w-[198.5px] w-full cursor-pointer"
-                            onClick={() => setTab("pictures")}
-                          >
-                            <img
-                              className=" md:max-w-[270px] md:min-w-[270px] max-w-full  md:h-[280px] min-h-[200px] h-[200px] w-full object-contain"
-                              src={deviceData?.banner_img}
-                              alt=""
-                            />
-                          </div>
-                          <div className="max-w-[45%]  w-full ">
-                            <Slider {...settings}>
-                              <div>
-                                <div className="w-full h-[192px] sm:h-[265px] bg-opacity-30 bg-slate-300  px-2 flex flex-col gap-y-1 justify-between">
-                                  <div className="flex items-center gap-1">
-                                    <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                        transform="matrix(6.123233995736766e-17,1,-1,6.123233995736766e-17,0,0)"
-                                      >
-                                        <path d="M3 4H21C21.5523 4 22 4.44772 22 5V19C22 19.5523 21.5523 20 21 20H3C2.44772 20 2 19.5523 2 19V5C2 4.44772 2.44772 4 3 4ZM4 6V18H20V6H4Z" />
-                                      </svg>
-                                    </div>
-
-                                    <div>
-                                      <p className="font-poppins text-base font-medium">
-                                        {deviceData?.displaySize}"
-                                      </p>
-                                      <p className="font-poppins  text-xs font-light">
-                                        {deviceData.displayResolution && (
-                                          <span className="">
-                                            {deviceData.displayResolution} pixels
-                                          </span>
-                                        )}
-                                      </p>
-                                    </div>
-                                  </div>
-                                  <div className="flex items-center gap-1">
-                                    <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                      >
-                                        <path d="M2 6.00087C2 5.44811 2.45531 5 2.9918 5H21.0082C21.556 5 22 5.44463 22 6.00087V19.9991C22 20.5519 21.5447 21 21.0082 21H2.9918C2.44405 21 2 20.5554 2 19.9991V6.00087ZM4 7V19H20V7H4ZM14 16C15.6569 16 17 14.6569 17 13C17 11.3431 15.6569 10 14 10C12.3431 10 11 11.3431 11 13C11 14.6569 12.3431 16 14 16ZM14 18C11.2386 18 9 15.7614 9 13C9 10.2386 11.2386 8 14 8C16.7614 8 19 10.2386 19 13C19 15.7614 16.7614 18 14 18ZM4 2H10V4H4V2Z"></path>
-                                      </svg>
-                                    </div>
-
-                                    <div>
-                                      <p className="font-poppins text-base font-medium">
-                                        {deviceData.backCamera && (
-                                          <>
-                                            {" "}
-                                            {deviceData.backCamera}{" "}
-                                            <span className="xl:text-sm text-[8px]">
+                                      <div>
+                                        <p className="font-poppins text-base font-medium">
+                                          {/* 12 <span className="text-xs">GB RAM </span>{" "} */}
+                                          {deviceData.ram && (
+                                            <>
                                               {" "}
-                                              MP
-                                            </span>{" "}
-                                          </>
-                                        )}
-                                      </p>
-                                      <p className="font-poppins  text-xs font-light">
-                                        {deviceData?.backCameraVideo && (
-                                          <span className="">
-                                            {deviceData?.backCameraVideo}p
-                                          </span>
-                                        )}
-                                      </p>
+                                              {deviceData.ram}{" "}
+                                              <span className="text-xs"> GB RAM</span>{" "}
+                                            </>
+                                          )}{" "}
+                                        </p>
+                                        <p className="font-poppins  text-xs font-light">
+                                          {deviceData.processor && (
+                                            <span>{deviceData.processor}</span>
+                                          )}
+                                        </p>
+                                      </div>
                                     </div>
-                                  </div>
+                                    <div className="flex items-center gap-1">
+                                      <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          viewBox="0 0 24 24"
+                                          fill="rgba(0,0,0,1)"
+                                        >
+                                          <path d="M9 4V3C9 2.44772 9.44772 2 10 2H14C14.5523 2 15 2.44772 15 3V4H18C18.5523 4 19 4.44772 19 5V21C19 21.5523 18.5523 22 18 22H6C5.44772 22 5 21.5523 5 21V5C5 4.44772 5.44772 4 6 4H9ZM13 12V7L8 14H11V19L16 12H13Z"></path>
+                                        </svg>
+                                      </div>
 
-                                  <div className="flex items-center gap-1">
-                                    <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="rgba(0,0,0,1)"
-                                      >
-                                        <path d="M14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM7 7V11H11V7H7Z"></path>
-                                      </svg>
-                                    </div>
-
-                                    <div>
-                                      <p className="font-poppins text-base font-medium">
-                                        {/* 12 <span className="text-xs">GB RAM </span>{" "} */}
-                                        {deviceData.ram && (
-                                          <>
-                                            {" "}
-                                            {deviceData.ram}{" "}
-                                            <span className="text-xs"> GB RAM</span>{" "}
-                                          </>
-                                        )}{" "}
-                                      </p>
-                                      <p className="font-poppins  text-xs font-light">
-                                        {deviceData.processor && (
-                                          <span>{deviceData.processor}</span>
-                                        )}
-                                      </p>
-                                    </div>
-                                  </div>
-                                  <div className="flex items-center gap-1">
-                                    <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="rgba(0,0,0,1)"
-                                      >
-                                        <path d="M9 4V3C9 2.44772 9.44772 2 10 2H14C14.5523 2 15 2.44772 15 3V4H18C18.5523 4 19 4.44772 19 5V21C19 21.5523 18.5523 22 18 22H6C5.44772 22 5 21.5523 5 21V5C5 4.44772 5.44772 4 6 4H9ZM13 12V7L8 14H11V19L16 12H13Z"></path>
-                                      </svg>
-                                    </div>
-
-                                    <div>
-                                      <p className="font-poppins text-base font-medium">
-                                        {deviceData?.battery} <span className="text-xs">mAh</span>
-                                      </p>
-                                      <p className="font-poppins  text-xs font-light">
-                                        Li-Ion
-                                      </p>
+                                      <div>
+                                        <p className="font-poppins text-base font-medium">
+                                          {deviceData?.battery} <span className="text-xs">mAh</span>
+                                        </p>
+                                        <p className="font-poppins  text-xs font-light">
+                                          Li-Ion
+                                        </p>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                              <div>
-                                <div className="w-full h-[192px] sm:h-[265px] bg-opacity-30 bg-slate-300  px-3 flex flex-col justify-between gap-y-1 py-1">
-                                  <div className="flex items-center gap-2">
-                                    <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                      >
-                                        <path d="M9 1V3H15V1H17V3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H7V1H9ZM20 11H4V19H20V11ZM7 5H4V9H20V5H17V7H15V5H9V7H7V5Z"></path>
-                                      </svg>
+                                <div>
+                                  <div className="w-full h-[192px] sm:h-[265px] bg-opacity-30 bg-slate-300  px-3 flex flex-col justify-between gap-y-1 py-1">
+                                    <div className="flex items-center gap-2">
+                                      <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          viewBox="0 0 24 24"
+                                          fill="currentColor"
+                                        >
+                                          <path d="M9 1V3H15V1H17V3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H7V1H9ZM20 11H4V19H20V11ZM7 5H4V9H20V5H17V7H15V5H9V7H7V5Z"></path>
+                                        </svg>
+                                      </div>
+
+                                      <div>
+                                        <p className="font-poppins text-xs ">
+                                          {" "}
+                                          {deviceData.release_date
+                                            ? deviceData.release_date
+                                            : "No Data Found"}
+                                        </p>
+                                      </div>
                                     </div>
 
-                                    <div>
-                                      <p className="font-poppins text-xs ">
-                                        {" "}
-                                        {deviceData.release_date
-                                          ? deviceData.release_date
-                                          : "No Data Found"}
-                                      </p>
-                                    </div>
-                                  </div>
+                                    <div className="flex items-center gap-2">
+                                      <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          viewBox="0 0 24 24"
+                                          fill="currentColor"
+                                        >
+                                          <path d="M7 4V20H17V4H7ZM6 2H18C18.5523 2 19 2.44772 19 3V21C19 21.5523 18.5523 22 18 22H6C5.44772 22 5 21.5523 5 21V3C5 2.44772 5.44772 2 6 2ZM12 17C12.5523 17 13 17.4477 13 18C13 18.5523 12.5523 19 12 19C11.4477 19 11 18.5523 11 18C11 17.4477 11.4477 17 12 17Z"></path>
+                                        </svg>
+                                      </div>
 
-                                  <div className="flex items-center gap-2">
-                                    <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                      >
-                                        <path d="M7 4V20H17V4H7ZM6 2H18C18.5523 2 19 2.44772 19 3V21C19 21.5523 18.5523 22 18 22H6C5.44772 22 5 21.5523 5 21V3C5 2.44772 5.44772 2 6 2ZM12 17C12.5523 17 13 17.4477 13 18C13 18.5523 12.5523 19 12 19C11.4477 19 11 18.5523 11 18C11 17.4477 11.4477 17 12 17Z"></path>
-                                      </svg>
+                                      <div>
+                                        <p className="font-poppins text-xs">
+                                          {deviceData?.weight},{" "}
+                                          {deviceData?.thickness} thickness
+                                        </p>
+                                      </div>
                                     </div>
+                                    <div className="flex items-center gap-2">
+                                      <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          viewBox="0 0 24 24"
+                                          fill="currentColor"
+                                        >
+                                          <path d="M23 12L15.9289 19.0711L14.5147 17.6569L20.1716 12L14.5147 6.34317L15.9289 4.92896L23 12ZM3.82843 12L9.48528 17.6569L8.07107 19.0711L1 12L8.07107 4.92896L9.48528 6.34317L3.82843 12Z"></path>
+                                        </svg>
+                                      </div>
 
-                                    <div>
-                                      <p className="font-poppins text-xs">
-                                        {deviceData?.weight},{" "}
-                                        {deviceData?.thickness} thickness
-                                      </p>
+                                      <div>
+                                        <p className="font-poppins text-xs">
+                                          {deviceData.os_android},{" "}
+                                          {deviceData.os_brand}
+                                        </p>
+                                      </div>
                                     </div>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                      >
-                                        <path d="M23 12L15.9289 19.0711L14.5147 17.6569L20.1716 12L14.5147 6.34317L15.9289 4.92896L23 12ZM3.82843 12L9.48528 17.6569L8.07107 19.0711L1 12L8.07107 4.92896L9.48528 6.34317L3.82843 12Z"></path>
-                                      </svg>
-                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          viewBox="0 0 24 24"
+                                          fill="currentColor"
+                                        >
+                                          <path d="M6 18H18V6H6V18ZM14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM8 8H16V16H8V8Z"></path>
+                                        </svg>
+                                      </div>
 
-                                    <div>
-                                      <p className="font-poppins text-xs">
-                                        {deviceData.os_android},{" "}
-                                        {deviceData.os_brand}
-                                      </p>
-                                    </div>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                      >
-                                        <path d="M6 18H18V6H6V18ZM14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM8 8H16V16H8V8Z"></path>
-                                      </svg>
-                                    </div>
-
-                                    <div>
-                                      <p className="font-poppins text-xs">
-                                        {deviceData?.storage} storage,{" "}
-                                        {deviceData?.expandable_storage
-                                          ? deviceData.expandable_storage_type
-                                          : "no card slot"}
-                                      </p>
+                                      <div>
+                                        <p className="font-poppins text-xs">
+                                          {deviceData?.storage} storage,{" "}
+                                          {deviceData?.expandable_storage
+                                            ? deviceData.expandable_storage_type
+                                            : "no card slot"}
+                                        </p>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            </Slider>
+                              </Slider>
+                            </div>
                           </div>
+
+                          {
+                            compareDeviceData && <div className='flex w-[50%]'>
+                              <div
+                                className=" md:max-w-[270px] md:min-w-[270px] max-w-[198.5px] w-full cursor-pointer"
+                              // onClick={() => setTab("pictures")}
+                              >
+                                <img
+                                  className=" md:max-w-[270px] md:min-w-[270px] max-w-full  md:h-[280px] min-h-[200px] h-[200px] w-full object-contain"
+                                  src={compareDeviceData?.banner_img}
+                                  alt=""
+                                />
+                              </div>
+                              <div className="max-w-[45%]  w-full ">
+                                <Slider {...settings}>
+                                  <div>
+                                    <div className="w-full h-[192px] sm:h-[265px] bg-opacity-30 bg-slate-300  px-2 flex flex-col gap-y-1 justify-between">
+                                      <div className="flex items-center gap-1">
+                                        <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            fill="currentColor"
+                                            transform="matrix(6.123233995736766e-17,1,-1,6.123233995736766e-17,0,0)"
+                                          >
+                                            <path d="M3 4H21C21.5523 4 22 4.44772 22 5V19C22 19.5523 21.5523 20 21 20H3C2.44772 20 2 19.5523 2 19V5C2 4.44772 2.44772 4 3 4ZM4 6V18H20V6H4Z" />
+                                          </svg>
+                                        </div>
+
+                                        <div>
+                                          <p className="font-poppins text-base font-medium">
+                                            {compareDeviceData?.displaySize}"
+                                          </p>
+                                          <p className="font-poppins  text-xs font-light">
+                                            {compareDeviceData.displayResolution && (
+                                              <span className="">
+                                                {compareDeviceData.displayResolution} pixels
+                                              </span>
+                                            )}
+                                          </p>
+                                        </div>
+                                      </div>
+                                      <div className="flex items-center gap-1">
+                                        <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            fill="currentColor"
+                                          >
+                                            <path d="M2 6.00087C2 5.44811 2.45531 5 2.9918 5H21.0082C21.556 5 22 5.44463 22 6.00087V19.9991C22 20.5519 21.5447 21 21.0082 21H2.9918C2.44405 21 2 20.5554 2 19.9991V6.00087ZM4 7V19H20V7H4ZM14 16C15.6569 16 17 14.6569 17 13C17 11.3431 15.6569 10 14 10C12.3431 10 11 11.3431 11 13C11 14.6569 12.3431 16 14 16ZM14 18C11.2386 18 9 15.7614 9 13C9 10.2386 11.2386 8 14 8C16.7614 8 19 10.2386 19 13C19 15.7614 16.7614 18 14 18ZM4 2H10V4H4V2Z"></path>
+                                          </svg>
+                                        </div>
+
+                                        <div>
+                                          <p className="font-poppins text-base font-medium">
+                                            {compareDeviceData.backCamera && (
+                                              <>
+                                                {" "}
+                                                {compareDeviceData.backCamera}{" "}
+                                                <span className="xl:text-sm text-[8px]">
+                                                  {" "}
+                                                  MP
+                                                </span>{" "}
+                                              </>
+                                            )}
+                                          </p>
+                                          <p className="font-poppins  text-xs font-light">
+                                            {compareDeviceData?.backCameraVideo && (
+                                              <span className="">
+                                                {compareDeviceData?.backCameraVideo}p
+                                              </span>
+                                            )}
+                                          </p>
+                                        </div>
+                                      </div>
+
+                                      <div className="flex items-center gap-1">
+                                        <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            fill="rgba(0,0,0,1)"
+                                          >
+                                            <path d="M14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM7 7V11H11V7H7Z"></path>
+                                          </svg>
+                                        </div>
+
+                                        <div>
+                                          <p className="font-poppins text-base font-medium">
+                                            {/* 12 <span className="text-xs">GB RAM </span>{" "} */}
+                                            {compareDeviceData.ram && (
+                                              <>
+                                                {" "}
+                                                {compareDeviceData.ram}{" "}
+                                                <span className="text-xs"> GB RAM</span>{" "}
+                                              </>
+                                            )}{" "}
+                                          </p>
+                                          <p className="font-poppins  text-xs font-light">
+                                            {compareDeviceData.processor && (
+                                              <span>{compareDeviceData.processor}</span>
+                                            )}
+                                          </p>
+                                        </div>
+                                      </div>
+                                      <div className="flex items-center gap-1">
+                                        <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            fill="rgba(0,0,0,1)"
+                                          >
+                                            <path d="M9 4V3C9 2.44772 9.44772 2 10 2H14C14.5523 2 15 2.44772 15 3V4H18C18.5523 4 19 4.44772 19 5V21C19 21.5523 18.5523 22 18 22H6C5.44772 22 5 21.5523 5 21V5C5 4.44772 5.44772 4 6 4H9ZM13 12V7L8 14H11V19L16 12H13Z"></path>
+                                          </svg>
+                                        </div>
+
+                                        <div>
+                                          <p className="font-poppins text-base font-medium">
+                                            {compareDeviceData?.battery} <span className="text-xs">mAh</span>
+                                          </p>
+                                          <p className="font-poppins  text-xs font-light">
+                                            Li-Ion
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <div className="w-full h-[192px] sm:h-[265px] bg-opacity-30 bg-slate-300  px-3 flex flex-col justify-between gap-y-1 py-1">
+                                      <div className="flex items-center gap-2">
+                                        <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            fill="currentColor"
+                                          >
+                                            <path d="M9 1V3H15V1H17V3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H7V1H9ZM20 11H4V19H20V11ZM7 5H4V9H20V5H17V7H15V5H9V7H7V5Z"></path>
+                                          </svg>
+                                        </div>
+
+                                        <div>
+                                          <p className="font-poppins text-xs ">
+                                            {" "}
+                                            {compareDeviceData.release_date
+                                              ? compareDeviceData.release_date
+                                              : "No Data Found"}
+                                          </p>
+                                        </div>
+                                      </div>
+
+                                      <div className="flex items-center gap-2">
+                                        <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            fill="currentColor"
+                                          >
+                                            <path d="M7 4V20H17V4H7ZM6 2H18C18.5523 2 19 2.44772 19 3V21C19 21.5523 18.5523 22 18 22H6C5.44772 22 5 21.5523 5 21V3C5 2.44772 5.44772 2 6 2ZM12 17C12.5523 17 13 17.4477 13 18C13 18.5523 12.5523 19 12 19C11.4477 19 11 18.5523 11 18C11 17.4477 11.4477 17 12 17Z"></path>
+                                          </svg>
+                                        </div>
+
+                                        <div>
+                                          <p className="font-poppins text-xs">
+                                            {compareDeviceData?.weight},{" "}
+                                            {compareDeviceData?.thickness} thickness
+                                          </p>
+                                        </div>
+                                      </div>
+                                      <div className="flex items-center gap-2">
+                                        <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            fill="currentColor"
+                                          >
+                                            <path d="M23 12L15.9289 19.0711L14.5147 17.6569L20.1716 12L14.5147 6.34317L15.9289 4.92896L23 12ZM3.82843 12L9.48528 17.6569L8.07107 19.0711L1 12L8.07107 4.92896L9.48528 6.34317L3.82843 12Z"></path>
+                                          </svg>
+                                        </div>
+
+                                        <div>
+                                          <p className="font-poppins text-xs">
+                                            {compareDeviceData.os_android},{" "}
+                                            {compareDeviceData.os_brand}
+                                          </p>
+                                        </div>
+                                      </div>
+                                      <div className="flex items-center gap-2">
+                                        <div className="max-w-[20px] h-[20px] w-full ml-[-4px]">
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            fill="currentColor"
+                                          >
+                                            <path d="M6 18H18V6H6V18ZM14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM8 8H16V16H8V8Z"></path>
+                                          </svg>
+                                        </div>
+
+                                        <div>
+                                          <p className="font-poppins text-xs">
+                                            {compareDeviceData?.storage} storage,{" "}
+                                            {compareDeviceData?.expandable_storage
+                                              ? compareDeviceData.expandable_storage_type
+                                              : "no card slot"}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </Slider>
+                              </div>
+                            </div>
+                          }
+
                         </div>
-                      </div>
                         : <div className="pt-[40px] md:pt-[60px] pb-[10px] flex md:gap-2 gap-2 md:justify-start justify-center  backdrop-blur-[100px] relative z-[1] h-full">
                           <div
                             className=" md:max-w-[270px] md:min-w-[270px] max-w-[198.5px] w-full cursor-pointer"
@@ -1327,7 +1369,28 @@ const PhoneDetails = () => {
                           </div>
                         </div>
                     }
-
+                    {filteredDevices.length > 0 && (
+                      <>
+                        <div className="absolute w-[242px] z-10 top-[50px] right-[23px] flex flex-col">
+                          {filteredDevices.slice(0, 1).map((device, i) => (
+                            <div
+                              key={i}
+                              onClick={() => handleCompareDevice(device._id)}
+                              className="flex justify-start items-center gap-2 bg-slate-500 border-b-[1px] border-t-[1px] py-[1px] px-2 cursor-pointer"
+                            >
+                              <div className="max-w-[28px] w-full">
+                                <img
+                                  className="w-full h-[36px] object-contain"
+                                  src={device.banner_img}
+                                  alt=""
+                                />
+                              </div>
+                              <p className="text-white font-inter">{device.deviceName}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
                     <div className="absolute bg-slate-500 h-10 w-full bottom-[35px] z-[2] flex justify-around items-center px-5 bg-opacity-10 md:hidden ">
                       <div>
                         <div className="flex gap-3">
@@ -1458,7 +1521,7 @@ const PhoneDetails = () => {
                       </div>
                     )}
                     {tab === "compare" && <div className='w-full'>
-                      <Compare deviceData={deviceData?.data} s />
+                      <Compare deviceData={deviceData?.data} compareDeviceData={compareDeviceData} />
                     </div>}
                     {tab === "price" && <div>price</div>}
                   </div>
