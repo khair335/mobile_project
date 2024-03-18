@@ -21,6 +21,7 @@ import auth from "../../firebase.init";
 import Specifications from '../../component/Specifications/Specifications';
 import Compare from '../../component/Compare/Compare';
 import { useQuery } from 'react-query';
+import Price from '../../component/Price/Price';
 const PhoneDetails = () => {
   const { phoneId } = useParams();
   const state = useSelector((state) => state.search);
@@ -52,17 +53,17 @@ const PhoneDetails = () => {
     updateVisitorCount(phoneId);
   }, [phoneId]);
   const [user] = useAuthState(auth);
-  // console.log("user",user);
+
   const [shareModal, setShareModal] = useState(false);
   const [tab, setTab] = useState("specifications");
   const [isHovered, setIsHovered] = useState(false);
   const [favDevice, setFavDevice] = useState(null);
-  // console.log("favDevice", favDevice?.deviceId);
+
   // const [deviceData, setDeviceData] = useState(null);
   const { devices } = useSelector((state) => state.device);
   const [searchTerm, setSearchTerm] = useState("");
   const [compareDeviceData, setCompareDeviceData] = useState("");
-  console.log("setCompareDeviceData", compareDeviceData);
+
   useEffect(() => {
     // Update filtered devices when searchTerm changes
     setFilteredDevices(
@@ -81,15 +82,13 @@ const PhoneDetails = () => {
   const [filteredDevices, setFilteredDevices] = useState([]);
 
   const handleCompareDevice = async (deviceId) => {
-    console.log("deviceId", deviceId);
+
     try {
       const response = await axios.get(`${api}/devicesData/${deviceId}`);
-      console.log("deviceData", response.data);
+
       setCompareDeviceData(response.data);
       setSearchTerm("")
 
-      // Handle the deviceData as needed, you can log it for now
-      // console.log('Device Data:', deviceData.data);
     } catch (error) {
       console.error('Error fetching device data:', error);
       // Handle the error state if needed
@@ -112,7 +111,7 @@ const PhoneDetails = () => {
     if (user) {
       const fetchDeviceDetails = async () => {
         const apiUrl = `${api}/users/${user.email}/devices/${phoneId}`;
-        console.log("apiUrl", apiUrl);
+
 
         try {
           const response = await axios.get(apiUrl);
@@ -136,7 +135,7 @@ const PhoneDetails = () => {
   };
 
   const { data: deviceData, isLoading, isError } = useQuery(['device', phoneId, addComment], fetchDeviceData);
-  // console.log("deviceData",deviceData);
+
   if (isLoading) {
     return <Loading />;
   }
@@ -149,8 +148,7 @@ const PhoneDetails = () => {
 
   const handleFavCount = async (id) => {
     if (user) {
-      console.log("user", user);
-      console.log("favCount Function");
+
       try {
         // Assuming user.uid is the user's ID
         await axios.post(`${api}/updateFavCount/${user.email}/${id}`);
@@ -168,9 +166,6 @@ const PhoneDetails = () => {
       try {
         // Send a DELETE request to the backend API
         await axios.delete(`${api}/users/${user.email}/favorite-devices/${id}`);
-
-        // Handle success (you might want to refresh the user's data, etc.)
-        console.log("Favorite device removed successfully");
       } catch (error) {
         // Handle error
         console.error("Error removing favorite device:", error.response?.data?.error || "Internal Server Error");
@@ -310,7 +305,9 @@ const PhoneDetails = () => {
       "_blank"
     );
   };
-
+  const clearInput = () => {
+    setSearchTerm('');
+  };
 
 
   return (
@@ -375,17 +372,32 @@ const PhoneDetails = () => {
                     }}
                   >
                     <div className="md:h-[50px] h-8 w-full bg-black absolute top-0 flex z-[2] justify-between px-3 md:px-6 items-center bg-opacity-50 backdrop-blur-[80px]">
-                      <h3 className="text-white lg:text-3xl md:text-xl text-base font-sans font-inter">
+                      <h3 className="text-white lg:text-3xl md:text-xl text-base font-sans font-inter capitalize">
                         {deviceData.deviceName
                           ? deviceData.deviceName
                           : "No Name Found"}
                       </h3>
                       {
-                        tab == "compare" ? <div className='flex flex-col items-end max-w-[242px] w-full'>
+                        tab == "compare" ? <div className='flex flex-col items-end max-w-[142px] sm:max-w-[242px] w-full'>
                           {/* <label htmlFor="compare">Search Your Compare Devices</label> */}
-                          <input type="text" id='compare' className='max-w-[242px] h-10 w-full border outline-none rounded-sm px-2 placeholder:text-xs'
-                            onChange={handleSearchChange}
-                            placeholder='Search Your Compare Devices' />
+
+                          <div className='max-w-[142px] sm:max-w-[242px] flex w-full justify-center items-center bg-white'>
+                            <input type="text" id='compare' className='w-full sm:h-10 sm:text-base text-[8px] h-[26px] border-none outline-none rounded-sm px-2 sm:placeholder:text-xs placeholder:text-[8px]'
+                              onChange={handleSearchChange}
+                              value={searchTerm}
+                              placeholder='Search Your Compare Devices' />
+                            {
+                              searchTerm && <button className="w-8 flex"
+                                onClick={clearInput}
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16"
+                                  height="16"
+                                  fill="black"><path d="M11.9997 10.5865L16.9495 5.63672L18.3637 7.05093L13.4139 12.0007L18.3637 16.9504L16.9495 18.3646L11.9997 13.4149L7.04996 18.3646L5.63574 16.9504L10.5855 12.0007L5.63574 7.05093L7.04996 5.63672L11.9997 10.5865Z"></path></svg>
+                              </button>
+                            }
+
+                          </div>
+
                         </div> : <div className="flex items-center">
                           {shareModal && (
                             <div className="flex items-center ">
@@ -468,19 +480,20 @@ const PhoneDetails = () => {
                     </div>
                     {
                       tab == "compare" ?
-                        <div className="pt-[40px] max-w-[1000px] md:pt-[60px] pb-[10px] flex md:gap-2 gap-2 md:justify-start justify-center  backdrop-blur-[100px] relative z-[1] h-full">
-                          <div className='flex w-[50%]'>
+                        <div className="pt-[40px] max-w-[1000px] md:pt-[60px] pb-[10px] flex md:gap-2 gap-2 md:justify-start justify-start  backdrop-blur-[100px] relative z-[1] h-full">
+                          <div className='flex gap-1 sm:gap-0 w-[50%] px-1 sm:px-0'>
                             <div
-                              className=" md:max-w-[270px] md:min-w-[270px] max-w-[198.5px] w-full cursor-pointer"
-                              onClick={() => setTab("pictures")}
+                              className=" md:max-w-[270px] md:min-w-[270px] max-w-[70px] w-full cursor-pointer"
+
                             >
                               <img
                                 className=" md:max-w-[270px] md:min-w-[270px] max-w-full  md:h-[280px] min-h-[200px] h-[200px] w-full object-contain"
                                 src={deviceData?.banner_img}
                                 alt=""
                               />
+
                             </div>
-                            <div className="max-w-[45%]  w-full ">
+                            <div className="sm:max-w-[45%] max-w-[55%]  w-full ">
                               <Slider {...settings}>
                                 <div>
                                   <div className="w-full h-[192px] sm:h-[265px] bg-opacity-30 bg-slate-300  px-2 flex flex-col gap-y-1 justify-between">
@@ -497,10 +510,10 @@ const PhoneDetails = () => {
                                       </div>
 
                                       <div>
-                                        <p className="font-poppins text-base font-medium">
+                                        <p className="font-poppins text-sm sm:text-base font-medium">
                                           {deviceData?.displaySize}"
                                         </p>
-                                        <p className="font-poppins  text-xs font-light">
+                                        <p className="font-poppins  text-[8px] sm:text-xs font-light">
                                           {deviceData.displayResolution && (
                                             <span className="">
                                               {deviceData.displayResolution} pixels
@@ -521,7 +534,7 @@ const PhoneDetails = () => {
                                       </div>
 
                                       <div>
-                                        <p className="font-poppins text-base font-medium">
+                                        <p className="font-poppins text-sm sm:text-base font-medium">
                                           {deviceData.backCamera && (
                                             <>
                                               {" "}
@@ -533,7 +546,7 @@ const PhoneDetails = () => {
                                             </>
                                           )}
                                         </p>
-                                        <p className="font-poppins  text-xs font-light">
+                                        <p className="font-poppins  text-[8px] sm:text-xs font-light">
                                           {deviceData?.backCameraVideo && (
                                             <span className="">
                                               {deviceData?.backCameraVideo}p
@@ -555,17 +568,19 @@ const PhoneDetails = () => {
                                       </div>
 
                                       <div>
-                                        <p className="font-poppins text-base font-medium">
+                                        <p className="font-poppins text-sm sm:text-base font-medium">
                                           {/* 12 <span className="text-xs">GB RAM </span>{" "} */}
                                           {deviceData.ram && (
                                             <>
-                                              {" "}
-                                              {deviceData.ram}{" "}
-                                              <span className="text-xs"> GB RAM</span>{" "}
+                                              <span className='text-sm sm:text-base'>
+
+                                                {deviceData.ram}
+                                              </span>
+                                              <span className="text-[8px] sm:text-xs"> GB RAM</span>{" "}
                                             </>
                                           )}{" "}
                                         </p>
-                                        <p className="font-poppins  text-xs font-light">
+                                        <p className="font-poppins  text-[8px] sm:text-xs font-light">
                                           {deviceData.processor && (
                                             <span>{deviceData.processor}</span>
                                           )}
@@ -584,10 +599,10 @@ const PhoneDetails = () => {
                                       </div>
 
                                       <div>
-                                        <p className="font-poppins text-base font-medium">
-                                          {deviceData?.battery} <span className="text-xs">mAh</span>
+                                        <p className="font-poppins text-sm sm:text-base font-medium">
+                                          {deviceData?.battery} <span className="text-[8px] sm:text-xs">mAh</span>
                                         </p>
-                                        <p className="font-poppins  text-xs font-light">
+                                        <p className="font-poppins  text-[8px] sm:text-xs font-light">
                                           Li-Ion
                                         </p>
                                       </div>
@@ -608,7 +623,7 @@ const PhoneDetails = () => {
                                       </div>
 
                                       <div>
-                                        <p className="font-poppins text-xs ">
+                                        <p className="font-poppins text-[8px] sm:text-xs ">
                                           {" "}
                                           {deviceData.release_date
                                             ? deviceData.release_date
@@ -629,7 +644,7 @@ const PhoneDetails = () => {
                                       </div>
 
                                       <div>
-                                        <p className="font-poppins text-xs">
+                                        <p className="font-poppins text-[8px] sm:text-xs">
                                           {deviceData?.weight},{" "}
                                           {deviceData?.thickness} thickness
                                         </p>
@@ -647,7 +662,7 @@ const PhoneDetails = () => {
                                       </div>
 
                                       <div>
-                                        <p className="font-poppins text-xs">
+                                        <p className="font-poppins text-[8px] sm:text-xss">
                                           {deviceData.os_android},{" "}
                                           {deviceData.os_brand}
                                         </p>
@@ -665,7 +680,7 @@ const PhoneDetails = () => {
                                       </div>
 
                                       <div>
-                                        <p className="font-poppins text-xs">
+                                        <p className="font-poppins text-[8px] sm:text-xs">
                                           {deviceData?.storage} storage,{" "}
                                           {deviceData?.expandable_storage
                                             ? deviceData.expandable_storage_type
@@ -680,9 +695,9 @@ const PhoneDetails = () => {
                           </div>
 
                           {
-                            compareDeviceData && <div className='flex w-[50%]'>
+                            compareDeviceData && <div className='flex gap-1 sm:gap-0 w-[50%] px-1 sm:px-0'>
                               <div
-                                className=" md:max-w-[270px] md:min-w-[270px] max-w-[198.5px] w-full cursor-pointer"
+                                className=" md:max-w-[270px] md:min-w-[270px] max-w-[70px] w-full cursor-pointer"
                               // onClick={() => setTab("pictures")}
                               >
                                 <img
@@ -691,7 +706,7 @@ const PhoneDetails = () => {
                                   alt=""
                                 />
                               </div>
-                              <div className="max-w-[45%]  w-full ">
+                              <div className="sm:max-w-[45%] max-w-[55%]  w-full">
                                 <Slider {...settings}>
                                   <div>
                                     <div className="w-full h-[192px] sm:h-[265px] bg-opacity-30 bg-slate-300  px-2 flex flex-col gap-y-1 justify-between">
@@ -708,10 +723,10 @@ const PhoneDetails = () => {
                                         </div>
 
                                         <div>
-                                          <p className="font-poppins text-base font-medium">
+                                          <p className="font-poppins text-sm sm:text-base font-medium">
                                             {compareDeviceData?.displaySize}"
                                           </p>
-                                          <p className="font-poppins  text-xs font-light">
+                                          <p className="font-poppins  text-[8px] sm:text-xs font-light">
                                             {compareDeviceData.displayResolution && (
                                               <span className="">
                                                 {compareDeviceData.displayResolution} pixels
@@ -732,7 +747,7 @@ const PhoneDetails = () => {
                                         </div>
 
                                         <div>
-                                          <p className="font-poppins text-base font-medium">
+                                          <p className="font-poppins text-sm sm:text-base font-medium">
                                             {compareDeviceData.backCamera && (
                                               <>
                                                 {" "}
@@ -744,7 +759,7 @@ const PhoneDetails = () => {
                                               </>
                                             )}
                                           </p>
-                                          <p className="font-poppins  text-xs font-light">
+                                          <p className="font-poppins  text-[8px] sm:text-xs font-light">
                                             {compareDeviceData?.backCameraVideo && (
                                               <span className="">
                                                 {compareDeviceData?.backCameraVideo}p
@@ -766,17 +781,19 @@ const PhoneDetails = () => {
                                         </div>
 
                                         <div>
-                                          <p className="font-poppins text-base font-medium">
+                                          <p className="font-poppins text-sm sm:text-base font-medium">
                                             {/* 12 <span className="text-xs">GB RAM </span>{" "} */}
                                             {compareDeviceData.ram && (
                                               <>
-                                                {" "}
-                                                {compareDeviceData.ram}{" "}
-                                                <span className="text-xs"> GB RAM</span>{" "}
+                                                <span className='text-sm sm:text-base'>
+
+                                                  {compareDeviceData.ram}
+                                                </span>
+                                                <span className="text-[8px] sm:text-xs"> GB RAM</span>{" "}
                                               </>
                                             )}{" "}
                                           </p>
-                                          <p className="font-poppins  text-xs font-light">
+                                          <p className="font-poppins  text-[8px] sm:text-xs font-light">
                                             {compareDeviceData.processor && (
                                               <span>{compareDeviceData.processor}</span>
                                             )}
@@ -795,10 +812,10 @@ const PhoneDetails = () => {
                                         </div>
 
                                         <div>
-                                          <p className="font-poppins text-base font-medium">
-                                            {compareDeviceData?.battery} <span className="text-xs">mAh</span>
+                                          <p className="font-poppins text-sm sm:text-base font-medium">
+                                            {compareDeviceData?.battery} <span className="text-[8px] sm:text-xs">mAh</span>
                                           </p>
-                                          <p className="font-poppins  text-xs font-light">
+                                          <p className="font-poppins  text-[8px] sm:text-xs font-light">
                                             Li-Ion
                                           </p>
                                         </div>
@@ -819,7 +836,7 @@ const PhoneDetails = () => {
                                         </div>
 
                                         <div>
-                                          <p className="font-poppins text-xs ">
+                                          <p className="font-poppins text-[8px] sm:text-xs ">
                                             {" "}
                                             {compareDeviceData.release_date
                                               ? compareDeviceData.release_date
@@ -840,7 +857,7 @@ const PhoneDetails = () => {
                                         </div>
 
                                         <div>
-                                          <p className="font-poppins text-xs">
+                                          <p className="font-poppins text-[8px] sm:text-xs">
                                             {compareDeviceData?.weight},{" "}
                                             {compareDeviceData?.thickness} thickness
                                           </p>
@@ -858,7 +875,7 @@ const PhoneDetails = () => {
                                         </div>
 
                                         <div>
-                                          <p className="font-poppins text-xs">
+                                          <p className="font-poppins text-[8px] sm:text-xss">
                                             {compareDeviceData.os_android},{" "}
                                             {compareDeviceData.os_brand}
                                           </p>
@@ -876,7 +893,7 @@ const PhoneDetails = () => {
                                         </div>
 
                                         <div>
-                                          <p className="font-poppins text-xs">
+                                          <p className="font-poppins text-[8px] sm:text-xs">
                                             {compareDeviceData?.storage} storage,{" "}
                                             {compareDeviceData?.expandable_storage
                                               ? compareDeviceData.expandable_storage_type
@@ -892,7 +909,8 @@ const PhoneDetails = () => {
                           }
 
                         </div>
-                        : <div className="pt-[40px] md:pt-[60px] pb-[10px] flex md:gap-2 gap-2 md:justify-start justify-center  backdrop-blur-[100px] relative z-[1] h-full">
+                          :
+                          <div className="pt-[40px] md:pt-[60px] pb-[10px] flex md:gap-2 gap-2 md:justify-start justify-center backdrop-blur-[100px]  relative z-[1] h-full ">
                           <div
                             className=" md:max-w-[270px] md:min-w-[270px] max-w-[198.5px] w-full cursor-pointer"
                             onClick={() => setTab("pictures")}
@@ -1371,21 +1389,21 @@ const PhoneDetails = () => {
                     }
                     {filteredDevices.length > 0 && (
                       <>
-                        <div className="absolute w-[242px] z-10 top-[50px] right-[23px] flex flex-col">
+                        <div className="absolute min-w-[142px] max-w-[142px] w-full sm:max-w-[242px] z-10 top-[33px] right-[12px] flex flex-col">
                           {filteredDevices.slice(0, 1).map((device, i) => (
                             <div
                               key={i}
                               onClick={() => handleCompareDevice(device._id)}
-                              className="flex justify-start items-center gap-2 bg-slate-500 border-b-[1px] border-t-[1px] py-[1px] px-2 cursor-pointer"
+                              className="flex justify-start items-center gap-2 bg-slate-500 border-none py-[1px] sm:px-2 px-[1px] cursor-pointer"
                             >
                               <div className="max-w-[28px] w-full">
                                 <img
-                                  className="w-full h-[36px] object-contain"
+                                  className="w-full h-[24px] object-contain"
                                   src={device.banner_img}
                                   alt=""
                                 />
                               </div>
-                              <p className="text-white font-inter">{device.deviceName}</p>
+                              <p className="text-white sm:text-base text-[8px] font-inter">{device.deviceName}</p>
                             </div>
                           ))}
                         </div>
@@ -1409,32 +1427,50 @@ const PhoneDetails = () => {
                           {deviceData?.visitorCount?.toLocaleString()} HITS
                         </p>
                       </div>
-                      <div>
-                        <div className="flex gap-3">
-                          <div className="w-5 h-5">
-                            {!isHovered && (
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                              >
-                                <path d="M16.5 3C19.5376 3 22 5.5 22 9C22 16 14.5 20 12 21.5C9.5 20 2 16 2 9C2 5.5 4.5 3 7.5 3C9.35997 3 11 4 12 5C13 4 14.64 3 16.5 3ZM12.9339 18.6038C13.8155 18.0485 14.61 17.4955 15.3549 16.9029C18.3337 14.533 20 11.9435 20 9C20 6.64076 18.463 5 16.5 5C15.4241 5 14.2593 5.56911 13.4142 6.41421L12 7.82843L10.5858 6.41421C9.74068 5.56911 8.5759 5 7.5 5C5.55906 5 4 6.6565 4 9C4 11.9435 5.66627 14.533 8.64514 16.9029C9.39 17.4955 10.1845 18.0485 11.0661 18.6038C11.3646 18.7919 11.6611 18.9729 12 19.1752C12.3389 18.9729 12.6354 18.7919 12.9339 18.6038Z"></path>
-                              </svg>
-                            )}
+                      <div className="flex flex-col  items-center">
+                        <div className="flex items-center gap-3">
+                          {
+                            favDevice?.deviceId == phoneId ? <div className="xl:w-8 xl:h-8 w-4 h-4 cursor-pointer" onClick={() => handleRemoveFavorite(phoneId)}><svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="rgba(15,90,178,1)"
+                            >
+                              <path d="M16.5 3C19.5376 3 22 5.5 22 9C22 16 14.5 20 12 21.5C9.5 20 2 16 2 9C2 5.5 4.5 3 7.5 3C9.35997 3 11 4 12 5C13 4 14.64 3 16.5 3Z"></path>
+                            </svg></div> : <div
+                              className="xl:w-8 xl:h-8 w-4 h-4 cursor-pointer"
+                              onMouseEnter={() => setIsHovered(true)}
+                              onMouseLeave={() => setIsHovered(false)}
+                              onClick={() => handleFavCount(phoneId)}
+                            >
+                              {!isHovered && (
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
+                                  fill="currentColor"
+                                >
+                                  <path d="M16.5 3C19.5376 3 22 5.5 22 9C22 16 14.5 20 12 21.5C9.5 20 2 16 2 9C2 5.5 4.5 3 7.5 3C9.35997 3 11 4 12 5C13 4 14.64 3 16.5 3ZM12.9339 18.6038C13.8155 18.0485 14.61 17.4955 15.3549 16.9029C18.3337 14.533 20 11.9435 20 9C20 6.64076 18.463 5 16.5 5C15.4241 5 14.2593 5.56911 13.4142 6.41421L12 7.82843L10.5858 6.41421C9.74068 5.56911 8.5759 5 7.5 5C5.55906 5 4 6.6565 4 9C4 11.9435 5.66627 14.533 8.64514 16.9029C9.39 17.4955 10.1845 18.0485 11.0661 18.6038C11.3646 18.7919 11.6611 18.9729 12 19.1752C12.3389 18.9729 12.6354 18.7919 12.9339 18.6038Z"></path>
+                                </svg>
+                              )}
 
-                            {isHovered && (
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="rgba(15,90,178,1)"
-                              >
-                                <path d="M16.5 3C19.5376 3 22 5.5 22 9C22 16 14.5 20 12 21.5C9.5 20 2 16 2 9C2 5.5 4.5 3 7.5 3C9.35997 3 11 4 12 5C13 4 14.64 3 16.5 3Z"></path>
-                              </svg>
-                            )}
-                          </div>
-                          <p className="text-black text-sm">{deviceData?.favCount?.toLocaleString()}</p>
+                              {isHovered && (
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
+                                  fill="rgba(15,90,178,1)"
+                                >
+                                  <path d="M16.5 3C19.5376 3 22 5.5 22 9C22 16 14.5 20 12 21.5C9.5 20 2 16 2 9C2 5.5 4.5 3 7.5 3C9.35997 3 11 4 12 5C13 4 14.64 3 16.5 3Z"></path>
+                                </svg>
+                              )}
+                            </div>
+                          }
+
+                          <p className="text-black xl:text-2xl text-sm">
+                            {deviceData?.favCount?.toLocaleString()}
+                          </p>
                         </div>
-                        <p className=" uppercase text-xs">Become a fan</p>
+                        <p className="text-xs uppercase">
+                          Become a fan
+                        </p>
                       </div>
                     </div>
                     <div className="lg:h-[50px] md:h-[40px] h-8 w-full z-[2] bg-gray-400 absolute bottom-0 backdrop-blur-[80px] flex  justify-around items-center bg-opacity-35  shadow">
@@ -1523,7 +1559,7 @@ const PhoneDetails = () => {
                     {tab === "compare" && <div className='w-full'>
                       <Compare deviceData={deviceData?.data} compareDeviceData={compareDeviceData} />
                     </div>}
-                    {tab === "price" && <div>price</div>}
+                    {tab === "price" && <Price/>}
                   </div>
                 </div>
               </div>

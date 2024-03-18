@@ -74,7 +74,7 @@ const Home = () => {
                               <div className='max-w-[135px] w-full'>
                                 <img className='w-full h-[135px] object-contain' src={d.banner_img} alt="" />
                               </div>
-                              <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1 w-full'>
+                              <p className='text-center text-[#777] font-inter text-sm py-4 mt-1 group-hover:bg-gray-500 group-hover:text-white px-1 w-full capitalize'>
                                 {d.deviceName}
                               </p>
                             </Link>

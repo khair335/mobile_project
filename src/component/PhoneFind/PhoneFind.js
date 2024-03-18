@@ -45,7 +45,7 @@ const mutation = useMutation(
 );
 
 
-  // console.log("mutation", mutation);
+
 
 const handlePhoneFinder = () => {
   if (mutation.isLoading) {
@@ -326,7 +326,7 @@ const handlePhoneFinder = () => {
               </p>
             </div>
           </div>
-          <ul className='bg-slate-100 flex flex-wrap gap-x-5 gap-y-[1px] py-3 sm:px-3 px-5 justify-start mx-auto'>
+          <ul className='bg-slate-100 flex flex-wrap gap-x-3 gap-y-[1px] py-3 sm:px-3 px-2 justify-start mx-auto'>
             {
               mobileBrand.map((brand, index) => (
                 <Link

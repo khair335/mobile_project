@@ -9,7 +9,7 @@ const BudgetDevice = ({ price,priceThreshold }) => {
   useEffect(() => {
     // Define the API endpoint
     const apiUrl = `${api}/budget/${price}?priceThreshold=${priceThreshold}`;
-    console.log("apiUrl",apiUrl);
+
 
     // Make a GET request using Axios
     axios
